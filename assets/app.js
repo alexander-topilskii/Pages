@@ -27,13 +27,9 @@ function toggleSidebar(open){
 init();
 async function init(){
   try{
-    if(window.siteData){
-      state.data = window.siteData;
-    }else{
-      const res = await fetch('./data/site.json?v=' + Date.now());
-      if(!res.ok) throw new Error('Не удалось загрузить data/site.json');
-      state.data = await res.json();
-    }
+    const res = await fetch('./data/site.json?v=' + Date.now());
+    if(!res.ok) throw new Error('Не удалось загрузить data/site.json');
+    state.data = await res.json();
     const firstId = state.data.categories?.[0]?.id;
     if(firstId) state.expanded.add(firstId);
     render();
@@ -138,6 +134,6 @@ function tryOpenFromHash(){
 }
 
 // --- Utilities
-function escapeHtml(s){ return String(s).replace(/[&<>\"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','\"':'&quot;','\\':'&#39;'}[c])); }
+function escapeHtml(s){ return String(s).replace(/[&<>\"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','\"':'&quot;','\\:'&#39;'}[c])); }
 function escapeAttr(s){ return escapeHtml(s).replace(/\"/g, '&quot;'); }
 function escapeReg(s){ return s.replace(/[.*+?^${}()|[\]\\]/g, '\\$&'); }
