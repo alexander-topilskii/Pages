@@ -29,9 +29,13 @@ function toggleSidebar(open){
 init();
 async function init(){
   try{
-    const res = await fetch('./data/site.json?v=' + Date.now());
-    if(!res.ok) throw new Error('Не удалось загрузить data/site.json');
-    state.data = await res.json();
+    if(window.siteData){
+      state.data = window.siteData;
+    }else{
+      const res = await fetch('./data/site.json?v=' + Date.now());
+      if(!res.ok) throw new Error('Не удалось загрузить data/site.json');
+      state.data = await res.json();
+    }
     const firstId = state.data.categories?.[0]?.id;
     if(firstId) state.expanded.add(firstId);
     render();
