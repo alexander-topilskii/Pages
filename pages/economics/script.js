@@ -52,10 +52,19 @@
       const rect = canvas.getBoundingClientRect();
       const W = rect.width - margin*2;
       const H = rect.height - margin*2;
+
+      // Определяем, является ли экран "маленьким"
+      const isSmallScreen = rect.width < 600; 
+      // На маленьких экранах применяем начальный 2x зум, на больших — нет
+      const zoomFactor = isSmallScreen ? 2 : 1;
+
       const w = worldBBox.maxX - worldBBox.minX;
       const h = worldBBox.maxY - worldBBox.minY;
-      const sx = W / w;
-      const sy = H / h;
+
+      // Применяем zoomFactor к вычислению масштаба
+      const sx = (W * zoomFactor) / w;
+      const sy = (H * zoomFactor) / h;
+
       const s = Math.min(sx, sy);
       fit.s = s;
       // ось Y — вверх (мировая), но на экране вниз, поэтому инвертируем при отрисовке
