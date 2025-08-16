@@ -1,30 +1,639 @@
 <!DOCTYPE html>
 <html lang="ru">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Карта идей об изобилии</title>
-  <link rel="stylesheet" href="style.css">
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Карта идей: реалистичность и оптимизм (Canvas, single-file)</title>
+    <style>
+        :root{
+          --bg:#0b0e14; --panel:#111622; --ink:#e7ebf3; --muted:#9aa7bd;
+          --accent:#6aa3ff; --grid:#273148; --axis:#c2cff3; --point:#77c0ff;
+          --tooltip-bg:#121826ee; --tooltip-border:#3a4a6b; --shadow:0 6px 18px rgba(0,0,0,.35);
+        }
+        *{box-sizing:border-box}
+        html,body{margin:0;padding:0;height:100%;background:var(--bg);color:var(--ink);
+          font:15px/1.5 system-ui,-apple-system,Segoe UI,Roboto,Ubuntu,Cantarell,Arial}
+        h1,h2{margin:0 0 .5rem} h1{font-size:clamp(1.25rem,1rem + 1.2vw,1.9rem)}
+        h2{font-size:clamp(1.05rem,.9rem + .8vw,1.3rem)}
+
+        .app-header{padding:14px clamp(12px,3vw,28px); border-bottom:1px solid #1b2334;
+          background:linear-gradient(180deg,#0b1020,#0b0e14); position:sticky; top:0; z-index:10}
+        .controls{display:flex; gap:16px; align-items:center; flex-wrap:wrap; margin-top:8px}
+        details summary{cursor:pointer; color:var(--muted)}
+        .json-panel{margin-top:10px; background:var(--panel); padding:10px; border-radius:10px;
+          box-shadow:var(--shadow); border:1px solid #1b2540}
+        .json-panel textarea{width:100%; min-height:180px; resize:vertical; background:#0d1323; color:var(--ink);
+          border:1px solid #1b2540; border-radius:10px; padding:10px; font-family:ui-monospace,Menlo,Consolas,monospace}
+        .json-actions{display:flex; gap:10px; align-items:center; flex-wrap:wrap; margin-top:8px}
+        .json-actions .hint{color:var(--muted); font-size:.9em}
+        .file-inline{display:inline-flex; align-items:center; gap:8px; cursor:pointer; color:var(--ink)}
+        .file-inline input{display:none}
+        .file-inline span{background:#13203a; border:1px solid #233255; padding:6px 10px; border-radius:10px}
+
+        .zoombar{margin-left:auto; display:flex; gap:8px}
+        .zoombar button{background:#13203a; color:var(--ink); border:1px solid #233255;
+          border-radius:10px; padding:8px 10px; cursor:pointer}
+        .zoombar button:hover{background:#18294c}
+
+        .chart-wrap{padding:14px clamp(12px,3vw,28px)}
+        .chart-container{width:100%; height:min(72vh,680px); position:relative; overflow:hidden;
+          background:radial-gradient(1200px 600px at 10% -20%, #0f1630 0%, #0b0e14 60%);
+          border:1px solid #1b2540; border-radius:16px; box-shadow:var(--shadow)}
+        canvas#chartCanvas{width:100%; height:100%; display:block; touch-action:none}
+
+        .legend{color:var(--muted); margin-top:8px; display:flex; gap:20px; flex-wrap:wrap}
+        .legend .dot{display:inline-block; width:10px; height:10px; background:var(--point); border-radius:50%; margin-right:6px}
+
+        .tooltip{position:absolute; pointer-events:none; background:var(--tooltip-bg); color:var(--ink);
+          border:1px solid var(--tooltip-border); border-radius:12px; padding:10px 12px; max-width:min(380px,86vw);
+          font-size:.95rem; box-shadow:var(--shadow)}
+        .tooltip a{color:var(--accent); text-decoration:none} .tooltip a:hover{text-decoration:underline}
+
+        .below-grid{display:grid; gap:20px; grid-template-columns:1fr 1fr;
+          padding:6px clamp(12px,3vw,28px) 28px}
+        .col{background:var(--panel); border:1px solid #1b2540; border-radius:14px; padding:14px; box-shadow:var(--shadow)}
+        .selected-card{ background:#101628; border:1px solid #233255; border-radius:12px; padding:12px; margin-bottom:12px }
+        .selected-card h3{ margin:.2rem 0 .4rem; font-size:1.05rem }
+        .selected-card .row{ color:var(--muted); margin:.15rem 0 }
+        .notes{ margin:10px 0 0 18px } .notes li{ margin:6px 0; color:var(--ink) }
+
+        .comment-view{ white-space:pre-wrap; background:#0d1323; color:var(--ink); border:1px solid #1b2540; border-radius:10px; padding:10px; margin-top:6px }
+
+        .resources{ margin:10px 0 0 18px } .resources li{ margin:6px 0 }
+        .resources a{ color:var(--accent); text-decoration:none } .resources a:hover{ text-decoration:underline }
+
+        .app-footer{padding:14px clamp(12px,3vw,28px); color:var(--muted); border-top:1px solid #1b2334}
+
+        @media (max-width:900px){ .below-grid{grid-template-columns:1fr} .legend{flex-direction:column} }
+        button{transition:transform .06s ease} button:active{transform:translateY(1px)}
+        button:focus-visible{outline:2px solid var(--accent); outline-offset:2px}
+    </style>
 </head>
 <body>
-  <h1 id="title"></h1>
-  <p id="description"></p>
-  <div id="chart-container">
-    <canvas id="chart"></canvas>
-  </div>
-  <div id="info-panels">
-    <div id="notes-panel">
-      <h2>Notes</h2>
-      <ul id="notes"></ul>
-      <h2>Комментарий</h2>
-      <textarea id="comment" placeholder="Ваш комментарий..."></textarea>
+<header class="app-header">
+    <h1 id="pageTitle">Карта идей: реалистичность и оптимизм (Canvas)</h1>
+    <div class="controls">
+        <details>
+            <summary>Загрузить/править JSON</summary>
+            <div class="json-panel">
+                <textarea id="jsonInput" spellcheck="false"></textarea>
+                <div class="json-actions">
+                    <button id="btnLoad">Загрузить JSON из textarea</button>
+                    <button id="btnExport">Скачать текущий JSON</button>
+                    <label class="file-inline">
+                        <input type="file" id="fileInput" accept="application/json" />
+                        <span>Загрузить из файла…</span>
+                    </label>
+                    <span class="hint">Структура: <code>title, axes, notes, comment, points[]</code>. В точке: <code>title, x, y, size, year, type, url, description, key_takeaways[]</code>.</span>
+                </div>
+            </div>
+        </details>
+        <div class="zoombar">
+            <button id="btnZoomIn" aria-label="Приблизить">＋</button>
+            <button id="btnZoomOut" aria-label="Отдалить">－</button>
+            <button id="btnReset" aria-label="Сброс масштаба">⟲</button>
+        </div>
     </div>
-    <div id="resources-panel">
-      <h2>Ресурсы</h2>
-      <ul id="resources"></ul>
-    </div>
-  </div>
-  <div id="tooltip" class="hidden"></div>
-  <script src="script.js"></script>
+</header>
+
+<main>
+    <section class="chart-wrap">
+        <div class="chart-container" id="chartContainer" aria-label="Диаграмма (Canvas)">
+            <canvas id="chartCanvas"></canvas>
+            <div id="tooltip" class="tooltip" hidden></div>
+        </div>
+        <div class="legend">
+            <div><span class="dot"></span> Точка = работа. Радиус фиксированный, <b>яркость</b> обводки = <code>size</code> (влияние).</div>
+            <div>Колёсико/пинч — масштаб, перетаскивание — панорама, <b>клик</b> — карточка слева.</div>
+        </div>
+    </section>
+
+    <section class="below-grid">
+        <div class="col col-notes">
+            <div id="selectedCard" class="selected-card" hidden></div>
+
+            <h2>Notes</h2>
+            <ul id="notesList" class="notes"></ul>
+
+            <h2>Comment</h2>
+            <div id="commentView" class="comment-view" aria-live="polite"></div>
+        </div>
+
+        <div class="col col-resources">
+            <h2>Resources</h2>
+            <ol id="resourcesList" class="resources"></ol>
+        </div>
+    </section>
+</main>
+
+<footer class="app-footer">
+    <small>Единственный Canvas. Для локального запуска откройте файл через простой http-сервер (из-за fetch-политики браузера) или работайте через панель JSON.</small>
+</footer>
+
+<!-- Встроенный JSON по умолчанию -->
+<script id="embedded-data" type="application/json">{
+    "title": "Карта идей: реалистичность и оптимизм пост-товарных сценариев",
+    "axes": {
+        "x": {"label": "Время / Достижимость"},
+        "y": {"label": "Оптимизм (вверх — возможно, вниз — невозможно)"},
+        "bubble": {"label":"Влияние (size)"}
+    },
+    "notes": [
+        "Координаты — экспертные оценки.",
+        "Яркость круга = условное влияние (size).",
+        "Клик/hover по точке — детали."
+    ],
+    "comment": "Этот набор собирает как оптимистичные, так и критические позиции. Сфокусируйтесь на сравнении аргументов и методологий.",
+    "points": [
+        {
+            "title":"The Conquest of Bread (Kropotkin, 1892)","x":-100,"y":6,"size":7,"year":1892,"type":"книга",
+            "url":"https://en.wikipedia.org/wiki/The_Conquest_of_Bread",
+            "description":"Ранняя формулировка идеи изобилия.",
+            "key_takeaways":["Кооперация и взаимопомощь как основа изобилия","Сокращение принудительного труда до минимума"]
+        },
+        {
+            "title":"The Abolition of Work (Black, 1985)","x":-30,"y":7,"size":5,"year":1985,"type":"эссе",
+            "url":"https://en.wikipedia.org/wiki/The_Abolition_of_Work",
+            "description":"Манифест против принудительного труда.",
+            "key_takeaways":["Разделение труда отчуждает","Игра и творчество как альтернатива работе"]
+        },
+        {
+            "title":"Towards a New Socialism (Cockshott & Cottrell, 1993)","x":-10,"y":8,"size":8,"year":1993,"type":"книга",
+            "url":"https://www.towardsanewsocialism.com",
+            "description":"IT-планирование, логистика, реализуемость.",
+            "key_takeaways":["Компьютерное планирование возможно","Логистические цепочки можно оптимизировать без рынка"]
+        },
+        {
+            "title":"Envisioning Real Utopias (Wright, 2010)","x":0,"y":5,"size":8,"year":2010,"type":"книга",
+            "url":"https://en.wikipedia.org/wiki/Erik_Olin_Wright",
+            "description":"Реалистичные утопии: кооперативы, муниципальные решения.",
+            "key_takeaways":["Пошаговые институциональные изменения","Кооперативы и муниципальные решения работают"]
+        },
+        {
+            "title":"Seventeen Contradictions (Harvey, 2014)","x":0,"y":-6,"size":7,"year":2014,"type":"книга",
+            "url":"https://en.wikipedia.org/wiki/David_Harvey",
+            "description":"Критика пост-дефицита.",
+            "key_takeaways":["Капитал воспроизводит дефицит","Технологии не решают распределение"]
+        }
+    ]
+}</script>
+
+<script>
+    /* ======================= State & DOM refs ======================= */
+    let data = null;
+    const canvas = document.getElementById('chartCanvas');
+    const container = document.getElementById('chartContainer');
+    const tooltip = document.getElementById('tooltip');
+
+    const jsonInput = document.getElementById('jsonInput');
+    const btnLoad = document.getElementById('btnLoad');
+    const btnExport = document.getElementById('btnExport');
+    const fileInput = document.getElementById('fileInput');
+
+    const notesList = document.getElementById('notesList');
+    const resourcesList = document.getElementById('resourcesList');
+    const commentView = document.getElementById('commentView');
+    const selectedCard = document.getElementById('selectedCard');
+
+    const btnZoomIn = document.getElementById('btnZoomIn');
+    const btnZoomOut = document.getElementById('btnZoomOut');
+    const btnReset = document.getElementById('btnReset');
+
+    /* =================== Canvas sizing & transforms ================== */
+    const ctx = canvas.getContext('2d');
+    let worldBBox = {minX:-10,maxX:10,minY:-10,maxY:10};
+    const margin = 28; // внутренний отступ в px (экранных)
+    let fit = { s:1, tx:0, ty:0 };   // world -> screen (авто)
+    let user = { s:1, tx:0, ty:0 };  // screen -> screen (пан/зум)
+    const R_WORLD = 6;               // фиксированный радиус (в мировых единицах)
+
+    /* ============================= Utils ============================= */
+    function safe(s){ return String(s ?? '').replace(/[<>&]/g, m => ({'<':'&lt;','>':'&gt;','&':'&amp;'}[m])) }
+    function niceTick(raw){
+      const pow10 = Math.pow(10, Math.floor(Math.log10(raw || 1)));
+      const n = raw / pow10;
+      let step = n < 1.5 ? 1 : n < 3 ? 2 : n < 7 ? 5 : 10;
+      return step * pow10;
+    }
+    function getWorldBBox(points){
+      const xs = points.map(p=>p.x), ys = points.map(p=>p.y);
+      let minX = Math.min(...xs), maxX = Math.max(...xs);
+      let minY = Math.min(...ys), maxY = Math.max(...ys);
+      const padX = (maxX - minX) * 0.1 || 10;
+      const padY = (maxY - minY) * 0.1 || 10;
+      return { minX:minX-padX, maxX:maxX+padX, minY:minY-padY, maxY:maxY+padY };
+    }
+    function intensityFromSize(size){ // -> [0.35, 1] (альфа яркости)
+      const s = Math.max(1, Math.min(10, size || 5));
+      return 0.35 + (s - 1) * (0.65 / 9);
+    }
+
+    /* ===== World<->Screen (с учётом авто-fit и пользовательского зума) ===== */
+    function computeFit(){
+      const rect = canvas.getBoundingClientRect();
+      const W = rect.width - margin*2;
+      const H = rect.height - margin*2;
+      const w = worldBBox.maxX - worldBBox.minX;
+      const h = worldBBox.maxY - worldBBox.minY;
+      const sx = W / w;
+      const sy = H / h;
+      const s = Math.min(sx, sy);
+      fit.s = s;
+      // ось Y — вверх (мировая), но на экране вниз, поэтому инвертируем при отрисовке
+      fit.tx = margin + (W - s*w)/2 - s*worldBBox.minX;
+      fit.ty = rect.height - margin - (H - s*h)/2 + s*worldBBox.minY;
+      // сброс пользовательского зума
+      user = { s:1, tx:0, ty:0 };
+    }
+    function worldToScreen(x, y){
+      // сначала авто-fit (с инверсией Y), затем пользовательский зум/пан
+      let X = fit.s * x + fit.tx;
+      let Y = -fit.s * y + fit.ty;
+      X = user.s * X + user.tx;
+      Y = user.s * Y + user.ty;
+      return [X, Y];
+    }
+    function screenToWorld(Xs, Ys){
+      // обратное преобразование для хитов/подписей
+      let X = (Xs - user.tx) / user.s;
+      let Y = (Ys - user.ty) / user.s;
+      const x = (X - fit.tx) / fit.s;
+      const y = - (Y - fit.ty) / fit.s;
+      return [x, y];
+    }
+
+    /* ============================= Drawing ============================ */
+    function setCanvasSize(){
+      const dpr = Math.max(1, window.devicePixelRatio || 1);
+      const rect = container.getBoundingClientRect();
+      canvas.width = Math.round(rect.width * dpr);
+      canvas.height = Math.round(rect.height * dpr);
+      canvas.style.width = rect.width + 'px';
+      canvas.style.height = rect.height + 'px';
+      ctx.setTransform(1,0,0,1,0,0);
+      ctx.scale(dpr, dpr);
+    }
+    function drawGridAxes(){
+      const rect = canvas.getBoundingClientRect();
+      // фон
+      ctx.fillStyle = '#0b0e14';
+      ctx.fillRect(0,0,rect.width,rect.height);
+
+      // сетка
+      ctx.strokeStyle = getComputedStyle(document.documentElement).getPropertyValue('--grid').trim() || '#273148';
+      ctx.lineWidth = 1;
+      ctx.beginPath();
+      const xStep = niceTick((worldBBox.maxX - worldBBox.minX)/10);
+      const yStep = niceTick((worldBBox.maxY - worldBBox.minY)/8);
+
+      for(let x = Math.ceil(worldBBox.minX / xStep)*xStep; x <= worldBBox.maxX; x += xStep){
+        const [x1,y1] = worldToScreen(x, worldBBox.minY);
+        const [x2,y2] = worldToScreen(x, worldBBox.maxY);
+        ctx.moveTo(x1,y1); ctx.lineTo(x2,y2);
+      }
+      for(let y = Math.ceil(worldBBox.minY / yStep)*yStep; y <= worldBBox.maxY; y += yStep){
+        const [x1,y1] = worldToScreen(worldBBox.minX, y);
+        const [x2,y2] = worldToScreen(worldBBox.maxX, y);
+        ctx.moveTo(x1,y1); ctx.lineTo(x2,y2);
+      }
+      ctx.stroke();
+
+      // оси X=0 и Y=0
+      ctx.strokeStyle = getComputedStyle(document.documentElement).getPropertyValue('--axis').trim() || '#c2cff3';
+      ctx.lineWidth = 1.4;
+      ctx.beginPath();
+      let [ax1,ay1] = worldToScreen(worldBBox.minX, 0);
+      let [ax2,ay2] = worldToScreen(worldBBox.maxX, 0);
+      ctx.moveTo(ax1,ay1); ctx.lineTo(ax2,ay2);
+      [ax1,ay1] = worldToScreen(0, worldBBox.minY);
+      [ax2,ay2] = worldToScreen(0, worldBBox.maxY);
+      ctx.moveTo(ax1,ay1); ctx.lineTo(ax2,ay2);
+      ctx.stroke();
+
+      // подписи тиков (крупные)
+      ctx.fillStyle = getComputedStyle(document.documentElement).getPropertyValue('--muted').trim() || '#9aa7bd';
+      ctx.font = '11px system-ui, sans-serif';
+      for(let x = Math.ceil(worldBBox.minX / xStep)*xStep; x <= worldBBox.maxX; x += xStep){
+        const [sx, sy] = worldToScreen(x, 0);
+        ctx.fillText(String(x), sx+4, sy-4);
+      }
+      for(let y = Math.ceil(worldBBox.minY / yStep)*yStep; y <= worldBBox.maxY; y += yStep){
+        const [sx, sy] = worldToScreen(0, y);
+        ctx.fillText(String(y), sx+4, sy-4);
+      }
+
+      // подписи осей
+      ctx.fillStyle = getComputedStyle(document.documentElement).getPropertyValue('--ink').trim() || '#e7ebf3';
+      ctx.font = '12px system-ui, sans-serif';
+      const xLabel = data.axes?.x?.label || 'X';
+      const yLabel = data.axes?.y?.label || 'Y';
+      const [xEnd, yZero] = worldToScreen(worldBBox.maxX, 0);
+      ctx.fillText(xLabel, xEnd - 40, yZero + 18);
+      const [xZero, yTop] = worldToScreen(0, worldBBox.maxY);
+      ctx.save();
+      ctx.translate(xZero - 28, yTop + 8);
+      ctx.rotate(-Math.PI/2);
+      ctx.fillText(yLabel, 0, 0);
+      ctx.restore();
+    }
+    function drawPoints(){
+      const R = R_WORLD * fit.s * user.s; // экранный радиус
+      const stroke = getComputedStyle(document.documentElement).getPropertyValue('--point').trim() || '#77c0ff';
+      const ink = getComputedStyle(document.documentElement).getPropertyValue('--ink').trim() || '#e7ebf3';
+      const outline = '#0b0e14';
+
+      for(const p of (data.points || [])){
+        const [sx, sy] = worldToScreen(p.x, p.y);
+        const alpha = intensityFromSize(p.size);
+
+        // круг
+        ctx.save();
+        ctx.globalAlpha = alpha;
+        ctx.strokeStyle = stroke;
+        ctx.lineWidth = 2;
+        ctx.beginPath();
+        ctx.arc(sx, sy, Math.max(2, Math.abs(R)), 0, Math.PI*2);
+        ctx.stroke();
+        ctx.restore();
+
+        // заголовок
+        ctx.font = '12px system-ui, sans-serif';
+        ctx.lineWidth = 3;
+        ctx.strokeStyle = outline;
+        ctx.fillStyle = ink;
+        const dx = Math.max(2, Math.abs(R)) + 4;
+        const dy = Math.max(2, Math.abs(R)) + 4;
+        ctx.strokeText(p.title, sx + dx, sy - dy);
+        ctx.fillText(p.title, sx + dx, sy - dy);
+      }
+    }
+    function render(){
+      setCanvasSize();
+      drawGridAxes();
+      drawPoints();
+    }
+
+    /* ============================ Tooltip ============================ */
+    function tooltipHTML(p){
+      return `
+        <div style="font-weight:600; margin-bottom:4px;">${safe(p.title)}</div>
+        ${p.year ? `<div><strong>Год:</strong> ${safe(p.year)}</div>` : ``}
+        ${p.type ? `<div><strong>Тип:</strong> ${safe(p.type)}</div>` : ``}
+        <div><strong>X:</strong> ${p.x}, <strong>Y:</strong> ${p.y}</div>
+        ${p.description ? `<div style="margin-top:6px">${safe(p.description)}</div>` : ``}
+        ${Array.isArray(p.key_takeaways)&&p.key_takeaways.length
+            ? `<div style="margin-top:6px"><strong>Ключевые выводы:</strong><ul>${p.key_takeaways.map(k=>`<li>${safe(k)}</li>`).join('')}</ul></div>` : ``}
+        ${p.url ? `<div style="margin-top:6px"><a href="${p.url}" target="_blank" rel="noopener">Открыть ресурс ↗</a></div>` : ``}
+      `;
+    }
+    let tooltipFixed = false;
+    let hoverPoint = null;
+
+    function moveTooltipTo(clientX, clientY){
+      const c = container.getBoundingClientRect();
+      const pad = 12;
+      const tw = tooltip.offsetWidth || 260;
+      const th = tooltip.offsetHeight || 120;
+      let x = clientX - c.left + 14;
+      let y = clientY - c.top + 14;
+      if(x + tw + pad > c.width) x = c.width - tw - pad;
+      if(y + th + pad > c.height) y = c.height - th - pad;
+      tooltip.style.left = x + 'px';
+      tooltip.style.top = y + 'px';
+    }
+    function showTooltip(p, clientX, clientY){
+      if(tooltipFixed) return;
+      tooltip.innerHTML = tooltipHTML(p);
+      tooltip.hidden = false;
+      moveTooltipTo(clientX, clientY);
+    }
+    function hideTooltip(){
+      if(tooltipFixed) return;
+      tooltip.hidden = true;
+    }
+
+    /* ====================== Hit-testing for points ===================== */
+    function pointAt(clientX, clientY){
+      // screen coords relative to canvas CSS pixels
+      const rect = canvas.getBoundingClientRect();
+      const sx = clientX - rect.left;
+      const sy = clientY - rect.top;
+
+      // экранный радиус
+      const R = Math.max(6, Math.abs(R_WORLD * fit.s * user.s));
+      // проверяем по расстоянию в экранных координатах
+      for(const p of (data.points || []).slice().reverse()){ // top-most при равенстве — последний
+        const [px, py] = worldToScreen(p.x, p.y);
+        const dx = sx - px, dy = sy - py;
+        if (dx*dx + dy*dy <= (R+4)*(R+4)) return p;
+      }
+      return null;
+    }
+
+    /* ========================= Pan & Zoom handlers ========================= */
+    let isDragging = false;
+    let last = {x:0, y:0};
+
+    canvas.addEventListener('mousedown', e => { isDragging = true; last = {x:e.clientX, y:e.clientY}; });
+    window.addEventListener('mouseup',   () => { isDragging = false; });
+    window.addEventListener('mousemove', e => {
+      if(isDragging){
+        const dx = e.clientX - last.x;
+        const dy = e.clientY - last.y;
+        last = {x:e.clientX, y:e.clientY};
+        user.tx += dx;
+        user.ty += dy;
+        render();
+      } else {
+        const p = pointAt(e.clientX, e.clientY);
+        hoverPoint = p;
+        if(p) showTooltip(p, e.clientX, e.clientY); else hideTooltip();
+      }
+    });
+
+    // Zoom with wheel
+    canvas.addEventListener('wheel', e => {
+      e.preventDefault();
+      const factor = Math.pow(1.15, -Math.sign(e.deltaY)); // шаг ~15%
+      const rect = canvas.getBoundingClientRect();
+      const mx = e.clientX - rect.left;
+      const my = e.clientY - rect.top;
+
+      const prevS = user.s;
+      const newS = Math.max(0.2, Math.min(8, prevS * factor));
+      const k = newS / prevS;
+
+      // зум вокруг точки (mx,my)
+      user.tx = mx - k*(mx - user.tx);
+      user.ty = my - k*(my - user.ty);
+      user.s = newS;
+
+      render();
+    },{passive:false});
+
+    // Touch: drag & pinch
+    let touchState = { mode:null, p1:null, p2:null, startDist:0, startS:1, startTx:0, startTy:0 };
+    canvas.addEventListener('touchstart', e => {
+      if(e.touches.length === 1){
+        touchState.mode = 'drag';
+        touchState.p1 = { x:e.touches[0].clientX, y:e.touches[0].clientY };
+      } else if(e.touches.length === 2){
+        touchState.mode = 'pinch';
+        touchState.p1 = { x:e.touches[0].clientX, y:e.touches[0].clientY };
+        touchState.p2 = { x:e.touches[1].clientX, y:e.touches[1].clientY };
+        touchState.startDist = Math.hypot(touchState.p1.x - touchState.p2.x, touchState.p1.y - touchState.p2.y);
+        touchState.startS = user.s;
+        touchState.startTx = user.tx;
+        touchState.startTy = user.ty;
+      }
+    }, {passive:true});
+    canvas.addEventListener('touchmove', e => {
+      if(touchState.mode === 'drag' && e.touches.length === 1){
+        const p = { x:e.touches[0].clientX, y:e.touches[0].clientY };
+        const dx = p.x - touchState.p1.x;
+        const dy = p.y - touchState.p1.y;
+        touchState.p1 = p;
+        user.tx += dx; user.ty += dy;
+        render();
+      } else if(touchState.mode === 'pinch' && e.touches.length === 2){
+        const p1 = { x:e.touches[0].clientX, y:e.touches[0].clientY };
+        const p2 = { x:e.touches[1].clientX, y:e.touches[1].clientY };
+        const newDist = Math.hypot(p1.x - p2.x, p1.y - p2.y);
+        const scale = newDist / (touchState.startDist || newDist);
+        user.s = Math.max(0.2, Math.min(8, touchState.startS * scale));
+        user.tx = touchState.startTx;
+        user.ty = touchState.startTy;
+        render();
+      }
+    },{passive:true});
+    window.addEventListener('touchend', ()=> { touchState.mode = null; }, {passive:true});
+
+    // Buttons
+    btnZoomIn.addEventListener('click', ()=> zoomBy(1.2));
+    btnZoomOut.addEventListener('click', ()=> zoomBy(1/1.2));
+    btnReset.addEventListener('click', ()=> { computeFit(); render(); });
+    function zoomBy(factor){
+      const rect = canvas.getBoundingClientRect();
+      const mx = rect.width/2, my = rect.height/2;
+      const prevS = user.s;
+      const newS = Math.max(0.2, Math.min(8, prevS * factor));
+      const k = newS / prevS;
+      user.tx = mx - k*(mx - user.tx);
+      user.ty = my - k*(my - user.ty);
+      user.s = newS;
+      render();
+    }
+
+    /* =========================== Click select =========================== */
+    canvas.addEventListener('click', e => {
+      const p = pointAt(e.clientX, e.clientY);
+      if(!p){ tooltipFixed = false; hideTooltip(); selectedCard.hidden = true; selectedCard.innerHTML = ''; return; }
+      tooltipFixed = true;
+      tooltip.innerHTML = tooltipHTML(p);
+      tooltip.hidden = false;
+      moveTooltipTo(e.clientX, e.clientY);
+      renderSelection(p);
+    });
+    function renderSelection(p){
+      selectedCard.hidden = false;
+      selectedCard.innerHTML = `
+        <h2>Selected</h2>
+        <h3>${safe(p.title)}</h3>
+        ${p.year?`<div class="row"><strong>Год:</strong> ${safe(p.year)}</div>`:''}
+        ${p.type?`<div class="row"><strong>Тип:</strong> ${safe(p.type)}</div>`:''}
+        ${p.description?`<div class="row">${safe(p.description)}</div>`:''}
+        ${Array.isArray(p.key_takeaways)&&p.key_takeaways.length?`<div class="row"><strong>Ключевые выводы:</strong><ul>${p.key_takeaways.map(k=>`<li>${safe(k)}</li>`).join('')}</ul></div>`:''}
+        ${p.url?`<div class="row"><a href="${p.url}" target="_blank" rel="noopener">Открыть ресурс ↗</a></div>`:''}
+      `;
+    }
+
+    /* =================== Notes / Comment / Resources =================== */
+    function renderNotesAndResources(){
+      // Notes
+      notesList.innerHTML = '';
+      (data.notes || []).forEach(n => {
+        const li = document.createElement('li');
+        li.textContent = n;
+        notesList.appendChild(li);
+      });
+
+      // Comment (нередактируемый)
+      commentView.textContent = data.comment || '';
+
+      // Resources (уникальные URL)
+      resourcesList.innerHTML = '';
+      const items = [];
+      (data.points || []).forEach(p => { if(p.url) items.push({title:p.title, url:p.url, type:p.type, year:p.year}); });
+      const uniq = Object.values(items.reduce((acc, it) => (acc[it.url] ??= it, acc), {}));
+      uniq.sort((a,b) => (a.title||'').localeCompare(b.title||''));
+      uniq.forEach(it => {
+        const li = document.createElement('li');
+        const a = document.createElement('a');
+        a.href = it.url; a.target = '_blank'; a.rel = 'noopener';
+        a.textContent = it.title + (it.year?` (${it.year})`:``) + (it.type?` — ${it.type}`:``);
+        li.appendChild(a);
+        resourcesList.appendChild(li);
+      });
+    }
+
+    /* ======================= Load / Export JSON ======================= */
+    btnLoad.addEventListener('click', () => {
+      try{
+        const parsed = JSON.parse(jsonInput.value);
+        if(!Array.isArray(parsed.points)) throw new Error('В JSON отсутствует массив points');
+        data = parsed;
+        applyData();
+      }catch(err){
+        alert('Ошибка разбора JSON: ' + err.message);
+      }
+    });
+    btnExport.addEventListener('click', () => {
+      try{
+        const blob = new Blob([JSON.stringify(data, null, 2)], {type:'application/json'});
+        const url = URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.href = url; a.download = 'ideas-map.json';
+        document.body.appendChild(a); a.click(); a.remove();
+        URL.revokeObjectURL(url);
+      }catch(err){
+        alert('Не удалось сформировать файл: ' + err.message);
+      }
+    });
+    fileInput.addEventListener('change', e => {
+      const f = e.target.files?.[0];
+      if(!f) return;
+      const reader = new FileReader();
+      reader.onload = () => {
+        try{
+          const parsed = JSON.parse(reader.result);
+          if(!Array.isArray(parsed.points)) throw new Error('В JSON отсутствует массив points');
+          data = parsed; jsonInput.value = JSON.stringify(data, null, 2);
+          applyData();
+        }catch(err){ alert('Ошибка разбора файла: ' + err.message); }
+      };
+      reader.readAsText(f);
+    });
+
+    /* ======================== Apply & Init ======================== */
+    function applyData(){
+      document.getElementById('pageTitle').textContent = data.title || 'Карта';
+      worldBBox = getWorldBBox(data.points || [{x:0,y:0}]);
+      computeFit();
+      renderNotesAndResources();
+      render();
+      tooltipFixed = false; hideTooltip(); selectedCard.hidden = true; selectedCard.innerHTML = '';
+    }
+    function init(){
+      try{
+        data = JSON.parse(document.getElementById('embedded-data').textContent);
+      }catch(e){
+        data = { title:'Карта', points:[] };
+      }
+      jsonInput.value = JSON.stringify(data, null, 2);
+      applyData();
+    }
+    window.addEventListener('resize', () => { computeFit(); render(); });
+    init();
+</script>
 </body>
 </html>
