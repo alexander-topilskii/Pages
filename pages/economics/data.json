@@ -14,6 +14,10 @@
       "label": "Влияние (size)",
       "scale_hint": "1 (низкое влияние) … 10 (высокое влияние)",
       "notes": "Оценка ориентировочная: совмещает академические цитирования, общественную известность и влияние на практику."
+    },
+    "shape": {
+      "label": "Подход к изменениям",
+      "scale_hint": "Круг (реформа), Прямоугольник (трансформация), Треугольник (революция)"
     }
   },
   "points": [
@@ -44,7 +48,8 @@
             "url": "https://libcom.org/article/demanding-impossible-history-anarchism-peter-marshall"
           }
         ]
-      }
+      },
+      "shape": "triangle"
     },
     {
       "title": "Боб Блэк — The Abolition of Work (1985)",
@@ -73,11 +78,12 @@
             "url": "https://en.wikipedia.org/wiki/Richard_Sennett"
           }
         ]
-      }
+      },
+      "shape": "triangle"
     },
     {
       "title": "Пол Кокшотт, Аллин Котрелл — Towards a New Socialism (1993/обновл.)",
-      "x": -10,
+      "x": -8,
       "y": 8,
       "size": 80,
       "year": 1993,
@@ -102,11 +108,12 @@
             "url": "https://www.economist.com/finance-and-economics/2020/02/20/planning-versus-markets"
           }
         ]
-      }
+      },
+      "shape": "rectangle"
     },
     {
       "title": "Эрик Олин Райт — Envisioning Real Utopias (2010)",
-      "x": 0,
+      "x": 2,
       "y": 5,
       "size": 80,
       "year": 2010,
@@ -131,11 +138,12 @@
             "url": "https://www.versobooks.com/en/books/2342-inventing-the-future"
           }
         ]
-      }
+      },
+      "shape": "circle"
     },
     {
       "title": "Ник Срничек, Алекс Уильямс — Inventing the Future (2015)",
-      "x": 15,
+      "x": 10,
       "y": 7,
       "size": 70,
       "year": 2015,
@@ -164,7 +172,8 @@
             "url": "https://theanarchistlibrary.org/library/murray-bookchin-post-scarcity-anarchism"
           }
         ]
-      }
+      },
+      "shape": "rectangle"
     },
     {
       "title": "Аарон Бастани — Fully Automated Luxury Communism (2019)",
@@ -197,11 +206,12 @@
             "url": "https://degrowth.org/2019/09/20/degrowth-and-the-critique-of-luxury-communism/"
           }
         ]
-      }
+      },
+      "shape": "triangle"
     },
     {
       "title": "Филипп ван Пэрайс, Ян Вандерборгт — Basic Income (2017)",
-      "x": 0,
+      "x": 7,
       "y": 4,
       "size": 80,
       "year": 2017,
@@ -230,11 +240,12 @@
             "url": "https://www.economist.com/finance-and-economics/2016/06/04/youre-on-your-own"
           }
         ]
-      }
+      },
+      "shape": "circle"
     },
     {
       "title": "Гай Стэндинг — Basic Income: And How We Can Make It Happen (2017)",
-      "x": 0,
+      "x": 5,
       "y": 5,
       "size": 70,
       "year": 2017,
@@ -259,11 +270,12 @@
             "url": "https://www.economist.com/finance-and-economics/2016/06/04/youre-on-your-own"
           }
         ]
-      }
+      },
+      "shape": "circle"
     },
     {
       "title": "Мариана Маццукато — The Value of Everything (2018)",
-      "x": 0,
+      "x": -3,
       "y": 3,
       "size": 80,
       "year": 2018,
@@ -288,12 +300,13 @@
             "url": "https://www.ft.com/content/ea2a37ea-4788-11e8-8ee8-cae73aab7ccb"
           }
         ]
-      }
+      },
+      "shape": "circle"
     },
     {
       "title": "Дэвид Харви — Seventeen Contradictions and the End of Capitalism (2014)",
-      "x": 0,
-      "y": -6,
+      "x": -5,
+      "y": -4,
       "size": 70,
       "year": 2014,
       "type": "книга",
@@ -317,11 +330,12 @@
             "url": "https://www.versobooks.com/en/books/2342-inventing-the-future"
           }
         ]
-      }
+      },
+      "shape": "rectangle"
     },
     {
       "title": "Джейсон Хикель — Less is More (2020)",
-      "x": 10,
+      "x": 8,
       "y": -8,
       "size": 80,
       "year": 2020,
@@ -350,11 +364,12 @@
             "url": "https://www.versobooks.com/en/books/2342-inventing-the-future"
           }
         ]
-      }
+      },
+      "shape": "rectangle"
     },
     {
       "title": "Вацлав Смил — Growth (2019)",
-      "x": 5,
+      "x": -2,
       "y": -7,
       "size": 90,
       "year": 2019,
@@ -383,11 +398,12 @@
             "url": "https://www.versobooks.com/en/books/2342-inventing-the-future"
           }
         ]
-      }
+      },
+      "shape": "circle"
     },
     {
       "title": "Ник Срничек — Platform Capitalism (2017)",
-      "x": 0,
+      "x": -4,
       "y": -5,
       "size": 70,
       "year": 2017,
@@ -412,11 +428,12 @@
             "url": "https://www.technologyreview.com/2018/09/12/240325/how-platforms-are-reshaping-economy/"
           }
         ]
-      }
+      },
+      "shape": "rectangle"
     },
     {
       "title": "OECD — Basic Income as a Policy Option (2017)",
-      "x": 0,
+      "x": 2,
       "y": 2,
       "size": 90,
       "year": 2017,
@@ -441,7 +458,8 @@
             "url": "https://www.penguin.co.uk/books/441138/basic-income-by-guy-standing/9780141985480"
           }
         ]
-      }
+      },
+      "shape": "circle"
     },
     {
       "title": "FAO/WFP — SOFI (State of Food Security) 2024",
@@ -470,7 +488,8 @@
             "url": "https://www.jasonhickel.org/less-is-more"
           }
         ]
-      }
+      },
+      "shape": "circle"
     },
     {
       "title": "ILO — Working Time and Work–Life Balance Around the World (2023)",
@@ -499,11 +518,12 @@
             "url": "https://www.peri.umass.edu/economists/robert-pollin"
           }
         ]
-      }
+      },
+      "shape": "circle"
     },
     {
       "title": "Роберт Поллин — Green New Deal (2018–2023)",
-      "x": 5,
+      "x": 6,
       "y": -4,
       "size": 70,
       "year": 2021,
@@ -532,11 +552,12 @@
             "url": "https://en.wikipedia.org/wiki/Fully_Automated_Luxury_Communism"
           }
         ]
-      }
+      },
+      "shape": "circle"
     },
     {
       "title": "Van Parijs & Vanderborght — Basic Income (1990s–2010s статьи)",
-      "x": -5,
+      "x": -6,
       "y": 4,
       "size": 70,
       "year": 2000,
@@ -561,11 +582,12 @@
             "url": "https://www.tandfonline.com/doi/abs/10.1080/135048597355406"
           }
         ]
-      }
+      },
+      "shape": "circle"
     },
     {
       "title": "Kate Raworth — Doughnut Economics (2017)",
-      "x": 0,
+      "x": 3,
       "y": 2,
       "size": 80,
       "year": 2017,
@@ -594,11 +616,12 @@
             "url": "https://monthlyreview.org/author/johnbellamyfoster/"
           }
         ]
-      }
+      },
+      "shape": "circle"
     },
     {
       "title": "Srnicek & Williams — Inventing the Future (лекции/статьи)",
-      "x": 10,
+      "x": 8,
       "y": 6,
       "size": 60,
       "year": 2016,
@@ -623,7 +646,8 @@
             "url": "https://en.wikipedia.org/wiki/Vaclav_Smil"
           }
         ]
-      }
+      },
+      "shape": "rectangle"
     },
     {
       "title": "KELA — Finland Basic Income Experiment (2017–2018)",
@@ -646,7 +670,8 @@
             "url": "https://global.oup.com/academic/product/basic-income-9780674986917"
           }
         ]
-      }
+      },
+      "shape": "circle"
     },
     {
       "title": "4 Day Week UK Pilot (2022–2023) — итоговый отчёт",
@@ -669,7 +694,8 @@
             "url": "https://www.ft.com/content/7c97ff38-6c6d-11e9-9ff9-8c855179f1c4"
           }
         ]
-      }
+      },
+      "shape": "circle"
     },
     {
       "title": "Project Cybersyn — Chile (1971–1973)",
@@ -692,7 +718,8 @@
             "url": "https://en.wikipedia.org/wiki/The_Use_of_Knowledge_in_Society"
           }
         ]
-      }
+      },
+      "shape": "rectangle"
     },
     {
       "title": "Historical Evidence — Late‑Soviet Planning Inefficiencies (1960s–1980s)",
@@ -715,7 +742,8 @@
             "url": "https://www.towardsanewsocialism.com"
           }
         ]
-      }
+      },
+      "shape": "rectangle"
     },
     {
       "title": "FAO — Global Calories per Capita (1960–2023) — тренд",
@@ -730,7 +758,8 @@
         "В среднем еды достаточно: потому что производство на душу растёт десятилетиями.",
         "Голод вызван доступом и конфликтами: потому что региональные разрывы сохраняются.",
         "Контраргумент к чисто техно‑решениям: потому что логистика и политика решают не меньше, чем урожайность."
-      ]
+      ],
+      "shape": "circle"
     },
     {
       "title": "Amsterdam Doughnut City (2020–) — применение рамки «пончика»",
@@ -745,11 +774,12 @@
         "Рамка помогает ставить цели: потому что делает видимыми социальные и экологические пределы.",
         "Сложно масштабировать на нацуровень: потому что требует координации налоговой/торговой политики.",
         "Контраргумент к критикам абстрактности: потому что есть практическое внедрение, но с ограничениями."
-      ]
+      ],
+      "shape": "circle"
     },
     {
       "title": "ICT/AI Energy Use — Constraint on Full Automation (meta‑analyses)",
-      "x": 5,
+      "x": -2,
       "y": -3,
       "size": 60,
       "year": 2023,
@@ -760,7 +790,8 @@
         "Полная автоматизация требует больше энергии: потому что вычислительные нагрузки растут экспоненциально.",
         "Зелёная энергия — предпосылка, а не вывода: потому что без неё климатические издержки растут.",
         "Контраргумент к FALC: потому что энергетический след роботов/ИИ не нулевой."
-      ]
+      ],
+      "shape": "circle"
     },
     {
       "title": "Germany Energiewende — занятость в ВИЭ (2000s–2020s)",
@@ -775,7 +806,8 @@
         "Зелёный переход создаёт рабочие места: потому что требуются масштабные инвестиции и строительство.",
         "Структурная волатильность есть: потому что политики субсидий и импортные цепочки влияют на занятость.",
         "Контраргумент к тезису о мгновенном «освобождении от труда»: потому что на горизонте десятилетий труд растёт."
-      ]
+      ],
+      "shape": "circle"
     },
     {
       "title": "Gig/Platform Work — эмпирика контроля и нестабильности (2010s–2020s)",
@@ -790,7 +822,8 @@
         "Алгоритмы усиливают контроль: потому что управление и оценка зависят от платформ.",
         "Доходы волатильны: потому что спрос и тарифы нестабильны.",
         "Контраргумент к «автоматизация освобождает»: потому что часто происходит обратное."
-      ]
+      ],
+      "shape": "circle"
     },
     {
       "title": "Spain/Valencia 4‑day Week Pilots (2021–2024)",
@@ -805,7 +838,8 @@
         "Благополучие workers растёт: потому что фиксируется выше удовлетворённость и меньше больничных.",
         "Экономика зависит от дизайна: потому что субсидии и отрасль определяют результат.",
         "Контраргумент к универсальности: потому что нужно учитывать контекст."
-      ]
+      ],
+      "shape": "circle"
     },
     {
       "title": "Harry Cleaver — Reading Capital Politically (1979)",
@@ -821,7 +855,8 @@
       ],
       "against": {
         "key_points": []
-      }
+      },
+      "shape": "rectangle"
     },
     {
       "title": "Richard Sennett — The Corrosion of Character (1998)",
@@ -839,7 +874,8 @@
       ],
       "against": {
         "key_points": []
-      }
+      },
+      "shape": "circle"
     },
     {
       "title": "F. A. Hayek — The Use of Knowledge in Society (1945)",
@@ -855,7 +891,8 @@
       ],
       "against": {
         "key_points": []
-      }
+      },
+      "shape": "circle"
     },
     {
       "title": "Murray Bookchin — Post-Scarcity Anarchism (1971)",
@@ -875,7 +912,8 @@
       ],
       "against": {
         "key_points": []
-      }
+      },
+      "shape": "triangle"
     },
     {
       "title": "World Bank — Agriculture Overview (2023)",
@@ -891,11 +929,12 @@
       ],
       "against": {
         "key_points": []
-      }
+      },
+      "shape": "circle"
     },
     {
       "title": "Giorgos Kallis — Degrowth and the Critique of Luxury Communism (2019)",
-      "x": 0,
+      "x": 5,
       "y": -8,
       "size": 60,
       "year": 2019,
@@ -907,11 +946,12 @@
       ],
       "against": {
         "key_points": []
-      }
+      },
+      "shape": "rectangle"
     },
     {
       "title": "The Economist — Basically Flawed (2016)",
-      "x": 0,
+      "x": -2,
       "y": -4,
       "size": 70,
       "year": 2016,
@@ -923,11 +963,12 @@
       ],
       "against": {
         "key_points": []
-      }
+      },
+      "shape": "circle"
     },
     {
       "title": "Nassim Dehouche — Post-Labor Economics: A Systematic Review",
-      "x": 25,
+      "x": 18,
       "y": 7,
       "size": 40,
       "year": 2024,
@@ -947,20 +988,16 @@
             "url": "https://en.wikipedia.org/wiki/Vaclav_Smil"
           },
           {
-            "short_description": "Susskind ("
-            A
-            World
-            Without
-            Work
-            ") фокусируется на образовании и переквалификации как ответе на автоматизацию.",
+            "short_description": "Susskind (\"A World Without Work\") фокусируется на образовании и переквалификации как ответе на автоматизацию.",
             "url": "https://global.oup.com/academic/product/a-world-without-work-9780190069810"
           }
         ]
-      }
+      },
+      "shape": "rectangle"
     },
     {
       "title": "Aaron Benanav — Beyond Capitalism—1",
-      "x": 20,
+      "x": 12,
       "y": 5,
       "size": 50,
       "year": 2022,
@@ -984,11 +1021,12 @@
             "url": "https://global.oup.com/academic/product/a-world-without-work-9780190069810"
           }
         ]
-      }
+      },
+      "shape": "rectangle"
     },
     {
       "title": "Matthias Schmelzer et al. — The Future Is Degrowth",
-      "x": 15,
+      "x": 13,
       "y": -9,
       "size": 65,
       "year": 2022,
@@ -1012,11 +1050,12 @@
             "url": "https://en.wikipedia.org/wiki/Fully_Automated_Luxury_Communism"
           }
         ]
-      }
+      },
+      "shape": "rectangle"
     },
     {
       "title": "Tim Jackson — Post Growth: Life After Capitalism",
-      "x": 10,
+      "x": 9,
       "y": -7,
       "size": 75,
       "year": 2021,
@@ -1036,11 +1075,12 @@
             "url": "https://www.ft.com/content/49b06c4c-3701-11e7-bce4-9023f8c0fd2e"
           }
         ]
-      }
+      },
+      "shape": "rectangle"
     },
     {
       "title": "Kate Soper — Post-Growth Living",
-      "x": 5,
+      "x": 4,
       "y": -6,
       "size": 50,
       "year": 2020,
@@ -1059,11 +1099,12 @@
             "url": "https://en.wikipedia.org/wiki/Fully_Automated_Luxury_Communism"
           }
         ]
-      }
+      },
+      "shape": "rectangle"
     },
     {
       "title": "Richard Heinberg — The End of Growth",
-      "x": 0,
+      "x": -3,
       "y": -8,
       "size": 65,
       "year": 2011,
@@ -1082,11 +1123,12 @@
             "url": "https://en.wikipedia.org/wiki/Fully_Automated_Luxury_Communism"
           }
         ]
-      }
+      },
+      "shape": "rectangle"
     },
     {
       "title": "Tim Jackson — Prosperity Without Growth",
-      "x": -5,
+      "x": -7,
       "y": -7,
       "size": 85,
       "year": 2009,
@@ -1105,11 +1147,12 @@
             "url": "https://www.peri.umass.edu/economists/robert-pollin"
           }
         ]
-      }
+      },
+      "shape": "rectangle"
     },
     {
       "title": "Clive Hamilton — Growth Fetish",
-      "x": -10,
+      "x": -12,
       "y": -6,
       "size": 60,
       "year": 2003,
@@ -1129,11 +1172,12 @@
             "url": "https://www.economist.com/books-and-arts/2017/04/27/doughnut-economics-by-kate-raworth"
           }
         ]
-      }
+      },
+      "shape": "rectangle"
     },
     {
       "title": "Robin Wall Kimmerer — The Serviceberry",
-      "x": 20,
+      "x": 15,
       "y": 8,
       "size": 55,
       "year": 2023,
@@ -1153,11 +1197,12 @@
             "url": "https://www.economist.com/finance-and-economics/2020/02/20/planning-versus-markets"
           }
         ]
-      }
+      },
+      "shape": "triangle"
     },
     {
       "title": "Brett Christophers — The Price is Wrong",
-      "x": 5,
+      "x": -1,
       "y": -5,
       "size": 60,
       "year": 2024,
@@ -1177,11 +1222,12 @@
             "url": "https://www.peri.umass.edu/economists/robert-pollin"
           }
         ]
-      }
+      },
+      "shape": "rectangle"
     },
     {
       "title": "Stephanie Kelton — The Deficit Myth",
-      "x": 0,
+      "x": 6,
       "y": 6,
       "size": 85,
       "year": 2020,
@@ -1201,11 +1247,12 @@
             "url": "https://www.oecd.org/social/Basic-Income-Policy-Option-2017.pdf"
           }
         ]
-      }
+      },
+      "shape": "rectangle"
     },
     {
       "title": "Aaron Benanav — Automation and the Future of Work",
-      "x": 20,
+      "x": 10,
       "y": 4,
       "size": 60,
       "year": 2020,
@@ -1229,11 +1276,12 @@
             "url": "https://global.oup.com/academic/product/a-world-without-work-9780190069810"
           }
         ]
-      }
+      },
+      "shape": "rectangle"
     },
     {
       "title": "Paul Mason — Postcapitalism: A Guide to Our Future",
-      "x": 35,
+      "x": 25,
       "y": 8,
       "size": 75,
       "year": 2015,
@@ -1257,11 +1305,12 @@
             "url": "https://en.wikipedia.org/wiki/David_Harvey"
           }
         ]
-      }
+      },
+      "shape": "rectangle"
     },
     {
       "title": "Daniel Susskind — A World Without Work: Technology, Automation, and How We Should Respond",
-      "x": 25,
+      "x": 20,
       "y": 5,
       "size": 70,
       "year": 2020,
@@ -1285,11 +1334,12 @@
             "url": "https://en.wikipedia.org/wiki/Fully_Automated_Luxury_Communism"
           }
         ]
-      }
+      },
+      "shape": "circle"
     },
     {
       "title": "Yanis Varoufakis — Another Now: Dispatches from an Alternative Present",
-      "x": 20,
+      "x": 18,
       "y": 6,
       "size": 60,
       "year": 2020,
@@ -1313,7 +1363,8 @@
             "url": "https://www.economist.com/finance-and-economics/2016/06/04/youre-on-your-own"
           }
         ]
-      }
+      },
+      "shape": "rectangle"
     },
     {
       "title": "Юваль Ной Харари — Homo Deus: Краткая история завтрашнего дня (2015)",
@@ -1342,11 +1393,12 @@
             "url": "https://en.wikipedia.org/wiki/Enlightenment_Now"
           }
         ]
-      }
+      },
+      "shape": "rectangle"
     },
     {
       "title": "Джеймс Бридл — Новое тёмное время: Технологии и конец будущего (2018)",
-      "x": 5,
+      "x": -3,
       "y": -7,
       "size": 70,
       "year": 2018,
@@ -1371,11 +1423,12 @@
             "url": "https://en.wikipedia.org/wiki/Artificial_intelligence_risk"
           }
         ]
-      }
+      },
+      "shape": "circle"
     },
     {
       "title": "Шошана Зубофф — Эпоха надзорного капитализма (2019)",
-      "x": 0,
+      "x": -5,
       "y": -8,
       "size": 85,
       "year": 2019,
@@ -1400,7 +1453,8 @@
             "url": "https://newleftreview.org/issues/ii116/articles/evgeny-morozov-critique-of-techno-feudal-reason"
           }
         ]
-      }
+      },
+      "shape": "rectangle"
     },
     {
       "title": "Рэй Курцвейл — Сингулярность уже близко (2005)",
@@ -1429,7 +1483,8 @@
             "url": "https://en.wikipedia.org/wiki/Vaclav_Smil"
           }
         ]
-      }
+      },
+      "shape": "triangle"
     },
     {
       "title": "Джозеф Тейнтер — Коллапс сложных обществ (1988)",
@@ -1458,7 +1513,8 @@
             "url": "https://en.wikipedia.org/wiki/The_Singularity_Is_Near"
           }
         ]
-      }
+      },
+      "shape": "circle"
     }
   ],
   "notes": [
@@ -1468,5 +1524,5 @@
     "Версия 2.0: все описания расширены, добавлены key_takeaways («утверждение: потому что…») и блок against с источниками.",
     "Добавлены отдельные точки‑контраргументы/кейсы с собственными координатами (x/y), чтобы контраргументация была видна на общей карте."
   ],
-  "version": "2.1 (counter-positions)"
+  "version": "3.0 (refined_axes_and_shapes)"
 }
