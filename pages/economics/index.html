@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Карта идей об изобилии</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <h1 id="title"></h1>
+  <p id="description"></p>
+  <div id="chart-container">
+    <canvas id="chart"></canvas>
+  </div>
+  <div id="info-panels">
+    <div id="notes-panel">
+      <h2>Notes</h2>
+      <ul id="notes"></ul>
+      <h2>Комментарий</h2>
+      <textarea id="comment" placeholder="Ваш комментарий..."></textarea>
+    </div>
+    <div id="resources-panel">
+      <h2>Ресурсы</h2>
+      <ul id="resources"></ul>
+    </div>
+  </div>
+  <div id="tooltip" class="hidden"></div>
+  <script src="script.js"></script>
+</body>
+</html>

@@ -1,0 +1,18 @@
+{
+  "title": "Карта идей об изобилии",
+  "description": "Пример JSON",
+  "axes": {},
+  "points": [
+    {
+      "title": "Пример точка",
+      "x": 0,
+      "y": 0,
+      "size": 5,
+      "year": 2020,
+      "type": "книга",
+      "url": "https://example.com",
+      "description": "Описание примера"
+    }
+  ],
+  "notes": ["Пример заметки"]
+}
