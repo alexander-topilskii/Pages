@@ -93,14 +93,16 @@ function emptyHint(){
 
 // --- Search
 function wireSearch(){
-  els.q.addEventListener('input', e => { state.filter = e.target.value; render(); });
+  // `q` may be absent on some pages; guard to avoid runtime error
+  els.q?.addEventListener('input', e => { state.filter = e.target.value; render(); });
 }
 function match(text, q){ return String(text||'').toLowerCase().includes(q); }
 function highlight(text){ if(!state.filter) return escapeHtml(text); const re = new RegExp(`(${escapeReg(state.filter)})`, 'ig'); return escapeHtml(text).replace(re, '<mark>$1</mark>'); }
 
 // --- Page viewer
 function wireViewer(){
-  els.backBtn.addEventListener('click', () => history.back());
+  // `backBtn` might not exist in standalone page views
+  els.backBtn?.addEventListener('click', () => history.back());
   window.addEventListener('hashchange', tryOpenFromHash);
   tryOpenFromHash();
 }
