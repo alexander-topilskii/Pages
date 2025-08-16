@@ -54,6 +54,18 @@
         .legend{color:var(--muted); margin-top:8px; display:flex; gap:20px; flex-wrap:wrap}
         .legend .dot{display:inline-block; width:10px; height:10px; background:var(--point); border-radius:50%; margin-right:6px}
 
+        /* Cluster count text style for grouped markers */
+        .cluster-count {
+          font-size: 0.8em;
+          text-align: center;
+          color: #fff;
+          background: rgba(0, 0, 0, 0.75);
+          border-radius: 50%;
+          padding: 4px 8px;
+          position: absolute;
+          transform: translate(-50%, -50%);
+        }
+
         .tooltip{position:absolute; pointer-events:none; background:var(--tooltip-bg); color:var(--ink);
           border:1px solid var(--tooltip-border); border-radius:12px; padding:10px 12px; max-width:min(380px,86vw);
           font-size:.95rem; box-shadow:var(--shadow)}
@@ -534,50 +546,104 @@
       ctx.fillText(yLabel, 0, 0);
       ctx.restore();
     }
-    function drawPoints(){
-      const R = R_WORLD * fit.s * user.s; // экранный радиус
-      const stroke = getComputedStyle(document.documentElement).getPropertyValue('--point').trim() || '#77c0ff';
+    function drawPoints() {
+      const R = R_WORLD * fit.s * user.s; // screen radius
       const ink = getComputedStyle(document.documentElement).getPropertyValue('--ink').trim() || '#e7ebf3';
-      const outline = '#0b0e14';
+      const detectedClusters = new Map();
 
-      for(const p of (data.points || [])){
-        const [sx, sy] = worldToScreen(p.x, p.y);
-        const alpha = intensityFromSize(p.size);
+      // Group points by identical coordinates
+      for (let p of data.points || []) {
+        const key = `${p.x},${p.y}`;
+        if (!detectedClusters.has(key)) detectedClusters.set(key, []);
+        detectedClusters.get(key).push(p);
+      }
 
-        // вычисление цвета по size
-        ctx.save();
-        // Normalize size to [0, 1] range for influence-based coloring
-        const normalizedSize = Math.max(0, Math.min(100, p.size || 0)) / 100;
+      // Handle and dynamically draw point clusters
+      for (const [coords, points] of detectedClusters.entries()) {
+        const [baseX, baseY] = coords.split(',').map(Number);
 
-        // Calculate dynamic color on a blue-to-red gradient
-        const red = Math.round(normalizedSize * 255);     // High influence -> More red
-        const blue = Math.round((1 - normalizedSize) * 255); // Low influence -> More blue
-        const fillColor = `rgb(${red}, 0, ${blue})`;
+        if (points.length > 1) {
+          const [centerX, centerY] = worldToScreen(baseX, baseY);
 
-        // Apply calculated color as fill
-        ctx.fillStyle = fillColor;
+          const adjustedRadius = Math.max(2, R * 0.7); // Reduce size for stack visualization
+          const stackSeparation = adjustedRadius * 2.5;
+          const totalStackHeight = stackSeparation * (points.length - 1);
+          const startY = centerY - totalStackHeight / 2;
 
-        ctx.beginPath();
+          const clusterCircleRadius = (totalStackHeight / 2) + (adjustedRadius * 2);
 
-        // книги рисуются квадратами
-        if (p.type === "книга") {
-            const side = Math.max(2, Math.abs(R)) * 2;
-            ctx.rect(sx - side / 2, sy - side / 2, side, side); // Draw square centered at (sx, sy)
+          // Draw circle indicating stack presence
+          ctx.save();
+          ctx.strokeStyle = 'rgba(0, 0, 0, 0.5)';
+          ctx.lineWidth = 1;
+          ctx.setLineDash([2, 3]);
+          ctx.beginPath();
+          ctx.arc(centerX, centerY, clusterCircleRadius, 0, Math.PI * 2);
+          ctx.stroke();
+          ctx.restore();
+
+          points.forEach((p, i) => {
+            const pointY = startY + i * stackSeparation;
+            const pointX = centerX;
+
+            // Draw individual point
+            ctx.save();
+            const normalizedSize = Math.max(0, Math.min(100, p.size || 0)) / 100;
+            const red = Math.round(normalizedSize * 255);
+            const blue = Math.round((1 - normalizedSize) * 255);
+            const fillColor = `rgb(${red}, 0, ${blue})`;
+            ctx.fillStyle = fillColor;
+
+            ctx.beginPath();
+            if (p.type === "книга") {
+                const side = adjustedRadius * 2;
+                ctx.rect(pointX - side / 2, pointY - side / 2, side, side);
+            } else {
+                ctx.arc(pointX, pointY, adjustedRadius, 0, Math.PI * 2);
+            }
+            ctx.fill();
+            ctx.restore();
+
+            // Position labels to avoid overlaps within stack
+            const labelX = pointX + clusterCircleRadius + 5;
+            const labelY = pointY;
+
+            // Draw label
+            ctx.font = '12px "Segoe UI", Arial, sans-serif';
+            ctx.fillStyle = ink;
+            ctx.textAlign = 'left';
+            ctx.textBaseline = 'middle';
+            ctx.fillText(p.title, labelX, labelY);
+          });
         } else {
-            ctx.arc(sx, sy, Math.max(2, Math.abs(R)), 0, Math.PI * 2); // Draw circle
+          // For standalone points
+          const p = points[0];
+          const [sx, sy] = worldToScreen(p.x, p.y);
+
+          ctx.save();
+          const normalizedSize = Math.max(0, Math.min(100, p.size || 0)) / 100;
+          const red = Math.round(normalizedSize * 255);
+          const blue = Math.round((1 - normalizedSize) * 255);
+          const fillColor = `rgb(${red}, 0, ${blue})`;
+          ctx.fillStyle = fillColor;
+
+          ctx.beginPath();
+          if (p.type === "книга") {
+              const side = Math.max(2, Math.abs(R)) * 2;
+              ctx.rect(sx - side / 2, sy - side / 2, side, side);
+          } else {
+              ctx.arc(sx, sy, Math.max(2, Math.abs(R)), 0, Math.PI * 2);
+          }
+          ctx.fill();
+          ctx.restore();
+
+          // Draw label
+          ctx.font = '12px "Segoe UI", Arial, sans-serif';
+          ctx.fillStyle = ink;
+          const dx = Math.max(2, Math.abs(R)) + 4;
+          const dy = Math.max(2, Math.abs(R)) + 4;
+          ctx.fillText(p.title, sx + dx, sy - dy);
         }
-
-        ctx.fill();
-        ctx.restore();
-
-        // заголовок - улучшено для читаемости
-        ctx.font = '12px "Segoe UI", Arial, sans-serif'; // Set a clear, modern font
-        ctx.fillStyle = ink;
-        const dx = Math.max(2, Math.abs(R)) + 4;
-        const dy = Math.max(2, Math.abs(R)) + 4;
-
-        // Render only filled text for clarity, no stroking
-        ctx.fillText(p.title, sx + dx, sy - dy);
       }
     }
     function render(){
@@ -629,16 +695,57 @@
     function pointAt(clientX, clientY){
       // screen coords relative to canvas CSS pixels
       const rect = canvas.getBoundingClientRect();
-      const sx = clientX - rect.left;
-      const sy = clientY - rect.top;
+      const clickX = clientX - rect.left;
+      const clickY = clientY - rect.top;
+      const R = R_WORLD * fit.s * user.s;
 
-      // экранный радиус
-      const R = Math.max(6, Math.abs(R_WORLD * fit.s * user.s));
-      // проверяем по расстоянию в экранных координатах
-      for(const p of (data.points || []).slice().reverse()){ // top-most при равенстве — последний
-        const [px, py] = worldToScreen(p.x, p.y);
-        const dx = sx - px, dy = sy - py;
-        if (dx*dx + dy*dy <= (R+4)*(R+4)) return p;
+      // We need to check against the actual drawn positions.
+      // Re-clustering is necessary here to mirror the drawing logic.
+      const detectedClusters = new Map();
+      for (let p of data.points || []) {
+        const key = `${p.x},${p.y}`;
+        if (!detectedClusters.has(key)) detectedClusters.set(key, []);
+        detectedClusters.get(key).push(p);
+      }
+
+      // Iterate in reverse order of clusters to check top-most clusters first
+      // (assuming map preserves insertion order, which it does)
+      const clusterEntries = Array.from(detectedClusters.entries()).reverse();
+
+      for (const [coords, points] of clusterEntries) {
+        const [baseX, baseY] = coords.split(',').map(Number);
+
+        if (points.length > 1) {
+            const [centerX, centerY] = worldToScreen(baseX, baseY);
+            const adjustedRadius = Math.max(2, R * 0.7);
+            const stackSeparation = adjustedRadius * 2.5;
+            const totalStackHeight = stackSeparation * (points.length - 1);
+            const startY = centerY - totalStackHeight / 2;
+
+            // Check points in reverse draw order (from top of stack to bottom on screen)
+            for (let i = points.length - 1; i >= 0; i--) {
+                const p = points[i];
+                const pointY = startY + i * stackSeparation;
+                const pointX = centerX;
+
+                const dx = clickX - pointX;
+                const dy = clickY - pointY;
+                const hitRadius = adjustedRadius + 4; 
+                if (dx*dx + dy*dy <= hitRadius*hitRadius) {
+                    return p;
+                }
+            }
+        } else {
+          // Single point
+          const p = points[0];
+          const [px, py] = worldToScreen(p.x, p.y);
+          const dx = clickX - px;
+          const dy = clickY - py;
+          const hitRadius = Math.max(6, Math.abs(R)) + 4;
+          if (dx*dx + dy*dy <= hitRadius*hitRadius) {
+            return p;
+          }
+        }
       }
       return null;
     }
