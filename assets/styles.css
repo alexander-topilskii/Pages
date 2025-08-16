@@ -34,13 +34,12 @@ body {
 .cat-title { display: flex; align-items: center; gap: 10px; font-weight: 600; }
 .cat-desc { margin: 6px 4px 0 34px; color: var(--muted); font-size: 12px; }
 .pages { margin-top: 8px; display: grid; gap: 6px; padding-left: 6px; }
-.page-link { text-decoration: none; color: inherit; padding: 10px; border: 1px solid var(--border); border-radius: 12px; display: grid; grid-template-columns: 28px 1fr auto; gap: 10px; align-items: center; background: var(--panel-2); }
+.page-link { text-decoration: none; color: inherit; padding: 10px; border: 1px solid var(--border); border-radius: 12px; display: grid; grid-template-columns: 28px 1fr; gap: 10px; align-items: center; background: var(--panel-2); }
 .page-link:hover{ border-color: rgba(91,156,255,.6); box-shadow: var(--shadow); }
 .page-emoji { font-size: 18px; line-height: 1; text-align: center; }
 .page-meta { display: grid; gap: 4px; }
 .page-title { font-weight: 600; }
 .page-desc { color: var(--muted); font-size: 12px; }
-.open-chip { font-size: 11px; padding: 4px 8px; border: 1px solid var(--border); border-radius: 100px; color: var(--muted); }
 /* Main */
 .main { position: relative; overflow: hidden; }
 .topbar { display: flex; align-items: center; justify-content: space-between; gap: 8px; padding: 12px 14px; border-bottom: 1px solid var(--border); background: linear-gradient(180deg, rgba(255,255,255,.02), transparent); }
