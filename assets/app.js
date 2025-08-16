@@ -11,6 +11,7 @@ const els = {
 };
 
 const state = { data: null, expanded: new Set(), filter: '' };
+const initialHistoryLength = history.length;
 
 // --- Sidebar menu toggle (mobile)
 els.menuBtn?.addEventListener('click', () => toggleSidebar(true));
@@ -83,7 +84,6 @@ function pageItem(cat, p){
         <div class="page-title">${highlight(p.title)}</div>
         ${p.desc ? `<div class="page-desc">${highlight(p.desc)}</div>` : ''}
       </div>
-      <div class="open-chip">${deviceHasWide() ? 'Открыть справа' : 'Открыть'}</div>
     </a>`;
 }
 
@@ -126,7 +126,7 @@ function openPage(url){
   els.viewer.classList.add('active');
   els.grid.style.display = 'none';
   els.welcome.style.display = 'none';
-  els.backBtn.style.display = 'inline-flex';
+  els.backBtn.style.display = history.length > initialHistoryLength ? 'inline-flex' : 'none';
 }
 
 function closePage(){
