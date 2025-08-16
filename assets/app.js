@@ -52,10 +52,15 @@ function render(){
     return `
       <section class="cat" data-id="${escapeAttr(cat.id)}">
         <div class="cat-header" data-action="toggle">
-          <div class="cat-title"><span style="font-size:18px">${escapeHtml(cat.emoji||'📁')}</span><span>${escapeHtml(cat.title)}</span></div>
+          <div class="cat-title">
+            <span style="font-size:18px">${escapeHtml(cat.emoji||'📁')}</span>
+            <div>
+              <div class="cat-name">${escapeHtml(cat.title)}</div>
+              ${cat.desc ? `<div class="cat-desc">${escapeHtml(cat.desc)}</div>` : ''}
+            </div>
+          </div>
           <div class="muted">${isOpen ? '▾' : '▸'}</div>
         </div>
-        ${cat.desc ? `<div class="cat-desc">${escapeHtml(cat.desc)}</div>`: ''}
         ${isOpen ? `<div class="pages">${pages || emptyHint()}</div>` : ''}
       </section>`;
   }).join('');
