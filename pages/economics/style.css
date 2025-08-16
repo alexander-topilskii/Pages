@@ -1,0 +1,84 @@
+        :root{
+          --bg:#f7f9fc; --panel:#ffffff; --ink:#333333; --muted:#666666;
+          --accent:#3366cc; --grid:#dde1e7; --axis:#555555; --point:#1155cc;
+          --tooltip-bg:#ffffffee; --tooltip-border:#b0b9c8; --shadow:0 6px 18px rgba(0,0,0,.2);
+        }
+        *{box-sizing:border-box}
+        html,body{margin:0;padding:0;height:100%;background:var(--bg);color:var(--ink);
+          font:15px/1.5 system-ui,-apple-system,Segoe UI,Roboto,Ubuntu,Cantarell,Arial}
+        body { background: var(--bg); color: var(--ink); }
+        .chart-container {
+          background: radial-gradient(1200px 600px at 10% -20%, #f0f3f8 0%, #f7f9fc 60%);
+          box-shadow: var(--shadow);
+        }
+        canvas#chartCanvas { background-color: transparent; }
+
+        .tooltip {
+          color: var(--ink);
+        }
+        h1,h2{margin:0 0 .5rem} h1{font-size:clamp(1.25rem,1rem + 1.2vw,1.9rem)}
+        h2{font-size:clamp(1.05rem,.9rem + .8vw,1.3rem)}
+
+        .app-header{padding:14px clamp(12px,3vw,28px); border-bottom:1px solid #b0b9c8;
+          background:linear-gradient(#b0b9c8,#b0b9c8,#b0b9c8); position:sticky; top:0; z-index:10}
+        .controls{display:flex; gap:16px; align-items:center; flex-wrap:wrap; margin-top:8px}
+        details summary{cursor:pointer; color:var(--muted)}
+        .json-panel{margin-top:10px; background:var(--panel); padding:10px; border-radius:10px;
+          box-shadow:var(--shadow); border:1px solid #1b2540}
+        .json-panel textarea{width:100%; min-height:180px; resize:vertical; background:#ffffffee; color:var(--ink);
+          border:1px solid #1b2540; border-radius:10px; padding:10px; font-family:ui-monospace,Menlo,Consolas,monospace}
+        .json-actions{display:flex; gap:10px; align-items:center; flex-wrap:wrap; margin-top:8px}
+        .json-actions .hint{color:var(--muted); font-size:.9em}
+        .file-inline{display:inline-flex; align-items:center; gap:8px; cursor:pointer; color:var(--ink)}
+        .file-inline input{display:none}
+        .file-inline span{background:#ffffffee; border:1px solid #b0b9c8; padding:6px 10px; border-radius:10px}
+
+        .zoombar{margin-left:auto; display:flex; gap:8px}
+        .zoombar button{background:#ffffffee; color:var(--ink); border:1px solid #b0b9c8;
+          border-radius:10px; padding:8px 10px; cursor:pointer}
+        .zoombar button:hover{background:#8393c9}
+
+        .chart-wrap{padding:14px clamp(12px,3vw,28px)}
+        .chart-container{width:100%; height:min(72vh,680px); position:relative; overflow:hidden;
+          background:radial-gradient(1200px 600px at 10% -20%, #0f1630 0%, #0b0e14 60%);
+          border:1px solid #1b2540; border-radius:16px; box-shadow:var(--shadow)}
+        canvas#chartCanvas{width:100%; height:100%; display:block; touch-action:none}
+
+        .legend{color:var(--muted); margin-top:8px; display:flex; gap:20px; flex-wrap:wrap}
+        .legend .dot{display:inline-block; width:10px; height:10px; background:var(--point); border-radius:50%; margin-right:6px}
+
+        /* Cluster count text style for grouped markers */
+        .cluster-count {
+          font-size: 0.8em;
+          text-align: center;
+          color: #fff;
+          background: rgba(0, 0, 0, 0.75);
+          border-radius: 50%;
+          padding: 4px 8px;
+          position: absolute;
+          transform: translate(-50%, -50%);
+        }
+
+        .tooltip{position:absolute; pointer-events:none; background:var(--tooltip-bg); color:var(--ink);
+          border:1px solid var(--tooltip-border); border-radius:12px; padding:10px 12px; max-width:min(380px,86vw);
+          font-size:.95rem; box-shadow:var(--shadow)}
+        .tooltip a{color:var(--accent); text-decoration:none} .tooltip a:hover{text-decoration:underline}
+
+        .below-grid{display:grid; gap:20px; grid-template-columns:1fr 1fr;
+          padding:6px clamp(12px,3vw,28px) 28px}
+        .col{background:var(--panel); border:1px solid #1b2540; border-radius:14px; padding:14px; box-shadow:var(--shadow)}
+        .selected-card{ background:#ffffffee; border:1px solid #233255; border-radius:12px; padding:12px; margin-bottom:12px }
+        .selected-card h3{ margin:.2rem 0 .4rem; font-size:1.05rem }
+        .selected-card .row{ color:var(--muted); margin:.15rem 0 }
+        .notes{ margin:10px 0 0 18px } .notes li{ margin:6px 0; color:var(--ink) }
+
+        .comment-view{ white-space:pre-wrap; background:#ffffffee; color:var(--ink); border:1px solid #1b2540; border-radius:10px; padding:10px; margin-top:6px }
+
+        .resources{ margin:10px 0 0 18px } .resources li{ margin:6px 0 }
+        .resources a{ color:var(--accent); text-decoration:none } .resources a:hover{ text-decoration:underline }
+
+        .app-footer{padding:14px clamp(12px,3vw,28px); color:var(--muted); border-top:1px solid #1b2334}
+
+        @media (max-width:900px){ .below-grid{grid-template-columns:1fr} .legend{flex-direction:column} }
+        button{transition:transform .06s ease} button:active{transform:translateY(1px)}
+        button:focus-visible{outline:2px solid var(--accent); outline-offset:2px}
