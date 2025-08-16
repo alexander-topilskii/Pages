@@ -64,6 +64,26 @@
           font-size:.95rem; box-shadow:var(--shadow)}
         .tooltip a{color:var(--accent); text-decoration:none} .tooltip a:hover{text-decoration:underline}
 
+        .tooltip.is-fixed {
+            pointer-events: auto;
+        }
+
+        .tooltip-show-btn {
+            background: var(--panel);
+            color: var(--ink);
+            border: 1px solid var(--tooltip-border);
+            border-radius: 6px;
+            padding: 5px 10px;
+            cursor: pointer;
+            margin-top: 4px;
+            font-size: 0.9em;
+            width: 100%;
+        }
+        .tooltip-show-btn:hover {
+            background: #e9eef5;
+            border-color: var(--accent);
+        }
+
         .below-grid{display:grid; gap:20px; grid-template-columns:1fr 1fr;
           padding:6px clamp(12px,3vw,28px) 28px}
         .col{background:var(--panel); border:1px solid #1b2540; border-radius:14px; padding:14px; box-shadow:var(--shadow)}

@@ -281,13 +281,8 @@
     function tooltipHTML(p){
       return `
         <div style="font-weight:600; margin-bottom:4px;">${safe(p.title)}</div>
-        ${p.year ? `<div><strong>Год:</strong> ${safe(p.year)}</div>` : ``}
-        ${p.type ? `<div><strong>Тип:</strong> ${safe(p.type)}</div>` : ``}
-        <div><strong>X:</strong> ${p.x}, <strong>Y:</strong> ${p.y}</div>
-        ${p.description ? `<div style="margin-top:6px">${safe(p.description)}</div>` : ``}
-        ${Array.isArray(p.key_takeaways)&&p.key_takeaways.length
-            ? `<div style="margin-top:6px"><strong>Ключевые выводы:</strong><ul>${p.key_takeaways.map(k=>`<li>${safe(k)}</li>`).join('')}</ul></div>` : ``}
-        ${p.url ? `<div style="margin-top:6px"><a href="${p.url}" target="_blank" rel="noopener">Открыть ресурс ↗</a></div>` : ``}
+        ${p.description ? `<div style="margin-top:6px; margin-bottom: 8px;">${safe(p.description)}</div>` : ''}
+        <button class="tooltip-show-btn" onclick="document.getElementById('selectedCard').scrollIntoView({behavior: 'smooth'})">Показать</button>
       `;
     }
     let tooltipFixed = false;
@@ -494,8 +489,16 @@
     /* =========================== Click select =========================== */
     canvas.addEventListener('click', e => {
       const p = pointAt(e.clientX, e.clientY);
-      if(!p){ tooltipFixed = false; hideTooltip(); selectedCard.hidden = true; selectedCard.innerHTML = ''; return; }
+      if(!p){
+        tooltipFixed = false;
+        tooltip.classList.remove('is-fixed');
+        hideTooltip();
+        selectedCard.hidden = true;
+        selectedCard.innerHTML = '';
+        return;
+      }
       tooltipFixed = true;
+      tooltip.classList.add('is-fixed');
       tooltip.innerHTML = tooltipHTML(p);
       tooltip.hidden = false;
       moveTooltipTo(e.clientX, e.clientY);
