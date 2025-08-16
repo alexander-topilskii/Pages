@@ -806,6 +806,124 @@
         "Экономика зависит от дизайна: потому что субсидии и отрасль определяют результат.",
         "Контраргумент к универсальности: потому что нужно учитывать контекст."
       ]
+    },
+    {
+      "title": "Harry Cleaver — Reading Capital Politically (1979)",
+      "x": -46,
+      "y": -5,
+      "size": 50,
+      "year": 1979,
+      "type": "книга",
+      "url": "https://libcom.org/article/reading-capital-politically-harry-cleaver",
+      "description": "Семинарная работа, фокусирующаяся на формировании практической, политической интерпретации 'Капитала' Маркса, подчеркивающая труд как средство коллективной самореализации.",
+      "key_takeaways": [
+        "Argument: Labor should be seen as collective self-realization because it enables workers to autonomously shape their lives and resist capitalist exploitation."
+      ],
+      "against": {
+        "key_points": []
+      }
+    },
+    {
+      "title": "Richard Sennett — The Corrosion of Character (1998)",
+      "x": -27,
+      "y": -5,
+      "size": 60,
+      "year": 1998,
+      "type": "книга",
+      "url": "https://en.wikipedia.org/wiki/Richard_Sennett",
+      "description": "Исследование, как новые формы работы меняют коммунальные и личные опыты, фокусируясь на влиянии современных практик труда на идентичность и социальную интеграцию.",
+      "key_takeaways": [
+        "Work is a source of identity and integration because it provides structure, meaning, and social connections, counter to the abolition of work, which would erode these essential aspects of human experience.",
+        "Modern work practices, such as flexible and short-term employment, undermine long-term commitments and personal narratives, leading to a corrosion of character.",
+        "Work historically served as a foundation for identity and community, and its transformation poses challenges to social cohesion."
+      ],
+      "against": {
+        "key_points": []
+      }
+    },
+    {
+      "title": "F. A. Hayek — The Use of Knowledge in Society (1945)",
+      "x": -80,
+      "y": -7,
+      "size": 90,
+      "year": 1945,
+      "type": "статья",
+      "url": "https://en.wikipedia.org/wiki/The_Use_of_Knowledge_in_Society",
+      "description": "Научная статья Фридриха Хайека, аргументирующая против централизованного планирования, подчеркивающая динамичную и органическую природу рыночных ценовых колебаний и преимущества децентрализованной экономики.",
+      "key_takeaways": [
+        "Criticism: Centralized planning fails because the knowledge required for economic decision-making is dispersed among many individuals and cannot be fully gathered or utilized by a central authority."
+      ],
+      "against": {
+        "key_points": []
+      }
+    },
+    {
+      "title": "Murray Bookchin — Post-Scarcity Anarchism (1971)",
+      "x": -54,
+      "y": 5,
+      "size": 70,
+      "year": 1971,
+      "type": "книга",
+      "url": "https://theanarchistlibrary.org/library/murray-bookchin-post-scarcity-anarchism",
+      "description": "Исследование потенциала общей революции в эру технологического прогресса и материального изобилия, контрастирующее с историческими партикулярными революциями, критикующее центральные и иерархические тенденции буржуазного общества.",
+      "key_takeaways": [
+        "Centralized techno-optimism reinforces hierarchy, exploitation, and environmental destruction because it mobilizes technology for repressive purposes and disrupts ecological balance, whereas decentralization and self-limitation foster ecological harmony and individual freedom by promoting small-scale, diverse, and spontaneous community structures.",
+        "Technological advances create the potential for a world without class rule, exploitation, or material want, but bourgeois control of technology often reinforces centralization, hierarchy, and repression.",
+        "Bourgeois exploitation and manipulation of the natural and social environment lead to ecological crises, such as pollution, habitat destruction, and threats to biological integrity, necessitating a decentralized approach to technology and community.",
+        "The social dialectic has expanded beyond economic contradictions to include hierarchical forms, requiring the absolute negation of state, city, bureaucracy, centralized economy, patriarchal family, and marketplace through anarchism, community, immediate relations, regional ecotechnology, liberated sexuality, and communism.",
+        "Spontaneity, inspired by ecological principles of balance through diversity, challenges hierarchical power and supports decentralized, small-scale agriculture and industry, aligning with the Utopian ideal of the rounded, self-fulfilled individual."
+      ],
+      "against": {
+        "key_points": []
+      }
+    },
+    {
+      "title": "World Bank — Agriculture Overview (2023)",
+      "x": 0,
+      "y": -2,
+      "size": 80,
+      "year": 2023,
+      "type": "отчёт",
+      "url": "https://www.worldbank.org/en/topic/agriculture/overview",
+      "description": "Обзор Всемирного банка подчеркивает сельское хозяйство как критический сектор для окончания крайней бедности и стимулирования экономик, с ростом в сельском хозяйстве в 2-3 раза более эффективным для снижения бедности по сравнению с другими секторами.",
+      "key_takeaways": [
+        "Warning: Climate and population growth are undermining food systems because conflict, extreme weather events, and economic shocks are slowing down efforts to feed 10 billion people by 2050 and putting millions at risk of falling into extreme poverty."
+      ],
+      "against": {
+        "key_points": []
+      }
+    },
+    {
+      "title": "Giorgos Kallis — Degrowth and the Critique of Luxury Communism (2019)",
+      "x": 0,
+      "y": -8,
+      "size": 60,
+      "year": 2019,
+      "type": "статья",
+      "url": "https://degrowth.org/2019/09/20/degrowth-and-the-critique-of-luxury-communism/",
+      "description": "Критика люксового коммунизма за игнорирование необходимости снижения потребления, подчеркивая тему degrowth как социализма без роста.",
+      "key_takeaways": [
+        "Criticism: Luxury communism ignores the necessity of consumption reduction because it assumes technology can enable abundance without ecological limits."
+      ],
+      "against": {
+        "key_points": []
+      }
+    },
+    {
+      "title": "The Economist — Basically Flawed (2016)",
+      "x": 0,
+      "y": -4,
+      "size": 70,
+      "year": 2016,
+      "type": "статья",
+      "url": "https://www.economist.com/leaders/2016/06/04/basically-flawed",
+      "description": "Критика базового дохода как ответа на проблему, которая еще не materialized, с worries о снижении стимулов к работе.",
+      "key_takeaways": [
+        "Criticism: Basic income reduces work incentives because it provides income without work, potentially leading to lower labor participation."
+      ],
+      "against": {
+        "key_points": []
+      }
     }
   ],
   "notes": [
