@@ -1,30 +1,63 @@
 {
-  "title": "Карта идей: реалистичность и оптимизм пост-товарных сценариев",
-  "description": "Визуализация работ о будущем распределения благ. Ось Y — оптимизм относительно возможности обеспечить базовые потребности при минимальном труде (выше — оптимистичнее, ниже — скептичнее). Ось X — временная дистанция/достижимость (0 — применимо уже сейчас; >0 — дальний футуризм; <0 — прогнозы о «будущем», которое уже наступило). Размер «пузыря» (size) отражает ориентировочное влияние работы (комбинация академических цитирований, публичного охвата и практического воздействия на политику/дискуссию).",
   "axes": {
-    "x": {
+    "achievability": {
       "label": "Время / Достижимость",
-      "scale_hint": "−100 (давние прогнозы о прошедшем будущем) … 0 (сейчас) … +50 (далёкий футуризм)"
+      "type": "numerical",
+      "hint": "-100 (прошлое) … 0 (сейчас) … +50 (будущее)"
     },
-    "y": {
-      "label": "Оптимизм о возможности изобилия при малом труде",
-      "scale_hint": "−10 (невозможно) … 0 (нейтрально) … +10 (вполне возможно)"
+    "optimism": {
+      "label": "Оптимизм об изобилии при малом труде",
+      "type": "numerical",
+      "hint": "-10 (невозможно) … +10 (возможно)"
     },
-    "bubble": {
-      "label": "Влияние (size)",
-      "scale_hint": "1 (низкое влияние) … 10 (высокое влияние)",
-      "notes": "Оценка ориентировочная: совмещает академические цитирования, общественную известность и влияние на практику."
-    },
-    "shape": {
+    "approach": {
       "label": "Подход к изменениям",
-      "scale_hint": "Круг (реформа), Прямоугольник (трансформация), Треугольник (революция)"
+      "type": "categorical",
+      "values": [
+        { "key": "reform", "label": "Реформа", "numeric": 1 },
+        { "key": "transformation", "label": "Трансформация", "numeric": 2 },
+        { "key": "revolution", "label": "Революция", "numeric": 3 }
+      ]
+    },
+    "driver": {
+      "label": "Основной драйвер",
+      "type": "categorical",
+      "values": [
+        { "key": "technology", "label": "Технология", "numeric": 1 },
+        { "key": "social_policy", "label": "Социальная политика", "numeric": 2 }
+      ]
+    },
+    "growth_stance": {
+      "label": "Отношение к росту",
+      "type": "categorical",
+      "values": [
+        { "key": "degrowth", "label": "Анти-рост / Дерост", "numeric": 1 },
+        { "key": "neutral", "label": "Нейтральное", "numeric": 2 },
+        { "key": "pro_growth", "label": "Про-рост", "numeric": 3 }
+      ]
+    },
+    "scale": {
+      "label": "Масштаб реализации",
+      "type": "categorical",
+      "values": [
+        { "key": "local", "label": "Локальный", "numeric": 1 },
+        { "key": "national", "label": "Национальный", "numeric": 2 },
+        { "key": "global", "label": "Глобальный", "numeric": 3 }
+      ]
+    },
+    "power_structure": {
+      "label": "Централизация власти",
+      "type": "categorical",
+      "values": [
+        { "key": "decentralized", "label": "Децентрализация", "numeric": 1 },
+        { "key": "hybrid", "label": "Гибридный", "numeric": 2 },
+        { "key": "centralized", "label": "Централизация", "numeric": 3 }
+      ]
     }
   },
   "points": [
     {
       "title": "Пётр Кропоткин — The Conquest of Bread (1892)",
-      "x": -100,
-      "y": 6,
       "size": 70,
       "year": 1892,
       "type": "книга",
@@ -49,12 +82,18 @@
           }
         ]
       },
-      "shape": "triangle"
+      "analytics": {
+        "achievability": -100,
+        "optimism": 6,
+        "approach": "revolution",
+        "driver": "social_policy",
+        "growth_stance": "neutral",
+        "scale": "local",
+        "power_structure": "decentralized"
+      }
     },
     {
       "title": "Боб Блэк — The Abolition of Work (1985)",
-      "x": -30,
-      "y": 7,
       "size": 50,
       "year": 1985,
       "type": "эссе",
@@ -79,12 +118,18 @@
           }
         ]
       },
-      "shape": "triangle"
+      "analytics": {
+        "achievability": -30,
+        "optimism": 7,
+        "approach": "revolution",
+        "driver": "social_policy",
+        "growth_stance": "neutral",
+        "scale": "local",
+        "power_structure": "decentralized"
+      }
     },
     {
       "title": "Пол Кокшотт, Аллин Котрелл — Towards a New Socialism (1993/обновл.)",
-      "x": -8,
-      "y": 8,
       "size": 80,
       "year": 1993,
       "type": "книга/монография",
@@ -109,12 +154,18 @@
           }
         ]
       },
-      "shape": "rectangle"
+      "analytics": {
+        "achievability": -8,
+        "optimism": 8,
+        "approach": "revolution",
+        "driver": "technology",
+        "growth_stance": "pro_growth",
+        "scale": "national",
+        "power_structure": "centralized"
+      }
     },
     {
       "title": "Эрик Олин Райт — Envisioning Real Utopias (2010)",
-      "x": 2,
-      "y": 5,
       "size": 80,
       "year": 2010,
       "type": "книга",
@@ -139,12 +190,18 @@
           }
         ]
       },
-      "shape": "circle"
+      "analytics": {
+        "achievability": 2,
+        "optimism": 5,
+        "approach": "reform",
+        "driver": "social_policy",
+        "growth_stance": "neutral",
+        "scale": "local",
+        "power_structure": "decentralized"
+      }
     },
     {
       "title": "Ник Срничек, Алекс Уильямс — Inventing the Future (2015)",
-      "x": 10,
-      "y": 7,
       "size": 70,
       "year": 2015,
       "type": "книга",
@@ -173,12 +230,18 @@
           }
         ]
       },
-      "shape": "rectangle"
+      "analytics": {
+        "achievability": 10,
+        "optimism": 7,
+        "approach": "transformation",
+        "driver": "technology",
+        "growth_stance": "pro_growth",
+        "scale": "global",
+        "power_structure": "centralized"
+      }
     },
     {
       "title": "Аарон Бастани — Fully Automated Luxury Communism (2019)",
-      "x": 40,
-      "y": 9,
       "size": 70,
       "year": 2019,
       "type": "книга",
@@ -207,12 +270,18 @@
           }
         ]
       },
-      "shape": "triangle"
+      "analytics": {
+        "achievability": 40,
+        "optimism": 9,
+        "approach": "revolution",
+        "driver": "technology",
+        "growth_stance": "pro_growth",
+        "scale": "global",
+        "power_structure": "hybrid"
+      }
     },
     {
       "title": "Филипп ван Пэрайс, Ян Вандерборгт — Basic Income (2017)",
-      "x": 7,
-      "y": 4,
       "size": 80,
       "year": 2017,
       "type": "книга",
@@ -241,12 +310,18 @@
           }
         ]
       },
-      "shape": "circle"
+      "analytics": {
+        "achievability": 7,
+        "optimism": 4,
+        "approach": "reform",
+        "driver": "social_policy",
+        "growth_stance": "neutral",
+        "scale": "national",
+        "power_structure": "centralized"
+      }
     },
     {
       "title": "Гай Стэндинг — Basic Income: And How We Can Make It Happen (2017)",
-      "x": 5,
-      "y": 5,
       "size": 70,
       "year": 2017,
       "type": "книга",
@@ -271,12 +346,18 @@
           }
         ]
       },
-      "shape": "circle"
+      "analytics": {
+        "achievability": 5,
+        "optimism": 5,
+        "approach": "reform",
+        "driver": "social_policy",
+        "growth_stance": "neutral",
+        "scale": "national",
+        "power_structure": "centralized"
+      }
     },
     {
       "title": "Мариана Маццукато — The Value of Everything (2018)",
-      "x": -3,
-      "y": 3,
       "size": 80,
       "year": 2018,
       "type": "книга",
@@ -301,12 +382,18 @@
           }
         ]
       },
-      "shape": "circle"
+      "analytics": {
+        "achievability": -3,
+        "optimism": 3,
+        "approach": "reform",
+        "driver": "social_policy",
+        "growth_stance": "pro_growth",
+        "scale": "national",
+        "power_structure": "centralized"
+      }
     },
     {
       "title": "Дэвид Харви — Seventeen Contradictions and the End of Capitalism (2014)",
-      "x": -5,
-      "y": -4,
       "size": 70,
       "year": 2014,
       "type": "книга",
@@ -331,12 +418,18 @@
           }
         ]
       },
-      "shape": "rectangle"
+      "analytics": {
+        "achievability": -5,
+        "optimism": -4,
+        "approach": "transformation",
+        "driver": "social_policy",
+        "growth_stance": "neutral",
+        "scale": "global",
+        "power_structure": "hybrid"
+      }
     },
     {
       "title": "Джейсон Хикель — Less is More (2020)",
-      "x": 8,
-      "y": -8,
       "size": 80,
       "year": 2020,
       "type": "книга",
@@ -365,12 +458,18 @@
           }
         ]
       },
-      "shape": "rectangle"
+      "analytics": {
+        "achievability": 8,
+        "optimism": -8,
+        "approach": "transformation",
+        "driver": "social_policy",
+        "growth_stance": "degrowth",
+        "scale": "global",
+        "power_structure": "hybrid"
+      }
     },
     {
       "title": "Вацлав Смил — Growth (2019)",
-      "x": -2,
-      "y": -7,
       "size": 90,
       "year": 2019,
       "type": "книга",
@@ -399,12 +498,18 @@
           }
         ]
       },
-      "shape": "circle"
+      "analytics": {
+        "achievability": -2,
+        "optimism": -7,
+        "approach": "reform",
+        "driver": "technology",
+        "growth_stance": "degrowth",
+        "scale": "global",
+        "power_structure": "hybrid"
+      }
     },
     {
       "title": "Ник Срничек — Platform Capitalism (2017)",
-      "x": -4,
-      "y": -5,
       "size": 70,
       "year": 2017,
       "type": "книга",
@@ -429,12 +534,18 @@
           }
         ]
       },
-      "shape": "rectangle"
+      "analytics": {
+        "achievability": -4,
+        "optimism": -5,
+        "approach": "transformation",
+        "driver": "technology",
+        "growth_stance": "neutral",
+        "scale": "global",
+        "power_structure": "centralized"
+      }
     },
     {
       "title": "OECD — Basic Income as a Policy Option (2017)",
-      "x": 2,
-      "y": 2,
       "size": 90,
       "year": 2017,
       "type": "отчёт",
@@ -459,12 +570,18 @@
           }
         ]
       },
-      "shape": "circle"
+      "analytics": {
+        "achievability": 2,
+        "optimism": 2,
+        "approach": "reform",
+        "driver": "social_policy",
+        "growth_stance": "neutral",
+        "scale": "national",
+        "power_structure": "centralized"
+      }
     },
     {
       "title": "FAO/WFP — SOFI (State of Food Security) 2024",
-      "x": 0,
-      "y": 1,
       "size": 9,
       "year": 2024,
       "type": "отчёт",
@@ -489,12 +606,18 @@
           }
         ]
       },
-      "shape": "circle"
+      "analytics": {
+        "achievability": 0,
+        "optimism": 1,
+        "approach": "reform",
+        "driver": "social_policy",
+        "growth_stance": "neutral",
+        "scale": "global",
+        "power_structure": "hybrid"
+      }
     },
     {
       "title": "ILO — Working Time and Work–Life Balance Around the World (2023)",
-      "x": 0,
-      "y": 3,
       "size": 80,
       "year": 2023,
       "type": "отчёт",
@@ -519,12 +642,18 @@
           }
         ]
       },
-      "shape": "circle"
+      "analytics": {
+        "achievability": 0,
+        "optimism": 3,
+        "approach": "reform",
+        "driver": "social_policy",
+        "growth_stance": "neutral",
+        "scale": "national",
+        "power_structure": "decentralized"
+      }
     },
     {
       "title": "Роберт Поллин — Green New Deal (2018–2023)",
-      "x": 6,
-      "y": -4,
       "size": 70,
       "year": 2021,
       "type": "научные статьи/отчёты",
@@ -553,12 +682,18 @@
           }
         ]
       },
-      "shape": "circle"
+      "analytics": {
+        "achievability": 6,
+        "optimism": -4,
+        "approach": "reform",
+        "driver": "social_policy",
+        "growth_stance": "pro_growth",
+        "scale": "national",
+        "power_structure": "centralized"
+      }
     },
     {
       "title": "Van Parijs & Vanderborght — Basic Income (1990s–2010s статьи)",
-      "x": -6,
-      "y": 4,
       "size": 70,
       "year": 2000,
       "type": "статьи",
@@ -583,12 +718,18 @@
           }
         ]
       },
-      "shape": "circle"
+      "analytics": {
+        "achievability": -6,
+        "optimism": 4,
+        "approach": "reform",
+        "driver": "social_policy",
+        "growth_stance": "neutral",
+        "scale": "national",
+        "power_structure": "centralized"
+      }
     },
     {
       "title": "Kate Raworth — Doughnut Economics (2017)",
-      "x": 3,
-      "y": 2,
       "size": 80,
       "year": 2017,
       "type": "книга/рамка",
@@ -617,12 +758,18 @@
           }
         ]
       },
-      "shape": "circle"
+      "analytics": {
+        "achievability": 3,
+        "optimism": 2,
+        "approach": "reform",
+        "driver": "social_policy",
+        "growth_stance": "degrowth",
+        "scale": "local",
+        "power_structure": "hybrid"
+      }
     },
     {
       "title": "Srnicek & Williams — Inventing the Future (лекции/статьи)",
-      "x": 8,
-      "y": 6,
       "size": 60,
       "year": 2016,
       "type": "статьи/лекции",
@@ -647,12 +794,18 @@
           }
         ]
       },
-      "shape": "rectangle"
+      "analytics": {
+        "achievability": 8,
+        "optimism": 6,
+        "approach": "transformation",
+        "driver": "technology",
+        "growth_stance": "pro_growth",
+        "scale": "global",
+        "power_structure": "centralized"
+      }
     },
     {
       "title": "KELA — Finland Basic Income Experiment (2017–2018)",
-      "x": 0,
-      "y": 1,
       "size": 65,
       "year": 2019,
       "type": "кейс/контрпример (эмпирика)",
@@ -671,12 +824,18 @@
           }
         ]
       },
-      "shape": "circle"
+      "analytics": {
+        "achievability": 0,
+        "optimism": 1,
+        "approach": "reform",
+        "driver": "social_policy",
+        "growth_stance": "neutral",
+        "scale": "national",
+        "power_structure": "centralized"
+      }
     },
     {
       "title": "4 Day Week UK Pilot (2022–2023) — итоговый отчёт",
-      "x": 0,
-      "y": 4,
       "size": 70,
       "year": 2023,
       "type": "кейс (эмпирика)",
@@ -695,12 +854,18 @@
           }
         ]
       },
-      "shape": "circle"
+      "analytics": {
+        "achievability": 0,
+        "optimism": 4,
+        "approach": "reform",
+        "driver": "social_policy",
+        "growth_stance": "neutral",
+        "scale": "local",
+        "power_structure": "decentralized"
+      }
     },
     {
       "title": "Project Cybersyn — Chile (1971–1973)",
-      "x": -40,
-      "y": -1,
       "size": 55,
       "year": 1972,
       "type": "исторический кейс/контрпример",
@@ -719,12 +884,18 @@
           }
         ]
       },
-      "shape": "rectangle"
+      "analytics": {
+        "achievability": -40,
+        "optimism": -1,
+        "approach": "revolution",
+        "driver": "technology",
+        "growth_stance": "pro_growth",
+        "scale": "national",
+        "power_structure": "centralized"
+      }
     },
     {
       "title": "Historical Evidence — Late‑Soviet Planning Inefficiencies (1960s–1980s)",
-      "x": -60,
-      "y": -6,
       "size": 85,
       "year": 1980,
       "type": "исторический обзор/контраргумент",
@@ -743,12 +914,18 @@
           }
         ]
       },
-      "shape": "rectangle"
+      "analytics": {
+        "achievability": -60,
+        "optimism": -6,
+        "approach": "transformation",
+        "driver": "social_policy",
+        "growth_stance": "neutral",
+        "scale": "national",
+        "power_structure": "centralized"
+      }
     },
     {
       "title": "FAO — Global Calories per Capita (1960–2023) — тренд",
-      "x": 0,
-      "y": 2,
       "size": 60,
       "year": 2024,
       "type": "данные (эмпирика)",
@@ -759,12 +936,18 @@
         "Голод вызван доступом и конфликтами: потому что региональные разрывы сохраняются.",
         "Контраргумент к чисто техно‑решениям: потому что логистика и политика решают не меньше, чем урожайность."
       ],
-      "shape": "circle"
+      "analytics": {
+        "achievability": 0,
+        "optimism": 2,
+        "approach": "reform",
+        "driver": "social_policy",
+        "growth_stance": "neutral",
+        "scale": "global",
+        "power_structure": "hybrid"
+      }
     },
     {
       "title": "Amsterdam Doughnut City (2020–) — применение рамки «пончика»",
-      "x": 0,
-      "y": 1,
       "size": 50,
       "year": 2021,
       "type": "политика/кейс",
@@ -775,12 +958,18 @@
         "Сложно масштабировать на нацуровень: потому что требует координации налоговой/торговой политики.",
         "Контраргумент к критикам абстрактности: потому что есть практическое внедрение, но с ограничениями."
       ],
-      "shape": "circle"
+      "analytics": {
+        "achievability": 0,
+        "optimism": 1,
+        "approach": "reform",
+        "driver": "social_policy",
+        "growth_stance": "degrowth",
+        "scale": "local",
+        "power_structure": "hybrid"
+      }
     },
     {
       "title": "ICT/AI Energy Use — Constraint on Full Automation (meta‑analyses)",
-      "x": -2,
-      "y": -3,
       "size": 60,
       "year": 2023,
       "type": "мета‑обзор (энергетика)",
@@ -791,12 +980,18 @@
         "Зелёная энергия — предпосылка, а не вывода: потому что без неё климатические издержки растут.",
         "Контраргумент к FALC: потому что энергетический след роботов/ИИ не нулевой."
       ],
-      "shape": "circle"
+      "analytics": {
+        "achievability": -2,
+        "optimism": -3,
+        "approach": "reform",
+        "driver": "technology",
+        "growth_stance": "neutral",
+        "scale": "global",
+        "power_structure": "centralized"
+      }
     },
     {
       "title": "Germany Energiewende — занятость в ВИЭ (2000s–2020s)",
-      "x": 0,
-      "y": -1,
       "size": 55,
       "year": 2020,
       "type": "кейс (занятость)",
@@ -807,12 +1002,18 @@
         "Структурная волатильность есть: потому что политики субсидий и импортные цепочки влияют на занятость.",
         "Контраргумент к тезису о мгновенном «освобождении от труда»: потому что на горизонте десятилетий труд растёт."
       ],
-      "shape": "circle"
+      "analytics": {
+        "achievability": 0,
+        "optimism": -1,
+        "approach": "reform",
+        "driver": "social_policy",
+        "growth_stance": "pro_growth",
+        "scale": "national",
+        "power_structure": "centralized"
+      }
     },
     {
       "title": "Gig/Platform Work — эмпирика контроля и нестабильности (2010s–2020s)",
-      "x": 0,
-      "y": -4,
       "size": 60,
       "year": 2021,
       "type": "эмпирика (рынок труда)",
@@ -823,12 +1024,18 @@
         "Доходы волатильны: потому что спрос и тарифы нестабильны.",
         "Контраргумент к «автоматизация освобождает»: потому что часто происходит обратное."
       ],
-      "shape": "circle"
+      "analytics": {
+        "achievability": 0,
+        "optimism": -4,
+        "approach": "reform",
+        "driver": "technology",
+        "growth_stance": "neutral",
+        "scale": "global",
+        "power_structure": "centralized"
+      }
     },
     {
       "title": "Spain/Valencia 4‑day Week Pilots (2021–2024)",
-      "x": 0,
-      "y": 3,
       "size": 55,
       "year": 2024,
       "type": "кейс (региональная политика)",
@@ -839,12 +1046,18 @@
         "Экономика зависит от дизайна: потому что субсидии и отрасль определяют результат.",
         "Контраргумент к универсальности: потому что нужно учитывать контекст."
       ],
-      "shape": "circle"
+      "analytics": {
+        "achievability": 0,
+        "optimism": 3,
+        "approach": "reform",
+        "driver": "social_policy",
+        "growth_stance": "neutral",
+        "scale": "local",
+        "power_structure": "decentralized"
+      }
     },
     {
       "title": "Harry Cleaver — Reading Capital Politically (1979)",
-      "x": -46,
-      "y": -5,
       "size": 50,
       "year": 1979,
       "type": "книга",
@@ -856,12 +1069,18 @@
       "against": {
         "key_points": []
       },
-      "shape": "rectangle"
+      "analytics": {
+        "achievability": -46,
+        "optimism": -5,
+        "approach": "transformation",
+        "driver": "social_policy",
+        "growth_stance": "neutral",
+        "scale": "global",
+        "power_structure": "hybrid"
+      }
     },
     {
       "title": "Richard Sennett — The Corrosion of Character (1998)",
-      "x": -27,
-      "y": -5,
       "size": 60,
       "year": 1998,
       "type": "книга",
@@ -875,12 +1094,18 @@
       "against": {
         "key_points": []
       },
-      "shape": "circle"
+      "analytics": {
+        "achievability": -27,
+        "optimism": -5,
+        "approach": "reform",
+        "driver": "social_policy",
+        "growth_stance": "neutral",
+        "scale": "national",
+        "power_structure": "hybrid"
+      }
     },
     {
       "title": "F. A. Hayek — The Use of Knowledge in Society (1945)",
-      "x": -80,
-      "y": -7,
       "size": 90,
       "year": 1945,
       "type": "статья",
@@ -892,12 +1117,18 @@
       "against": {
         "key_points": []
       },
-      "shape": "circle"
+      "analytics": {
+        "achievability": -80,
+        "optimism": -7,
+        "approach": "reform",
+        "driver": "social_policy",
+        "growth_stance": "pro_growth",
+        "scale": "national",
+        "power_structure": "decentralized"
+      }
     },
     {
       "title": "Murray Bookchin — Post-Scarcity Anarchism (1971)",
-      "x": -54,
-      "y": 5,
       "size": 70,
       "year": 1971,
       "type": "книга",
@@ -913,12 +1144,18 @@
       "against": {
         "key_points": []
       },
-      "shape": "triangle"
+      "analytics": {
+        "achievability": -54,
+        "optimism": 5,
+        "approach": "revolution",
+        "driver": "technology",
+        "growth_stance": "neutral",
+        "scale": "local",
+        "power_structure": "decentralized"
+      }
     },
     {
       "title": "World Bank — Agriculture Overview (2023)",
-      "x": 0,
-      "y": -2,
       "size": 80,
       "year": 2023,
       "type": "отчёт",
@@ -930,12 +1167,18 @@
       "against": {
         "key_points": []
       },
-      "shape": "circle"
+      "analytics": {
+        "achievability": 0,
+        "optimism": -2,
+        "approach": "reform",
+        "driver": "social_policy",
+        "growth_stance": "pro_growth",
+        "scale": "global",
+        "power_structure": "hybrid"
+      }
     },
     {
       "title": "Giorgos Kallis — Degrowth and the Critique of Luxury Communism (2019)",
-      "x": 5,
-      "y": -8,
       "size": 60,
       "year": 2019,
       "type": "статья",
@@ -947,12 +1190,18 @@
       "against": {
         "key_points": []
       },
-      "shape": "rectangle"
+      "analytics": {
+        "achievability": 5,
+        "optimism": -8,
+        "approach": "transformation",
+        "driver": "social_policy",
+        "growth_stance": "degrowth",
+        "scale": "global",
+        "power_structure": "hybrid"
+      }
     },
     {
       "title": "The Economist — Basically Flawed (2016)",
-      "x": -2,
-      "y": -4,
       "size": 70,
       "year": 2016,
       "type": "статья",
@@ -964,12 +1213,18 @@
       "against": {
         "key_points": []
       },
-      "shape": "circle"
+      "analytics": {
+        "achievability": -2,
+        "optimism": -4,
+        "approach": "reform",
+        "driver": "social_policy",
+        "growth_stance": "neutral",
+        "scale": "national",
+        "power_structure": "centralized"
+      }
     },
     {
       "title": "Nassim Dehouche — Post-Labor Economics: A Systematic Review",
-      "x": 18,
-      "y": 7,
       "size": 40,
       "year": 2024,
       "type": "научная статья",
@@ -993,12 +1248,18 @@
           }
         ]
       },
-      "shape": "rectangle"
+      "analytics": {
+        "achievability": 18,
+        "optimism": 7,
+        "approach": "transformation",
+        "driver": "technology",
+        "growth_stance": "neutral",
+        "scale": "global",
+        "power_structure": "hybrid"
+      }
     },
     {
       "title": "Aaron Benanav — Beyond Capitalism—1",
-      "x": 12,
-      "y": 5,
       "size": 50,
       "year": 2022,
       "type": "статья",
@@ -1022,12 +1283,18 @@
           }
         ]
       },
-      "shape": "rectangle"
+      "analytics": {
+        "achievability": 12,
+        "optimism": 5,
+        "approach": "transformation",
+        "driver": "social_policy",
+        "growth_stance": "neutral",
+        "scale": "global",
+        "power_structure": "hybrid"
+      }
     },
     {
       "title": "Matthias Schmelzer et al. — The Future Is Degrowth",
-      "x": 13,
-      "y": -9,
       "size": 65,
       "year": 2022,
       "type": "книга",
@@ -1051,12 +1318,18 @@
           }
         ]
       },
-      "shape": "rectangle"
+      "analytics": {
+        "achievability": 13,
+        "optimism": -9,
+        "approach": "transformation",
+        "driver": "social_policy",
+        "growth_stance": "degrowth",
+        "scale": "global",
+        "power_structure": "hybrid"
+      }
     },
     {
       "title": "Tim Jackson — Post Growth: Life After Capitalism",
-      "x": 9,
-      "y": -7,
       "size": 75,
       "year": 2021,
       "type": "книга",
@@ -1076,12 +1349,18 @@
           }
         ]
       },
-      "shape": "rectangle"
+      "analytics": {
+        "achievability": 9,
+        "optimism": -7,
+        "approach": "transformation",
+        "driver": "social_policy",
+        "growth_stance": "degrowth",
+        "scale": "global",
+        "power_structure": "hybrid"
+      }
     },
     {
       "title": "Kate Soper — Post-Growth Living",
-      "x": 4,
-      "y": -6,
       "size": 50,
       "year": 2020,
       "type": "книга",
@@ -1100,12 +1379,18 @@
           }
         ]
       },
-      "shape": "rectangle"
+      "analytics": {
+        "achievability": 4,
+        "optimism": -6,
+        "approach": "transformation",
+        "driver": "social_policy",
+        "growth_stance": "degrowth",
+        "scale": "local",
+        "power_structure": "decentralized"
+      }
     },
     {
       "title": "Richard Heinberg — The End of Growth",
-      "x": -3,
-      "y": -8,
       "size": 65,
       "year": 2011,
       "type": "книга",
@@ -1124,12 +1409,18 @@
           }
         ]
       },
-      "shape": "rectangle"
+      "analytics": {
+        "achievability": -3,
+        "optimism": -8,
+        "approach": "transformation",
+        "driver": "social_policy",
+        "growth_stance": "degrowth",
+        "scale": "local",
+        "power_structure": "decentralized"
+      }
     },
     {
       "title": "Tim Jackson — Prosperity Without Growth",
-      "x": -7,
-      "y": -7,
       "size": 85,
       "year": 2009,
       "type": "книга",
@@ -1148,12 +1439,18 @@
           }
         ]
       },
-      "shape": "rectangle"
+      "analytics": {
+        "achievability": -7,
+        "optimism": -7,
+        "approach": "transformation",
+        "driver": "social_policy",
+        "growth_stance": "degrowth",
+        "scale": "national",
+        "power_structure": "hybrid"
+      }
     },
     {
       "title": "Clive Hamilton — Growth Fetish",
-      "x": -12,
-      "y": -6,
       "size": 60,
       "year": 2003,
       "type": "книга",
@@ -1173,12 +1470,18 @@
           }
         ]
       },
-      "shape": "rectangle"
+      "analytics": {
+        "achievability": -12,
+        "optimism": -6,
+        "approach": "transformation",
+        "driver": "social_policy",
+        "growth_stance": "degrowth",
+        "scale": "national",
+        "power_structure": "hybrid"
+      }
     },
     {
       "title": "Robin Wall Kimmerer — The Serviceberry",
-      "x": 15,
-      "y": 8,
       "size": 55,
       "year": 2023,
       "type": "книга",
@@ -1198,12 +1501,18 @@
           }
         ]
       },
-      "shape": "triangle"
+      "analytics": {
+        "achievability": 15,
+        "optimism": 8,
+        "approach": "revolution",
+        "driver": "social_policy",
+        "growth_stance": "degrowth",
+        "scale": "local",
+        "power_structure": "decentralized"
+      }
     },
     {
       "title": "Brett Christophers — The Price is Wrong",
-      "x": -1,
-      "y": -5,
       "size": 60,
       "year": 2024,
       "type": "книга",
@@ -1223,12 +1532,18 @@
           }
         ]
       },
-      "shape": "rectangle"
+      "analytics": {
+        "achievability": -1,
+        "optimism": -5,
+        "approach": "transformation",
+        "driver": "social_policy",
+        "growth_stance": "neutral",
+        "scale": "national",
+        "power_structure": "centralized"
+      }
     },
     {
       "title": "Stephanie Kelton — The Deficit Myth",
-      "x": 6,
-      "y": 6,
       "size": 85,
       "year": 2020,
       "type": "книга",
@@ -1248,12 +1563,18 @@
           }
         ]
       },
-      "shape": "rectangle"
+      "analytics": {
+        "achievability": 6,
+        "optimism": 6,
+        "approach": "transformation",
+        "driver": "social_policy",
+        "growth_stance": "pro_growth",
+        "scale": "national",
+        "power_structure": "centralized"
+      }
     },
     {
       "title": "Aaron Benanav — Automation and the Future of Work",
-      "x": 10,
-      "y": 4,
       "size": 60,
       "year": 2020,
       "type": "книга",
@@ -1277,12 +1598,18 @@
           }
         ]
       },
-      "shape": "rectangle"
+      "analytics": {
+        "achievability": 10,
+        "optimism": 4,
+        "approach": "transformation",
+        "driver": "social_policy",
+        "growth_stance": "neutral",
+        "scale": "global",
+        "power_structure": "hybrid"
+      }
     },
     {
       "title": "Paul Mason — Postcapitalism: A Guide to Our Future",
-      "x": 25,
-      "y": 8,
       "size": 75,
       "year": 2015,
       "type": "книга",
@@ -1306,12 +1633,18 @@
           }
         ]
       },
-      "shape": "rectangle"
+      "analytics": {
+        "achievability": 25,
+        "optimism": 8,
+        "approach": "transformation",
+        "driver": "technology",
+        "growth_stance": "pro_growth",
+        "scale": "global",
+        "power_structure": "decentralized"
+      }
     },
     {
       "title": "Daniel Susskind — A World Without Work: Technology, Automation, and How We Should Respond",
-      "x": 20,
-      "y": 5,
       "size": 70,
       "year": 2020,
       "type": "книга",
@@ -1335,12 +1668,18 @@
           }
         ]
       },
-      "shape": "circle"
+      "analytics": {
+        "achievability": 20,
+        "optimism": 5,
+        "approach": "reform",
+        "driver": "technology",
+        "growth_stance": "neutral",
+        "scale": "national",
+        "power_structure": "hybrid"
+      }
     },
     {
       "title": "Yanis Varoufakis — Another Now: Dispatches from an Alternative Present",
-      "x": 18,
-      "y": 6,
       "size": 60,
       "year": 2020,
       "type": "книга",
@@ -1364,12 +1703,18 @@
           }
         ]
       },
-      "shape": "rectangle"
+      "analytics": {
+        "achievability": 18,
+        "optimism": 6,
+        "approach": "transformation",
+        "driver": "social_policy",
+        "growth_stance": "neutral",
+        "scale": "national",
+        "power_structure": "decentralized"
+      }
     },
     {
       "title": "Юваль Ной Харари — Homo Deus: Краткая история завтрашнего дня (2015)",
-      "x": 30,
-      "y": 2,
       "size": 90,
       "year": 2015,
       "type": "книга",
@@ -1394,12 +1739,18 @@
           }
         ]
       },
-      "shape": "rectangle"
+      "analytics": {
+        "achievability": 30,
+        "optimism": 2,
+        "approach": "transformation",
+        "driver": "technology",
+        "growth_stance": "pro_growth",
+        "scale": "global",
+        "power_structure": "centralized"
+      }
     },
     {
       "title": "Джеймс Бридл — Новое тёмное время: Технологии и конец будущего (2018)",
-      "x": -3,
-      "y": -7,
       "size": 70,
       "year": 2018,
       "type": "книга",
@@ -1424,12 +1775,18 @@
           }
         ]
       },
-      "shape": "circle"
+      "analytics": {
+        "achievability": -3,
+        "optimism": -7,
+        "approach": "reform",
+        "driver": "technology",
+        "growth_stance": "neutral",
+        "scale": "global",
+        "power_structure": "hybrid"
+      }
     },
     {
       "title": "Шошана Зубофф — Эпоха надзорного капитализма (2019)",
-      "x": -5,
-      "y": -8,
       "size": 85,
       "year": 2019,
       "type": "книга",
@@ -1454,12 +1811,18 @@
           }
         ]
       },
-      "shape": "rectangle"
+      "analytics": {
+        "achievability": -5,
+        "optimism": -8,
+        "approach": "transformation",
+        "driver": "technology",
+        "growth_stance": "neutral",
+        "scale": "global",
+        "power_structure": "centralized"
+      }
     },
     {
       "title": "Рэй Курцвейл — Сингулярность уже близко (2005)",
-      "x": 50,
-      "y": 9,
       "size": 80,
       "year": 2005,
       "type": "книга",
@@ -1484,12 +1847,18 @@
           }
         ]
       },
-      "shape": "triangle"
+      "analytics": {
+        "achievability": 50,
+        "optimism": 9,
+        "approach": "revolution",
+        "driver": "technology",
+        "growth_stance": "pro_growth",
+        "scale": "global",
+        "power_structure": "hybrid"
+      }
     },
     {
       "title": "Джозеф Тейнтер — Коллапс сложных обществ (1988)",
-      "x": -20,
-      "y": -9,
       "size": 70,
       "year": 1988,
       "type": "книга",
@@ -1514,15 +1883,21 @@
           }
         ]
       },
-      "shape": "circle"
+      "analytics": {
+        "achievability": -20,
+        "optimism": -9,
+        "approach": "reform",
+        "driver": "social_policy",
+        "growth_stance": "degrowth",
+        "scale": "national",
+        "power_structure": "hybrid"
+      }
     }
   ],
   "notes": [
     "Координаты — экспертные оценки для сравнительной навигации, а не строгие измерения.",
-    "Цвет/размер точки агрегирует: цитируемость/индекс h, публичные продажи/охват, внедрение в политику или городские программы.",
-    "Добавлено поле url для прямых ссылок на ресурсы.",
-    "Версия 2.0: все описания расширены, добавлены key_takeaways («утверждение: потому что…») и блок against с источниками.",
-    "Добавлены отдельные точки‑контраргументы/кейсы с собственными координатами (x/y), чтобы контраргументация была видна на общей карте."
+    "Размер точки (size) агрегирует: цитируемость, публичный охват, внедрение в политику.",
+    "Версия 4.0: данные реструктурированы для поддержки динамических осей. Добавлены аналитические измерения: approach, driver, growth_stance, scale, power_structure."
   ],
-  "version": "3.0 (refined_axes_and_shapes)"
+  "version": "4.0 (dynamic_axes_full)"
 }
