@@ -38,10 +38,10 @@
         .json-actions .hint{color:var(--muted); font-size:.9em}
         .file-inline{display:inline-flex; align-items:center; gap:8px; cursor:pointer; color:var(--ink)}
         .file-inline input{display:none}
-        .file-inline span{background:#ffffffee; border:1px solid #233255; padding:6px 10px; border-radius:10px}
+        .file-inline span{background:#ffffffee; border:1px solid #b0b9c8; padding:6px 10px; border-radius:10px}
 
         .zoombar{margin-left:auto; display:flex; gap:8px}
-        .zoombar button{background:#ffffffee; color:var(--ink); border:1px solid #233255;
+        .zoombar button{background:#ffffffee; color:var(--ink); border:1px solid #b0b9c8;
           border-radius:10px; padding:8px 10px; cursor:pointer}
         .zoombar button:hover{background:#18294c}
 
@@ -489,21 +489,24 @@
       ctx.fillStyle = '#f7f9fc'; // Light background
       ctx.fillRect(0,0,rect.width,rect.height);
 
+      const [vw_minX, vw_maxY] = screenToWorld(0, 0);
+      const [vw_maxX, vw_minY] = screenToWorld(rect.width, rect.height);
+
       // сетка
       ctx.strokeStyle = getComputedStyle(document.documentElement).getPropertyValue('--grid').trim() || '#555555'; // Dark gridlines
       ctx.lineWidth = 1;
       ctx.beginPath();
-      const xStep = niceTick((worldBBox.maxX - worldBBox.minX)/10);
-      const yStep = niceTick((worldBBox.maxY - worldBBox.minY)/8);
+      const xStep = niceTick((vw_maxX - vw_minX) / 10);
+      const yStep = niceTick((vw_maxY - vw_minY) / 8);
 
-      for(let x = Math.ceil(worldBBox.minX / xStep)*xStep; x <= worldBBox.maxX; x += xStep){
-        const [x1,y1] = worldToScreen(x, worldBBox.minY);
-        const [x2,y2] = worldToScreen(x, worldBBox.maxY);
+      for(let x = Math.ceil(vw_minX / xStep) * xStep; x <= vw_maxX; x += xStep){
+        const [x1,y1] = worldToScreen(x, vw_minY);
+        const [x2,y2] = worldToScreen(x, vw_maxY);
         ctx.moveTo(x1,y1); ctx.lineTo(x2,y2);
       }
-      for(let y = Math.ceil(worldBBox.minY / yStep)*yStep; y <= worldBBox.maxY; y += yStep){
-        const [x1,y1] = worldToScreen(worldBBox.minX, y);
-        const [x2,y2] = worldToScreen(worldBBox.maxX, y);
+      for(let y = Math.ceil(vw_minY / yStep) * yStep; y <= vw_maxY; y += yStep){
+        const [x1,y1] = worldToScreen(vw_minX, y);
+        const [x2,y2] = worldToScreen(vw_maxX, y);
         ctx.moveTo(x1,y1); ctx.lineTo(x2,y2);
       }
       ctx.stroke();
@@ -512,22 +515,25 @@
       ctx.strokeStyle = getComputedStyle(document.documentElement).getPropertyValue('--axis').trim() || '#c2cff3';
       ctx.lineWidth = 1.4;
       ctx.beginPath();
-      let [ax1,ay1] = worldToScreen(worldBBox.minX, 0);
-      let [ax2,ay2] = worldToScreen(worldBBox.maxX, 0);
+      let [ax1,ay1] = worldToScreen(vw_minX, 0);
+      let [ax2,ay2] = worldToScreen(vw_maxX, 0);
       ctx.moveTo(ax1,ay1); ctx.lineTo(ax2,ay2);
-      [ax1,ay1] = worldToScreen(0, worldBBox.minY);
-      [ax2,ay2] = worldToScreen(0, worldBBox.maxY);
+      [ax1,ay1] = worldToScreen(0, vw_minY);
+      [ax2,ay2] = worldToScreen(0, vw_maxY);
       ctx.moveTo(ax1,ay1); ctx.lineTo(ax2,ay2);
       ctx.stroke();
 
       // подписи тиков (крупные)
       ctx.fillStyle = getComputedStyle(document.documentElement).getPropertyValue('--muted').trim() || '#9aa7bd';
       ctx.font = '11px system-ui, sans-serif';
-      for(let x = Math.ceil(worldBBox.minX / xStep)*xStep; x <= worldBBox.maxX; x += xStep){
+      ctx.textAlign = 'left';
+      for(let x = Math.ceil(vw_minX / xStep) * xStep; x <= vw_maxX; x += xStep){
+        if (x === 0) continue;
         const [sx, sy] = worldToScreen(x, 0);
         ctx.fillText(String(x), sx+4, sy-4);
       }
-      for(let y = Math.ceil(worldBBox.minY / yStep)*yStep; y <= worldBBox.maxY; y += yStep){
+      for(let y = Math.ceil(vw_minY / yStep) * yStep; y <= vw_maxY; y += yStep){
+        if (y === 0) continue;
         const [sx, sy] = worldToScreen(0, y);
         ctx.fillText(String(y), sx+4, sy-4);
       }
@@ -537,14 +543,15 @@
       ctx.font = '12px system-ui, sans-serif';
       const xLabel = data.axes?.x?.label || 'X';
       const yLabel = data.axes?.y?.label || 'Y';
-      const [xEnd, yZero] = worldToScreen(worldBBox.maxX, 0);
-      ctx.fillText(xLabel, xEnd - 40, yZero + 18);
-      const [xZero, yTop] = worldToScreen(0, worldBBox.maxY);
-      ctx.save();
-      ctx.translate(xZero - 28, yTop + 8);
-      ctx.rotate(-Math.PI/2);
-      ctx.fillText(yLabel, 0, 0);
-      ctx.restore();
+
+      const [, yZero] = worldToScreen(0, 0);
+      ctx.textAlign = 'right';
+      ctx.fillText(xLabel, rect.width - 15, yZero + 18);
+
+      const [xZero, ] = worldToScreen(0, 0);
+      ctx.textAlign = 'left';
+      ctx.textBaseline = 'middle';
+      ctx.fillText(yLabel, xZero + 8, 15);
     }
     function drawPoints() {
       const R = R_WORLD * fit.s * user.s; // screen radius
