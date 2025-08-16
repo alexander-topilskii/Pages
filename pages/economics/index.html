@@ -6,13 +6,23 @@
     <title>Карта идей: реалистичность и оптимизм (Canvas, single-file)</title>
     <style>
         :root{
-          --bg:#0b0e14; --panel:#111622; --ink:#e7ebf3; --muted:#9aa7bd;
-          --accent:#6aa3ff; --grid:#273148; --axis:#c2cff3; --point:#77c0ff;
-          --tooltip-bg:#121826ee; --tooltip-border:#3a4a6b; --shadow:0 6px 18px rgba(0,0,0,.35);
+          --bg:#f7f9fc; --panel:#ffffff; --ink:#333333; --muted:#666666;
+          --accent:#3366cc; --grid:#dde1e7; --axis:#555555; --point:#1155cc;
+          --tooltip-bg:#ffffffee; --tooltip-border:#b0b9c8; --shadow:0 6px 18px rgba(0,0,0,.2);
         }
         *{box-sizing:border-box}
         html,body{margin:0;padding:0;height:100%;background:var(--bg);color:var(--ink);
           font:15px/1.5 system-ui,-apple-system,Segoe UI,Roboto,Ubuntu,Cantarell,Arial}
+        body { background: var(--bg); color: var(--ink); }
+        .chart-container {
+          background: radial-gradient(1200px 600px at 10% -20%, #f0f3f8 0%, #f7f9fc 60%);
+          box-shadow: var(--shadow);
+        }
+        canvas#chartCanvas { background-color: transparent; }
+
+        .tooltip {
+          color: var(--ink);
+        }
         h1,h2{margin:0 0 .5rem} h1{font-size:clamp(1.25rem,1rem + 1.2vw,1.9rem)}
         h2{font-size:clamp(1.05rem,.9rem + .8vw,1.3rem)}
 
@@ -123,8 +133,6 @@
             <h2>Notes</h2>
             <ul id="notesList" class="notes"></ul>
 
-            <h2>Comment</h2>
-            <div id="commentView" class="comment-view" aria-live="polite"></div>
         </div>
 
         <div class="col col-resources">
@@ -466,11 +474,11 @@
     function drawGridAxes(){
       const rect = canvas.getBoundingClientRect();
       // фон
-      ctx.fillStyle = '#0b0e14';
+      ctx.fillStyle = '#f7f9fc'; // Light background
       ctx.fillRect(0,0,rect.width,rect.height);
 
       // сетка
-      ctx.strokeStyle = getComputedStyle(document.documentElement).getPropertyValue('--grid').trim() || '#273148';
+      ctx.strokeStyle = getComputedStyle(document.documentElement).getPropertyValue('--grid').trim() || '#555555'; // Dark gridlines
       ctx.lineWidth = 1;
       ctx.beginPath();
       const xStep = niceTick((worldBBox.maxX - worldBBox.minX)/10);
@@ -562,14 +570,13 @@
         ctx.fill();
         ctx.restore();
 
-        // заголовок
-        ctx.font = '12px system-ui, sans-serif';
-        ctx.lineWidth = 3;
-        ctx.strokeStyle = outline;
+        // заголовок - улучшено для читаемости
+        ctx.font = '12px "Segoe UI", Arial, sans-serif'; // Set a clear, modern font
         ctx.fillStyle = ink;
         const dx = Math.max(2, Math.abs(R)) + 4;
         const dy = Math.max(2, Math.abs(R)) + 4;
-        ctx.strokeText(p.title, sx + dx, sy - dy);
+
+        // Render only filled text for clarity, no stroking
         ctx.fillText(p.title, sx + dx, sy - dy);
       }
     }
@@ -776,8 +783,6 @@
         notesList.appendChild(li);
       });
 
-      // Comment (нередактируемый)
-      commentView.textContent = data.comment || '';
 
       // Resources (уникальные URL)
       resourcesList.innerHTML = '';
