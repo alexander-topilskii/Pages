@@ -5,11 +5,9 @@ const els = {
   sidebar: document.getElementById('sidebar'),
   menuBtn: document.getElementById('menuBtn'),
   backdrop: document.getElementById('backdrop'),
-  previewWrap: document.getElementById('previewWrap'),
-  preview: document.getElementById('preview'),
-  previewTitle: document.getElementById('previewTitle'),
-  openInNew: document.getElementById('openInNew'),
-  closePreview: document.getElementById('closePreview')
+  welcome: document.getElementById('welcome'),
+  viewer: document.getElementById('viewer'),
+  backBtn: document.getElementById('backBtn')
 };
 
 const state = { data: null, expanded: new Set(), filter: '' };
@@ -38,7 +36,7 @@ async function init(){
     if(firstId) state.expanded.add(firstId);
     render();
     wireSearch();
-    wirePreview();
+    wireViewer();
   }catch(err){
     console.error(err);
     els.cats.innerHTML = `<div class="muted" style="padding:12px">Ошибка загрузки JSON: ${escapeHtml(String(err.message||err))}</div>`;
@@ -100,40 +98,50 @@ function wireSearch(){
 function match(text, q){ return String(text||'').toLowerCase().includes(q); }
 function highlight(text){ if(!state.filter) return escapeHtml(text); const re = new RegExp(`(${escapeReg(state.filter)})`, 'ig'); return escapeHtml(text).replace(re, '<mark>$1</mark>'); }
 
-// --- Preview
-function wirePreview(){
-  els.closePreview.addEventListener('click', () => {
-    els.preview.src = 'about:blank';
-    els.previewWrap.classList.remove('active');
-  });
+// --- Page viewer
+function wireViewer(){
+  els.backBtn.addEventListener('click', () => history.back());
   window.addEventListener('hashchange', tryOpenFromHash);
   tryOpenFromHash();
 }
 
 function onOpenPage(e){
-  // On mobile open the page directly, on desktop open preview iframe
   const url = this.getAttribute('data-url');
-  const title = this.getAttribute('data-title');
   if(!deviceHasWide()) return; // allow default navigation on mobile
   e.preventDefault();
-  openPreview(url, title);
   toggleSidebar(false);
-  location.hash = '#'+encodeURIComponent(url);
+  if(location.hash !== '#'+encodeURIComponent(url)){
+    location.hash = '#'+encodeURIComponent(url);
+  }else{
+    openPage(url);
+  }
 }
 
 function deviceHasWide(){ return window.matchMedia('(min-width: 1025px)').matches; }
 
-function openPreview(url, title){
-  els.previewTitle.innerHTML = `🔗 ${escapeHtml(title)}`;
-  els.preview.src = url;
-  els.openInNew.href = url;
-  els.previewWrap.classList.add('active');
+function openPage(url){
+  els.viewer.src = url;
+  els.viewer.classList.add('active');
+  els.grid.style.display = 'none';
+  els.welcome.style.display = 'none';
+  els.backBtn.style.display = 'inline-flex';
+}
+
+function closePage(){
+  els.viewer.src = 'about:blank';
+  els.viewer.classList.remove('active');
+  els.grid.style.display = '';
+  els.welcome.style.display = '';
+  els.backBtn.style.display = 'none';
 }
 
 function tryOpenFromHash(){
   const h = decodeURIComponent(location.hash.replace(/^#/, ''));
-  if(h && /^[^#?].+$/i.test(h)){
-    openPreview(h, 'Предпросмотр');
+  if(h){
+    openPage(h);
+    toggleSidebar(false);
+  }else{
+    closePage();
   }
 }
 
