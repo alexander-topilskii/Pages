@@ -31,8 +31,9 @@ body {
 .search input::placeholder{ color: var(--muted); }
 .cat { margin: 12px 0; }
 .cat-header { cursor: pointer; user-select: none; padding: 10px 12px; border-radius: 12px; display: flex; align-items: center; justify-content: space-between; border: 1px solid var(--border); background: rgba(255,255,255,.02); }
-.cat-title { display: flex; align-items: center; gap: 10px; font-weight: 600; }
-.cat-desc { margin: 6px 4px 0 34px; color: var(--muted); font-size: 12px; }
+.cat-title { display: flex; align-items: flex-start; gap: 10px; }
+.cat-name { font-weight: 600; }
+.cat-desc { margin-top: 2px; color: var(--muted); font-size: 12px; }
 .pages { margin-top: 8px; display: grid; gap: 6px; padding-left: 6px; }
 .page-link { text-decoration: none; color: inherit; padding: 10px; border: 1px solid var(--border); border-radius: 12px; display: grid; grid-template-columns: 28px 1fr; gap: 10px; align-items: center; background: var(--panel-2); }
 .page-link:hover{ border-color: rgba(91,156,255,.6); box-shadow: var(--shadow); }
