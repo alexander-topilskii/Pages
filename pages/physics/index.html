@@ -12,7 +12,8 @@
     <div class="controls">
       <div class="range">
         <label for="t">Время t (с)</label>
-        <input id="t" type="range" min="0" max="12" step="0.01" value="0" />
+        <input id="t" type="range" min="0" max="60" step="0.01" value="0" />
+        <input id="tInput" type="number" step="0.01" value="0" style="width:90px" />
         <div class="pill"><span id="tVal">0.00</span> с</div>
       </div>
       <div>
@@ -23,6 +24,11 @@
         <label for="speed">|v₀| (пикс/с)</label>
         <input id="speed" type="number" step="5" value="90" style="width:90px" />
       </div>
+      <div>
+        <label for="scale">Масштаб</label>
+        <input id="scale" type="number" step="0.1" value="1" style="width:70px" />
+      </div>
+      <div class="small">Колесо мыши тоже масштабирует</div>
     </div>
 
     <div class="panes">
@@ -49,6 +55,20 @@
         <div class="row"><strong>Вращающаяся форма</strong><span class="small">через величины инерциальной системы</span></div>
         <div class="code" id="eqRot"></div>
       </section>
+    </div>
+
+    <div class="description">
+      <h3>Описание</h3>
+      <p>На экране показано движение частицы в двух системах отсчёта: слева — инерциальная (движение равномерное и прямолинейное), справа — вращающаяся (наблюдатель вращается вместе с системой). Траектория справа искривляется из-за дополнительных (фиктивных) сил.</p>
+      <ul>
+        <li><b>a</b> — ускорение; <b>a<sub>инерц</sub></b> — в инерциальной системе; <b>a′</b> — во вращающейся.</li>
+        <li><b>r</b>, <b>v</b> — положение и скорость; со штрихом — во вращающейся системе.</li>
+        <li><b>ω</b> — угловая скорость вращения системы (по оси z).</li>
+        <li><b>t</b> — время моделирования (с).</li>
+        <li><b>R(ωt)</b> — оператор (матрица) поворота на угол ωt.</li>
+        <li><b>v₀</b> — начальная скорость в инерциальной системе (модуль задаётся в поле |v₀|).</li>
+        <li><b>Масштаб</b> — коэффициент увеличения/уменьшения отображения; также можно крутить колесо мыши.</li>
+      </ul>
     </div>
   </div>
 
