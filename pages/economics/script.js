@@ -217,15 +217,16 @@
             const red = Math.round(normalizedSize * 255);
             const blue = Math.round((1 - normalizedSize) * 255);
             const fillColor = `rgb(${red}, 0, ${blue})`;
-            ctx.fillStyle = fillColor;
+            const highlightX = pointX - adjustedRadius * 0.25;
+            const highlightY = pointY - adjustedRadius * 0.25;
+            const gradient = ctx.createRadialGradient(highlightX, highlightY, 0, pointX, pointY, adjustedRadius);
+            const lighterColor = `rgb(${Math.min(255, red + 90)}, ${Math.min(255, 0 + 90)}, ${Math.min(255, blue + 90)})`;
+            gradient.addColorStop(0, lighterColor);
+            gradient.addColorStop(1, fillColor);
+            ctx.fillStyle = gradient;
 
             ctx.beginPath();
-            if (p.type === "книга") {
-                const side = adjustedRadius * 2;
-                ctx.rect(pointX - side / 2, pointY - side / 2, side, side);
-            } else {
-                ctx.arc(pointX, pointY, adjustedRadius, 0, Math.PI * 2);
-            }
+            ctx.arc(pointX, pointY, adjustedRadius, 0, Math.PI * 2);
             ctx.fill();
             ctx.restore();
 
@@ -250,15 +251,17 @@
           const red = Math.round(normalizedSize * 255);
           const blue = Math.round((1 - normalizedSize) * 255);
           const fillColor = `rgb(${red}, 0, ${blue})`;
-          ctx.fillStyle = fillColor;
+          const radius = Math.max(2, Math.abs(R));
+          const highlightX = sx - radius * 0.25;
+          const highlightY = sy - radius * 0.25;
+          const gradient = ctx.createRadialGradient(highlightX, highlightY, 0, sx, sy, radius);
+          const lighterColor = `rgb(${Math.min(255, red + 90)}, ${Math.min(255, 0 + 90)}, ${Math.min(255, blue + 90)})`;
+          gradient.addColorStop(0, lighterColor);
+          gradient.addColorStop(1, fillColor);
+          ctx.fillStyle = gradient;
 
           ctx.beginPath();
-          if (p.type === "книга") {
-              const side = Math.max(2, Math.abs(R)) * 2;
-              ctx.rect(sx - side / 2, sy - side / 2, side, side);
-          } else {
-              ctx.arc(sx, sy, Math.max(2, Math.abs(R)), 0, Math.PI * 2);
-          }
+          ctx.arc(sx, sy, radius, 0, Math.PI * 2);
           ctx.fill();
           ctx.restore();
 
