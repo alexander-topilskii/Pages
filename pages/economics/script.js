@@ -405,9 +405,7 @@
       const my = e.clientY - rect.top;
 
       const prevS = user.s;
-      const isSmallScreen = rect.width < 600;
-      const maxZoom = isSmallScreen ? 20 : 8;
-      const newS = Math.max(0.2, Math.min(maxZoom, prevS * factor));
+      const newS = prevS * factor;
       const k = newS / prevS;
 
       // зум вокруг точки (mx,my)
@@ -454,13 +452,9 @@
         const newDist = Math.hypot(p1.x - p2.x, p1.y - p2.y);
         const currentMid = { x: (p1.x + p2.x) / 2, y: (p1.y + p2.y) / 2 };
 
-        // Dynamic max zoom
-        const isSmallScreen = rect.width < 600;
-        const maxZoom = isSmallScreen ? 20 : 8;
-
         // Calculate new scale
         const scale = newDist / (touchState.startDist || newDist);
-        const newS = Math.max(0.2, Math.min(maxZoom, touchState.startS * scale));
+        const newS = touchState.startS * scale;
         const k = newS / touchState.startS;
 
         // Pan delta
@@ -489,9 +483,7 @@
       const rect = canvas.getBoundingClientRect();
       const mx = rect.width/2, my = rect.height/2;
       const prevS = user.s;
-      const isSmallScreen = rect.width < 600;
-      const maxZoom = isSmallScreen ? 20 : 8;
-      const newS = Math.max(0.2, Math.min(maxZoom, prevS * factor));
+      const newS = prevS * factor;
       const k = newS / prevS;
       user.tx = mx - k*(mx - user.tx);
       user.ty = my - k*(my - user.ty);
