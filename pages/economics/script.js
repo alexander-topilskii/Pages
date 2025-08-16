@@ -52,19 +52,10 @@
       const rect = canvas.getBoundingClientRect();
       const W = rect.width - margin*2;
       const H = rect.height - margin*2;
-
-      // Определяем, является ли экран "маленьким"
-      const isSmallScreen = rect.width < 600; 
-      // На маленьких экранах применяем начальный 2x зум, на больших — нет
-      const zoomFactor = isSmallScreen ? 2 : 1;
-
       const w = worldBBox.maxX - worldBBox.minX;
       const h = worldBBox.maxY - worldBBox.minY;
-
-      // Применяем zoomFactor к вычислению масштаба
-      const sx = (W * zoomFactor) / w;
-      const sy = (H * zoomFactor) / h;
-
+      const sx = W / w;
+      const sy = H / h;
       const s = Math.min(sx, sy);
       fit.s = s;
       // ось Y — вверх (мировая), но на экране вниз, поэтому инвертируем при отрисовке
@@ -405,7 +396,9 @@
       const my = e.clientY - rect.top;
 
       const prevS = user.s;
-      const newS = Math.max(0.2, Math.min(8, prevS * factor));
+      const isSmallScreen = rect.width < 600;
+      const maxZoom = isSmallScreen ? 20 : 8;
+      const newS = Math.max(0.2, Math.min(maxZoom, prevS * factor));
       const k = newS / prevS;
 
       // зум вокруг точки (mx,my)
@@ -417,7 +410,7 @@
     },{passive:false});
 
     // Touch: drag & pinch
-    let touchState = { mode:null, p1:null, p2:null, startDist:0, startS:1, startTx:0, startTy:0 };
+    let touchState = { mode:null, p1:null, p2:null, startDist:0, startS:1, startTx:0, startTy:0, startMid:null };
     canvas.addEventListener('touchstart', e => {
       if(e.touches.length === 1){
         touchState.mode = 'drag';
@@ -430,6 +423,10 @@
         touchState.startS = user.s;
         touchState.startTx = user.tx;
         touchState.startTy = user.ty;
+        touchState.startMid = { 
+            x: (touchState.p1.x + touchState.p2.x) / 2,
+            y: (touchState.p1.y + touchState.p2.y) / 2
+        };
       }
     }, {passive:true});
     canvas.addEventListener('touchmove', e => {
@@ -441,13 +438,35 @@
         user.tx += dx; user.ty += dy;
         render();
       } else if(touchState.mode === 'pinch' && e.touches.length === 2){
+        const rect = canvas.getBoundingClientRect();
+        // current state
         const p1 = { x:e.touches[0].clientX, y:e.touches[0].clientY };
         const p2 = { x:e.touches[1].clientX, y:e.touches[1].clientY };
         const newDist = Math.hypot(p1.x - p2.x, p1.y - p2.y);
+        const currentMid = { x: (p1.x + p2.x) / 2, y: (p1.y + p2.y) / 2 };
+
+        // Dynamic max zoom
+        const isSmallScreen = rect.width < 600;
+        const maxZoom = isSmallScreen ? 20 : 8;
+
+        // Calculate new scale
         const scale = newDist / (touchState.startDist || newDist);
-        user.s = Math.max(0.2, Math.min(8, touchState.startS * scale));
-        user.tx = touchState.startTx;
-        user.ty = touchState.startTy;
+        const newS = Math.max(0.2, Math.min(maxZoom, touchState.startS * scale));
+        const k = newS / touchState.startS;
+
+        // Pan delta
+        const panDx = currentMid.x - touchState.startMid.x;
+        const panDy = currentMid.y - touchState.startMid.y;
+
+        // Initial midpoint relative to canvas
+        const mx = touchState.startMid.x - rect.left;
+        const my = touchState.startMid.y - rect.top;
+
+        // Apply new transform
+        user.s = newS;
+        user.tx = mx - k * (mx - touchState.startTx) + panDx;
+        user.ty = my - k * (my - touchState.startTy) + panDy;
+
         render();
       }
     },{passive:true});
@@ -461,7 +480,9 @@
       const rect = canvas.getBoundingClientRect();
       const mx = rect.width/2, my = rect.height/2;
       const prevS = user.s;
-      const newS = Math.max(0.2, Math.min(8, prevS * factor));
+      const isSmallScreen = rect.width < 600;
+      const maxZoom = isSmallScreen ? 20 : 8;
+      const newS = Math.max(0.2, Math.min(maxZoom, prevS * factor));
       const k = newS / prevS;
       user.tx = mx - k*(mx - user.tx);
       user.ty = my - k*(my - user.ty);
