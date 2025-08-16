@@ -33,6 +33,20 @@
         .file-inline input{display:none}
         .file-inline span{background:#ffffffee; border:1px solid #b0b9c8; padding:6px 10px; border-radius:10px}
 
+        .axis-selector {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        .axis-selector select {
+            background: var(--panel);
+            color: var(--ink);
+            border: 1px solid var(--tooltip-border);
+            border-radius: 8px;
+            padding: 6px 8px;
+            font-size: 14px;
+        }
+
         .zoombar{margin-left:auto; display:flex; gap:8px}
         .zoombar button{background:#ffffffee; color:var(--ink); border:1px solid #b0b9c8;
           border-radius:10px; padding:8px 10px; cursor:pointer}

@@ -1,5 +1,6 @@
     /* ======================= State & DOM refs ======================= */
     let data = null;
+    let mappedPoints = [];
     const canvas = document.getElementById('chartCanvas');
     const container = document.getElementById('chartContainer');
     const tooltip = document.getElementById('tooltip');
@@ -11,12 +12,14 @@
 
     const notesList = document.getElementById('notesList');
     const resourcesList = document.getElementById('resourcesList');
-    const commentView = document.getElementById('commentView');
     const selectedCard = document.getElementById('selectedCard');
 
     const btnZoomIn = document.getElementById('btnZoomIn');
     const btnZoomOut = document.getElementById('btnZoomOut');
     const btnReset = document.getElementById('btnReset');
+
+    const xAxisSelect = document.getElementById('xAxisSelect');
+    const yAxisSelect = document.getElementById('yAxisSelect');
 
     /* =================== Canvas sizing & transforms ================== */
     const ctx = canvas.getContext('2d');
@@ -35,16 +38,15 @@
       return step * pow10;
     }
     function getWorldBBox(points){
-      const xs = points.map(p=>p.x), ys = points.map(p=>p.y);
+      if (!points || points.length === 0) {
+        return { minX: -10, maxX: 10, minY: -10, maxY: 10 };
+      }
+      const xs = points.map(p=>p.renderX), ys = points.map(p=>p.renderY);
       let minX = Math.min(...xs), maxX = Math.max(...xs);
       let minY = Math.min(...ys), maxY = Math.max(...ys);
-      const padX = (maxX - minX) * 0.1 || 10;
-      const padY = (maxY - minY) * 0.1 || 10;
+      const padX = (maxX - minX) * 0.1 || 2;
+      const padY = (maxY - minY) * 0.1 || 2;
       return { minX:minX-padX, maxX:maxX+padX, minY:minY-padY, maxY:maxY+padY };
-    }
-    function intensityFromSize(size){ // -> [0.35, 1] (альфа яркости)
-      const s = Math.max(1, Math.min(10, size || 5));
-      return 0.35 + (s - 1) * (0.65 / 9);
     }
 
     /* ===== World<->Screen (с учётом авто-fit и пользовательского зума) ===== */
@@ -52,19 +54,10 @@
       const rect = canvas.getBoundingClientRect();
       const W = rect.width - margin*2;
       const H = rect.height - margin*2;
-
-      // Определяем, является ли экран "маленьким"
-      const isSmallScreen = rect.width < 600; 
-      // На маленьких экранах применяем начальный 2x зум, на больших — нет
-      const zoomFactor = isSmallScreen ? 2 : 1;
-
       const w = worldBBox.maxX - worldBBox.minX;
       const h = worldBBox.maxY - worldBBox.minY;
-
-      // Применяем zoomFactor к вычислению масштаба
-      const sx = (W * zoomFactor) / w;
-      const sy = (H * zoomFactor) / h;
-
+      const sx = w === 0 ? 1 : W / w;
+      const sy = h === 0 ? 1 : H / h;
       const s = Math.min(sx, sy);
       fit.s = s;
       // ось Y — вверх (мировая), но на экране вниз, поэтому инвертируем при отрисовке
@@ -103,46 +96,36 @@
     }
     function drawGridAxes(){
       const rect = canvas.getBoundingClientRect();
-      // фон
-      ctx.fillStyle = '#f7f9fc'; // Light background
+      ctx.fillStyle = '#f7f9fc';
       ctx.fillRect(0,0,rect.width,rect.height);
 
       const [vw_minX, vw_maxY] = screenToWorld(0, 0);
       const [vw_maxX, vw_minY] = screenToWorld(rect.width, rect.height);
-
-      // сетка
-      ctx.strokeStyle = getComputedStyle(document.documentElement).getPropertyValue('--grid').trim() || '#555555'; // Dark gridlines
-      ctx.lineWidth = 1;
-      ctx.beginPath();
       const xStep = niceTick((vw_maxX - vw_minX) / 10);
       const yStep = niceTick((vw_maxY - vw_minY) / 8);
 
+      ctx.strokeStyle = getComputedStyle(document.documentElement).getPropertyValue('--grid').trim();
+      ctx.lineWidth = 1;
+      ctx.beginPath();
       for(let x = Math.ceil(vw_minX / xStep) * xStep; x <= vw_maxX; x += xStep){
-        const [x1,y1] = worldToScreen(x, vw_minY);
-        const [x2,y2] = worldToScreen(x, vw_maxY);
-        ctx.moveTo(x1,y1); ctx.lineTo(x2,y2);
+        const [sx,] = worldToScreen(x, 0);
+        ctx.moveTo(sx, 0); ctx.lineTo(sx, rect.height);
       }
       for(let y = Math.ceil(vw_minY / yStep) * yStep; y <= vw_maxY; y += yStep){
-        const [x1,y1] = worldToScreen(vw_minX, y);
-        const [x2,y2] = worldToScreen(vw_maxX, y);
-        ctx.moveTo(x1,y1); ctx.lineTo(x2,y2);
+        const [, sy] = worldToScreen(0, y);
+        ctx.moveTo(0, sy); ctx.lineTo(rect.width, sy);
       }
       ctx.stroke();
 
-      // оси X=0 и Y=0
-      ctx.strokeStyle = getComputedStyle(document.documentElement).getPropertyValue('--axis').trim() || '#c2cff3';
+      ctx.strokeStyle = getComputedStyle(document.documentElement).getPropertyValue('--axis').trim();
       ctx.lineWidth = 1.4;
       ctx.beginPath();
-      let [ax1,ay1] = worldToScreen(vw_minX, 0);
-      let [ax2,ay2] = worldToScreen(vw_maxX, 0);
-      ctx.moveTo(ax1,ay1); ctx.lineTo(ax2,ay2);
-      [ax1,ay1] = worldToScreen(0, vw_minY);
-      [ax2,ay2] = worldToScreen(0, vw_maxY);
-      ctx.moveTo(ax1,ay1); ctx.lineTo(ax2,ay2);
+      let [x_zero_x, x_zero_y] = worldToScreen(0,0);
+      ctx.moveTo(0, x_zero_y); ctx.lineTo(rect.width, x_zero_y);
+      ctx.moveTo(x_zero_x, 0); ctx.lineTo(x_zero_x, rect.height);
       ctx.stroke();
 
-      // подписи тиков (крупные)
-      ctx.fillStyle = getComputedStyle(document.documentElement).getPropertyValue('--muted').trim() || '#9aa7bd';
+      ctx.fillStyle = getComputedStyle(document.documentElement).getPropertyValue('--muted').trim();
       ctx.font = '11px system-ui, sans-serif';
       ctx.textAlign = 'left';
       for(let x = Math.ceil(vw_minX / xStep) * xStep; x <= vw_maxX; x += xStep){
@@ -156,48 +139,38 @@
         ctx.fillText(String(y), sx+4, sy-4);
       }
 
-      // подписи осей
-      ctx.fillStyle = getComputedStyle(document.documentElement).getPropertyValue('--ink').trim() || '#e7ebf3';
+      ctx.fillStyle = getComputedStyle(document.documentElement).getPropertyValue('--ink').trim();
       ctx.font = '12px system-ui, sans-serif';
-      const xLabel = data.axes?.x?.label || 'X';
-      const yLabel = data.axes?.y?.label || 'Y';
-
-      const [, yZero] = worldToScreen(0, 0);
+      const xAxis = data.axes[xAxisSelect.value];
+      const yAxis = data.axes[yAxisSelect.value];
       ctx.textAlign = 'right';
-      ctx.fillText(xLabel, rect.width - 15, yZero + 18);
-
-      const [xZero, ] = worldToScreen(0, 0);
+      ctx.fillText(xAxis.label, rect.width - 15, x_zero_y + 18);
       ctx.textAlign = 'left';
       ctx.textBaseline = 'middle';
-      ctx.fillText(yLabel, xZero + 8, 15);
+      ctx.fillText(yAxis.label, x_zero_x + 8, 15);
     }
     function drawPoints() {
-      const R = R_WORLD * fit.s * user.s; // screen radius
-      const ink = getComputedStyle(document.documentElement).getPropertyValue('--ink').trim() || '#e7ebf3';
+      const R = R_WORLD * fit.s * user.s;
+      const ink = getComputedStyle(document.documentElement).getPropertyValue('--ink').trim();
       const detectedClusters = new Map();
 
-      // Group points by identical coordinates
-      for (let p of data.points || []) {
-        const key = `${p.x},${p.y}`;
+      for (let p of mappedPoints) {
+        const key = `${p.renderX},${p.renderY}`;
         if (!detectedClusters.has(key)) detectedClusters.set(key, []);
         detectedClusters.get(key).push(p);
       }
 
-      // Handle and dynamically draw point clusters
       for (const [coords, points] of detectedClusters.entries()) {
         const [baseX, baseY] = coords.split(',').map(Number);
 
         if (points.length > 1) {
           const [centerX, centerY] = worldToScreen(baseX, baseY);
-
-          const adjustedRadius = Math.max(1, R * 0.35); // Reduce size for stack visualization
+          const adjustedRadius = Math.max(1, R * 0.35);
           const stackSeparation = adjustedRadius * 2.5;
           const totalStackHeight = stackSeparation * (points.length - 1);
           const startY = centerY - totalStackHeight / 2;
-
           const clusterCircleRadius = (totalStackHeight / 2) + (adjustedRadius * 2);
 
-          // Draw circle indicating stack presence
           ctx.save();
           ctx.strokeStyle = 'rgba(0, 0, 0, 0.5)';
           ctx.lineWidth = 1;
@@ -211,12 +184,12 @@
             const pointY = startY + i * stackSeparation;
             const pointX = centerX;
 
-            // Draw individual point
             ctx.save();
             const normalizedSize = Math.max(0, Math.min(100, p.size || 0)) / 100;
             const red = Math.round(normalizedSize * 255);
             const blue = Math.round((1 - normalizedSize) * 255);
             const fillColor = `rgb(${red}, 0, ${blue})`;
+
             const highlightX = pointX - adjustedRadius * 0.25;
             const highlightY = pointY - adjustedRadius * 0.25;
             const gradient = ctx.createRadialGradient(highlightX, highlightY, 0, pointX, pointY, adjustedRadius);
@@ -230,11 +203,8 @@
             ctx.fill();
             ctx.restore();
 
-            // Position labels to avoid overlaps within stack
             const labelX = pointX + clusterCircleRadius + 5;
             const labelY = pointY;
-
-            // Draw label
             ctx.font = '12px "Segoe UI", Arial, sans-serif';
             ctx.fillStyle = ink;
             ctx.textAlign = 'left';
@@ -242,15 +212,14 @@
             ctx.fillText(p.title, labelX, labelY);
           });
         } else {
-          // For standalone points
           const p = points[0];
-          const [sx, sy] = worldToScreen(p.x, p.y);
-
+          const [sx, sy] = worldToScreen(p.renderX, p.renderY);
           ctx.save();
           const normalizedSize = Math.max(0, Math.min(100, p.size || 0)) / 100;
           const red = Math.round(normalizedSize * 255);
           const blue = Math.round((1 - normalizedSize) * 255);
           const fillColor = `rgb(${red}, 0, ${blue})`;
+
           const radius = Math.max(2, Math.abs(R));
           const highlightX = sx - radius * 0.25;
           const highlightY = sy - radius * 0.25;
@@ -265,7 +234,6 @@
           ctx.fill();
           ctx.restore();
 
-          // Draw label
           ctx.font = '12px "Segoe UI", Arial, sans-serif';
           ctx.fillStyle = ink;
           const dx = Math.max(2, Math.abs(R)) + 4;
@@ -282,9 +250,14 @@
 
     /* ============================ Tooltip ============================ */
     function tooltipHTML(p){
+      const xVal = p.analytics[xAxisSelect.value];
+      const yVal = p.analytics[yAxisSelect.value];
       return `
         <div style="font-weight:600; margin-bottom:4px;">${safe(p.title)}</div>
-        ${p.description ? `<div style="margin-top:6px; margin-bottom: 8px;">${safe(p.description)}</div>` : ''}
+        <div style="font-size: .9em; color: var(--muted); margin-bottom: 8px;">
+          ${data.axes[xAxisSelect.value].label}: ${xVal} <br>
+          ${data.axes[yAxisSelect.value].label}: ${yVal}
+        </div>
         <button class="tooltip-show-btn" onclick="document.getElementById('selectedCard').scrollIntoView({behavior: 'smooth'})">Показать</button>
       `;
     }
@@ -316,23 +289,18 @@
 
     /* ====================== Hit-testing for points ===================== */
     function pointAt(clientX, clientY){
-      // screen coords relative to canvas CSS pixels
       const rect = canvas.getBoundingClientRect();
       const clickX = clientX - rect.left;
       const clickY = clientY - rect.top;
       const R = R_WORLD * fit.s * user.s;
 
-      // We need to check against the actual drawn positions.
-      // Re-clustering is necessary here to mirror the drawing logic.
       const detectedClusters = new Map();
-      for (let p of data.points || []) {
-        const key = `${p.x},${p.y}`;
+      for (let p of mappedPoints) {
+        const key = `${p.renderX},${p.renderY}`;
         if (!detectedClusters.has(key)) detectedClusters.set(key, []);
         detectedClusters.get(key).push(p);
       }
 
-      // Iterate in reverse order of clusters to check top-most clusters first
-      // (assuming map preserves insertion order, which it does)
       const clusterEntries = Array.from(detectedClusters.entries()).reverse();
 
       for (const [coords, points] of clusterEntries) {
@@ -342,32 +310,26 @@
             const [centerX, centerY] = worldToScreen(baseX, baseY);
             const adjustedRadius = Math.max(1, R * 0.35);
             const stackSeparation = adjustedRadius * 2.5;
-            const totalStackHeight = stackSeparation * (points.length - 1);
-            const startY = centerY - totalStackHeight / 2;
 
-            // Check points in reverse draw order (from top of stack to bottom on screen)
             for (let i = points.length - 1; i >= 0; i--) {
                 const p = points[i];
+                const totalStackHeight = stackSeparation * (points.length - 1);
+                const startY = centerY - totalStackHeight / 2;
                 const pointY = startY + i * stackSeparation;
                 const pointX = centerX;
 
                 const dx = clickX - pointX;
                 const dy = clickY - pointY;
                 const hitRadius = adjustedRadius + 4; 
-                if (dx*dx + dy*dy <= hitRadius*hitRadius) {
-                    return p;
-                }
+                if (dx*dx + dy*dy <= hitRadius*hitRadius) return p;
             }
         } else {
-          // Single point
           const p = points[0];
-          const [px, py] = worldToScreen(p.x, p.y);
+          const [px, py] = worldToScreen(p.renderX, p.renderY);
           const dx = clickX - px;
           const dy = clickY - py;
           const hitRadius = Math.max(6, Math.abs(R)) + 4;
-          if (dx*dx + dy*dy <= hitRadius*hitRadius) {
-            return p;
-          }
+          if (dx*dx + dy*dy <= hitRadius*hitRadius) return p;
         }
       }
       return null;
@@ -381,11 +343,9 @@
     window.addEventListener('mouseup',   () => { isDragging = false; });
     window.addEventListener('mousemove', e => {
       if(isDragging){
-        const dx = e.clientX - last.x;
-        const dy = e.clientY - last.y;
+        user.tx += e.clientX - last.x;
+        user.ty += e.clientY - last.y;
         last = {x:e.clientX, y:e.clientY};
-        user.tx += dx;
-        user.ty += dy;
         render();
       } else {
         const p = pointAt(e.clientX, e.clientY);
@@ -394,27 +354,20 @@
       }
     });
 
-    // Zoom with wheel
     canvas.addEventListener('wheel', e => {
       e.preventDefault();
-      const factor = Math.pow(1.15, -Math.sign(e.deltaY)); // шаг ~15%
+      const factor = Math.pow(1.15, -Math.sign(e.deltaY));
       const rect = canvas.getBoundingClientRect();
       const mx = e.clientX - rect.left;
       const my = e.clientY - rect.top;
-
-      const prevS = user.s;
-      const newS = prevS * factor;
-      const k = newS / prevS;
-
-      // зум вокруг точки (mx,my)
+      const newS = user.s * factor;
+      const k = newS / user.s;
       user.tx = mx - k*(mx - user.tx);
       user.ty = my - k*(my - user.ty);
       user.s = newS;
-
       render();
     },{passive:false});
 
-    // Touch: drag & pinch
     let touchState = { mode:null, p1:null, p2:null, startDist:0, startS:1, startTx:0, startTy:0, startMid:null };
     canvas.addEventListener('touchstart', e => {
       if(e.touches.length === 1){
@@ -422,67 +375,51 @@
         touchState.p1 = { x:e.touches[0].clientX, y:e.touches[0].clientY };
       } else if(e.touches.length === 2){
         touchState.mode = 'pinch';
-        touchState.p1 = { x:e.touches[0].clientX, y:e.touches[0].clientY };
-        touchState.p2 = { x:e.touches[1].clientX, y:e.touches[1].clientY };
-        touchState.startDist = Math.hypot(touchState.p1.x - touchState.p2.x, touchState.p1.y - touchState.p2.y);
+        const p1 = { x:e.touches[0].clientX, y:e.touches[0].clientY };
+        const p2 = { x:e.touches[1].clientX, y:e.touches[1].clientY };
+        touchState.startDist = Math.hypot(p1.x - p2.x, p1.y - p2.y);
         touchState.startS = user.s;
         touchState.startTx = user.tx;
         touchState.startTy = user.ty;
-        touchState.startMid = { 
-            x: (touchState.p1.x + touchState.p2.x) / 2,
-            y: (touchState.p1.y + touchState.p2.y) / 2
-        };
+        touchState.startMid = { x: (p1.x + p2.x) / 2, y: (p1.y + p2.y) / 2 };
       }
     }, {passive:true});
     canvas.addEventListener('touchmove', e => {
       if(touchState.mode === 'drag' && e.touches.length === 1){
         const p = { x:e.touches[0].clientX, y:e.touches[0].clientY };
-        const dx = p.x - touchState.p1.x;
-        const dy = p.y - touchState.p1.y;
+        user.tx += p.x - touchState.p1.x;
+        user.ty += p.y - touchState.p1.y;
         touchState.p1 = p;
-        user.tx += dx; user.ty += dy;
         render();
       } else if(touchState.mode === 'pinch' && e.touches.length === 2){
         const rect = canvas.getBoundingClientRect();
-        // current state
         const p1 = { x:e.touches[0].clientX, y:e.touches[0].clientY };
         const p2 = { x:e.touches[1].clientX, y:e.touches[1].clientY };
         const newDist = Math.hypot(p1.x - p2.x, p1.y - p2.y);
         const currentMid = { x: (p1.x + p2.x) / 2, y: (p1.y + p2.y) / 2 };
-
-        // Calculate new scale
         const scale = newDist / (touchState.startDist || newDist);
         const newS = touchState.startS * scale;
         const k = newS / touchState.startS;
-
-        // Pan delta
         const panDx = currentMid.x - touchState.startMid.x;
         const panDy = currentMid.y - touchState.startMid.y;
-
-        // Initial midpoint relative to canvas
         const mx = touchState.startMid.x - rect.left;
         const my = touchState.startMid.y - rect.top;
-
-        // Apply new transform
         user.s = newS;
         user.tx = mx - k * (mx - touchState.startTx) + panDx;
         user.ty = my - k * (my - touchState.startTy) + panDy;
-
         render();
       }
     },{passive:true});
     window.addEventListener('touchend', ()=> { touchState.mode = null; }, {passive:true});
 
-    // Buttons
-    btnZoomIn.addEventListener('click', ()=> zoomBy(1.2));
-    btnZoomOut.addEventListener('click', ()=> zoomBy(1/1.2));
-    btnReset.addEventListener('click', ()=> { computeFit(); render(); });
+    btnZoomIn.addEventListener('click', ()=> zoomBy(1.25));
+    btnZoomOut.addEventListener('click', ()=> zoomBy(1/1.25));
+    btnReset.addEventListener('click', ()=> { processAndRender(); });
     function zoomBy(factor){
       const rect = canvas.getBoundingClientRect();
       const mx = rect.width/2, my = rect.height/2;
-      const prevS = user.s;
-      const newS = prevS * factor;
-      const k = newS / prevS;
+      const newS = user.s * factor;
+      const k = newS / user.s;
       user.tx = mx - k*(mx - user.tx);
       user.ty = my - k*(my - user.ty);
       user.s = newS;
@@ -551,40 +488,76 @@
       `;
     }
 
-    /* =================== Notes / Comment / Resources =================== */
+    /* =================== Data Mapping and Setup =================== */
+    function getNumericValue(axisKey, point) {
+      const axis = data.axes[axisKey];
+      const value = point.analytics[axisKey];
+      if (axis.type === 'numerical') {
+        return value || 0;
+      }
+      if (axis.type === 'categorical') {
+        const mapping = axis.values.find(v => v.key === value);
+        return mapping ? mapping.numeric : -1;
+      }
+      return 0;
+    }
+
+    function mapPoints(xAxisKey, yAxisKey) {
+        return (data.points || []).map(p => ({
+            ...p,
+            renderX: getNumericValue(xAxisKey, p),
+            renderY: getNumericValue(yAxisKey, p),
+        }));
+    }
+
+    function populateAxisSelectors() {
+        const axes = Object.keys(data.axes);
+        xAxisSelect.innerHTML = '';
+        yAxisSelect.innerHTML = '';
+        axes.forEach(key => {
+            const option = document.createElement('option');
+            option.value = key;
+            option.textContent = data.axes[key].label;
+            xAxisSelect.appendChild(option.cloneNode(true));
+            yAxisSelect.appendChild(option);
+        });
+        xAxisSelect.value = 'achievability';
+        yAxisSelect.value = 'optimism';
+    }
+
+    function processAndRender() {
+        const xAxisKey = xAxisSelect.value;
+        const yAxisKey = yAxisSelect.value;
+        mappedPoints = mapPoints(xAxisKey, yAxisKey);
+        worldBBox = getWorldBBox(mappedPoints);
+        computeFit();
+        render();
+    }
+
+    function setupUI() {
+        document.getElementById('pageTitle').textContent = data.title || 'Карта';
+        populateAxisSelectors();
+        renderNotesAndResources();
+        xAxisSelect.addEventListener('change', processAndRender);
+        yAxisSelect.addEventListener('change', processAndRender);
+    }
+
     function renderNotesAndResources(){
-      // Notes
-      notesList.innerHTML = '';
-      (data.notes || []).forEach(n => {
-        const li = document.createElement('li');
-        li.textContent = n;
-        notesList.appendChild(li);
-      });
-
-
-      // Resources (уникальные URL)
-      resourcesList.innerHTML = '';
-      const items = [];
-      (data.points || []).forEach(p => { if(p.url) items.push({title:p.title, url:p.url, type:p.type, year:p.year}); });
+      notesList.innerHTML = (data.notes || []).map(n => `<li>${safe(n)}</li>`).join('');
+      const items = (data.points || []).filter(p => p.url).map(p => ({title:p.title, url:p.url, type:p.type, year:p.year}));
       const uniq = Object.values(items.reduce((acc, it) => (acc[it.url] ??= it, acc), {}));
       uniq.sort((a,b) => (a.title||'').localeCompare(b.title||''));
-      uniq.forEach(it => {
-        const li = document.createElement('li');
-        const a = document.createElement('a');
-        a.href = it.url; a.target = '_blank'; a.rel = 'noopener';
-        a.textContent = it.title + (it.year?` (${it.year})`:``) + (it.type?` — ${it.type}`:``);
-        li.appendChild(a);
-        resourcesList.appendChild(li);
-      });
+      resourcesList.innerHTML = uniq.map(it => `<li><a href="${safe(it.url)}" target="_blank" rel="noopener">${safe(it.title)} (${it.year})</a></li>`).join('');
     }
 
     /* ======================= Load / Export JSON ======================= */
     btnLoad.addEventListener('click', () => {
       try{
         const parsed = JSON.parse(jsonInput.value);
-        if(!Array.isArray(parsed.points)) throw new Error('В JSON отсутствует массив points');
+        if(!parsed.points || !parsed.axes) throw new Error('В JSON отсутствует массив points или объект axes');
         data = parsed;
-        applyData();
+        setupUI();
+        processAndRender();
       }catch(err){
         alert('Ошибка разбора JSON: ' + err.message);
       }
@@ -608,32 +581,17 @@
       reader.onload = () => {
         try{
           const parsed = JSON.parse(reader.result);
-          if(!Array.isArray(parsed.points)) throw new Error('В JSON отсутствует массив points');
-          // Умножаем все `size` на 10
+          if(!parsed.points || !parsed.axes) throw new Error('В JSON отсутствует массив points или объект axes');
           data = parsed;
-          if (Array.isArray(data.points)) {
-              data.points.forEach(p => {
-                  if (typeof p.size === "number") {
-                      p.size *= 10;
-                  }
-              });
-          }
           jsonInput.value = JSON.stringify(data, null, 2);
-          applyData();
+          setupUI();
+          processAndRender();
         }catch(err){ alert('Ошибка разбора файла: ' + err.message); }
       };
       reader.readAsText(f);
     });
 
-    /* ======================== Apply & Init ======================== */
-    function applyData(){
-      document.getElementById('pageTitle').textContent = data.title || 'Карта';
-      worldBBox = getWorldBBox(data.points || [{x:0,y:0}]);
-      computeFit();
-      renderNotesAndResources();
-      render();
-      tooltipFixed = false; hideTooltip(); selectedCard.hidden = true; selectedCard.innerHTML = '';
-    }
+    /* ======================== Init ======================== */
     async function init(){
       try{
         const response = await fetch('./data.json');
@@ -641,10 +599,11 @@
         data = await response.json();
       }catch(e){
         console.error("Failed to load data:", e);
-        data = { title:'Карта (ошибка загрузки)', points:[] };
+        data = { title:'Карта (ошибка загрузки)', axes: {}, points:[] };
       }
       jsonInput.value = JSON.stringify(data, null, 2);
-      applyData();
+      setupUI();
+      processAndRender();
     }
     window.addEventListener('resize', () => { computeFit(); render(); });
     init();
