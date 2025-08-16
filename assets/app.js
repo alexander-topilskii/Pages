@@ -5,8 +5,6 @@ const els = {
   sidebar: document.getElementById('sidebar'),
   menuBtn: document.getElementById('menuBtn'),
   backdrop: document.getElementById('backdrop'),
-  openAll: document.getElementById('openAll'),
-  closeAll: document.getElementById('closeAll'),
   previewWrap: document.getElementById('previewWrap'),
   preview: document.getElementById('preview'),
   previewTitle: document.getElementById('previewTitle'),
