@@ -538,8 +538,15 @@
 
         // вычисление цвета по size
         ctx.save();
-        const normalizedSize = Math.max(0, Math.min(10, p.size || 0)) / 10; // Normalize size to [0, 1]
-        const fillColor = `rgb(0, 0, ${Math.round(255 * normalizedSize)})`; // Map size to blue intensity
+        // Normalize size to [0, 1] range for influence-based coloring
+        const normalizedSize = Math.max(0, Math.min(100, p.size || 0)) / 100;
+
+        // Calculate dynamic color on a blue-to-red gradient
+        const red = Math.round(normalizedSize * 255);     // High influence -> More red
+        const blue = Math.round((1 - normalizedSize) * 255); // Low influence -> More blue
+        const fillColor = `rgb(${red}, 0, ${blue})`;
+
+        // Apply calculated color as fill
         ctx.fillStyle = fillColor;
 
         ctx.beginPath();
@@ -742,6 +749,19 @@
         ${p.type?`<div class="row"><strong>Тип:</strong> ${safe(p.type)}</div>`:''}
         ${p.description?`<div class="row">${safe(p.description)}</div>`:''}
         ${Array.isArray(p.key_takeaways)&&p.key_takeaways.length?`<div class="row"><strong>Ключевые выводы:</strong><ul>${p.key_takeaways.map(k=>`<li>${safe(k)}</li>`).join('')}</ul></div>`:''}
+        ${p.size !== undefined ? `
+        <div class="row">
+            <strong>Влияние:</strong> ${p.size}
+            <span style="display: inline-block; width: 20px; height: 20px; background-color: ${
+              (() => {
+                  const normalizedSize = Math.max(0, Math.min(100, p.size || 0)) / 100;
+                  const red = Math.round(normalizedSize * 255);
+                  const blue = Math.round((1 - normalizedSize) * 255);
+                  return `rgb(${red}, 0, ${blue})`;
+              })()
+            }; border-radius: 4px; margin-left: 8px;"></span>
+        </div>
+        ` : ''}
         ${p.url?`<div class="row"><a href="${p.url}" target="_blank" rel="noopener">Открыть ресурс ↗</a></div>`:''}
       `;
     }
