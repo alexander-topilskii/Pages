@@ -103,8 +103,16 @@
             <div id="tooltip" class="tooltip" hidden></div>
         </div>
         <div class="legend">
-            <div><span class="dot"></span> Точка = работа. Радиус фиксированный, <b>яркость</b> обводки = <code>size</code> (влияние).</div>
-            <div>Колёсико/пинч — масштаб, перетаскивание — панорама, <b>клик</b> — карточка слева.</div>
+            <div>
+                <span class="dot" style="width: 10px; height: 10px; background: rgb(0, 0, 255);"></span>
+                <span style="margin: 0 6px;">Low Influence</span>
+                <span class="dot" style="width: 15px; height: 15px; background: rgb(127, 0, 127);"></span>
+                <span style="margin: 0 6px;">Medium Influence</span>
+                <span class="dot" style="width: 20px; height: 20px; background: rgb(255, 0, 0);"></span>
+                <span style="margin: 0 6px;">High Influence</span>
+            </div>
+            <div>Размер и цвет точки — функция <b>влияния</b> (интервал 0–100).</div>
+            <div><b>Тип:</b> круг = прочие, квадрат = книга. Колёсико/пинч — масштаб, перетаскивание — панорама, клик — карточка слева.</div>
         </div>
     </section>
 
@@ -133,50 +141,232 @@
 <!-- Встроенный JSON по умолчанию -->
 <script id="embedded-data" type="application/json">{
     "title": "Карта идей: реалистичность и оптимизм пост-товарных сценариев",
+    "description": "Визуализация работ о будущем распределения благ. Ось Y — оптимизм относительно возможности обеспечить базовые потребности при минимальном труде (выше — оптимистичнее, ниже — скептичнее). Ось X — временная дистанция/достижимость (0 — применимо уже сейчас; >0 — дальний футуризм; <0 — прогнозы о «будущем», которое уже наступило). Размер «пузыря» (size) отражает ориентировочное влияние работы (комбинация академических цитирований, публичного охвата и практического воздействия на политику/дискуссию).",
     "axes": {
-        "x": {"label": "Время / Достижимость"},
-        "y": {"label": "Оптимизм (вверх — возможно, вниз — невозможно)"},
-        "bubble": {"label":"Влияние (size)"}
+        "x": {
+            "label": "Время / Достижимость",
+            "scale_hint": "−100 (давние прогнозы о прошедшем будущем) … 0 (сейчас) … +50 (далёкий футуризм)"
+        },
+        "y": {
+            "label": "Оптимизм о возможности изобилия при малом труде",
+            "scale_hint": "−10 (невозможно) … 0 (нейтрально) … +10 (вполне возможно)"
+        },
+        "bubble": {
+            "label": "Влияние (size)",
+            "scale_hint": "1 (низкое влияние) … 10 (высокое влияние)",
+            "notes": "Оценка ориентировочная: совмещает академические цитирования, общественную известность и влияние на практику."
+        }
     },
-    "notes": [
-        "Координаты — экспертные оценки.",
-        "Яркость круга = условное влияние (size).",
-        "Клик/hover по точке — детали."
-    ],
-    "comment": "Этот набор собирает как оптимистичные, так и критические позиции. Сфокусируйтесь на сравнении аргументов и методологий.",
     "points": [
         {
-            "title":"The Conquest of Bread (Kropotkin, 1892)","x":-100,"y":6,"size":7,"year":1892,"type":"книга",
-            "url":"https://en.wikipedia.org/wiki/The_Conquest_of_Bread",
-            "description":"Ранняя формулировка идеи изобилия.",
-            "key_takeaways":["Кооперация и взаимопомощь как основа изобилия","Сокращение принудительного труда до минимума"]
+            "title": "Пётр Кропоткин — The Conquest of Bread (1892)",
+            "x": -100,
+            "y": 6,
+            "size": 70,
+            "year": 1892,
+            "type": "книга",
+            "url": "https://en.wikipedia.org/wiki/The_Conquest_of_Bread",
+            "description": "Анархистская утопия конца XIX века: при тогдашних технологиях можно работать по 5 часов в день и жить в изобилии."
         },
         {
-            "title":"The Abolition of Work (Black, 1985)","x":-30,"y":7,"size":5,"year":1985,"type":"эссе",
-            "url":"https://en.wikipedia.org/wiki/The_Abolition_of_Work",
-            "description":"Манифест против принудительного труда.",
-            "key_takeaways":["Разделение труда отчуждает","Игра и творчество как альтернатива работе"]
+            "title": "Боб Блэк — The Abolition of Work (1985)",
+            "x": -30,
+            "y": 7,
+            "size": 50,
+            "year": 1985,
+            "type": "эссе",
+            "url": "https://en.wikipedia.org/wiki/The_Abolition_of_Work",
+            "description": "Манифест против принудительного труда; оптимизм культурно-политический, технологическая часть слабо конкретизирована."
         },
         {
-            "title":"Towards a New Socialism (Cockshott & Cottrell, 1993)","x":-10,"y":8,"size":8,"year":1993,"type":"книга",
-            "url":"https://www.towardsanewsocialism.com",
-            "description":"IT-планирование, логистика, реализуемость.",
-            "key_takeaways":["Компьютерное планирование возможно","Логистические цепочки можно оптимизировать без рынка"]
+            "title": "Пол Кокшотт, Аллин Котрелл — Towards a New Socialism (1993/обновл.)",
+            "x": -10,
+            "y": 8,
+            "size": 80,
+            "year": 1993,
+            "type": "книга/монография",
+            "url": "https://www.towardsanewsocialism.com",
+            "description": "Технически детализированная модель вычислительного планирования и логистики; упор на реализуемость уже с IT конца XX века."
         },
         {
-            "title":"Envisioning Real Utopias (Wright, 2010)","x":0,"y":5,"size":8,"year":2010,"type":"книга",
-            "url":"https://en.wikipedia.org/wiki/Erik_Olin_Wright",
-            "description":"Реалистичные утопии: кооперативы, муниципальные решения.",
-            "key_takeaways":["Пошаговые институциональные изменения","Кооперативы и муниципальные решения работают"]
+            "title": "Эрик Олин Райт — Envisioning Real Utopias (2010)",
+            "x": 0,
+            "y": 5,
+            "size": 80,
+            "year": 2010,
+            "type": "книга",
+            "url": "https://en.wikipedia.org/wiki/Erik_Olin_Wright",
+            "description": "«Реалистичные утопии» как набор внедряемых институтов (кооперативы, муниципальные сервисы); достижимость — «здесь и сейчас»."
         },
         {
-            "title":"Seventeen Contradictions (Harvey, 2014)","x":0,"y":-6,"size":7,"year":2014,"type":"книга",
-            "url":"https://en.wikipedia.org/wiki/David_Harvey",
-            "description":"Критика пост-дефицита.",
-            "key_takeaways":["Капитал воспроизводит дефицит","Технологии не решают распределение"]
+            "title": "Ник Срничек, Алекс Уильямс — Inventing the Future (2015)",
+            "x": 15,
+            "y": 7,
+            "size": 70,
+            "year": 2015,
+            "type": "книга",
+            "url": "https://en.wikipedia.org/wiki/Inventing_the_Future",
+            "description": "Посткапитализм через автоматизацию и политическую стратегию; оптимизм высокий, горизонт — средне/долгосрочный."
+        },
+        {
+            "title": "Аарон Бастани — Fully Automated Luxury Communism (2019)",
+            "x": 40,
+            "y": 9,
+            "size": 70,
+            "year": 2019,
+            "type": "книга",
+            "url": "https://en.wikipedia.org/wiki/Fully_Automated_Luxury_Communism",
+            "description": "Максимально оптимистичный футуризм про «роскошь для всех»; значительный публичный резонанс."
+        },
+        {
+            "title": "Филипп ван Пэрайс, Ян Вандерборгт — Basic Income (2017)",
+            "x": 0,
+            "y": 4,
+            "size": 80,
+            "year": 2017,
+            "type": "книга",
+            "url": "https://global.oup.com/academic/product/basic-income-9780674986917",
+            "description": "Реалистичное внедрение ББД в существующей экономике; опора на пилоты и бюджетную арифметику."
+        },
+        {
+            "title": "Гай Стэндинг — Basic Income: And How We Can Make It Happen (2017)",
+            "x": 0,
+            "y": 5,
+            "size": 70,
+            "year": 2017,
+            "type": "книга",
+            "url": "https://www.penguin.co.uk/books/441138/basic-income-by-guy-standing/9780141985480",
+            "description": "Практические дорожные карты для ББД; умеренный оптимизм с акцентом на поэтапность."
+        },
+        {
+            "title": "Мариана Маццукато — The Value of Everything (2018)",
+            "x": 0,
+            "y": 3,
+            "size": 80,
+            "year": 2018,
+            "type": "книга",
+            "url": "https://en.wikipedia.org/wiki/Mariana_Mazzucato",
+            "description": "Роль государства в создании ценности; осторожный оптимизм и многочисленные кейсы из реальной политики."
+        },
+        {
+            "title": "Дэвид Харви — Seventeen Contradictions and the End of Capitalism (2014)",
+            "x": 0,
+            "y": -6,
+            "size": 70,
+            "year": 2014,
+            "type": "книга",
+            "url": "https://en.wikipedia.org/wiki/David_Harvey",
+            "description": "Критика: даже при технической возможности изобилия товарная логика воспроизводит дефицит и неравенство."
+        },
+        {
+            "title": "Джейсон Хикель — Less is More (2020)",
+            "x": 10,
+            "y": -8,
+            "size": 80,
+            "year": 2020,
+            "type": "книга",
+            "url": "https://www.jasonhickel.org/less-is-more",
+            "description": "Дегроус-подход: устойчивость требует снижения производства/потребления; скепсис к «техно-изобилию»."
+        },
+        {
+            "title": "Вацлав Смил — Growth (2019)",
+            "x": 5,
+            "y": -7,
+            "size": 90,
+            "year": 2019,
+            "type": "книга",
+            "url": "https://en.wikipedia.org/wiki/Vaclav_Smil",
+            "description": "Материально-энергетические пределы роста; системный скепсис к масштабам автоматизации без ресурсных компромиссов."
+        },
+        {
+            "title": "Ник Срничек — Platform Capitalism (2017)",
+            "x": 0,
+            "y": -5,
+            "size": 70,
+            "year": 2017,
+            "type": "книга",
+            "url": "https://en.wikipedia.org/wiki/Platform_capitalism",
+            "description": "Платформы закрепляют рыночную власть, а не высвобождают труд; технологический прогресс ≠ эмансипация."
+        },
+        {
+            "title": "OECD — Basic Income as a Policy Option (2017)",
+            "x": 0,
+            "y": 2,
+            "size": 90,
+            "year": 2017,
+            "type": "отчёт",
+            "url": "https://www.oecd.org/social/Basic-Income-Policy-Option-2017.pdf",
+            "description": "Трезвая оценка бюджетной реализуемости ББД в развитых экономиках; умеренный оптимизм при реформе налогов."
+        },
+        {
+            "title": "FAO/WFP — SOFI (State of Food Security) 2024",
+            "x": 0,
+            "y": 1,
+            "size": 9,
+            "year": 2024,
+            "type": "отчёт",
+            "url": "https://www.fao.org/state-of-food-security-nutrition",
+            "description": "Данных достаточно, чтобы накормить всех; главный барьер — распределение/конфликты/логистика, не производство."
+        },
+        {
+            "title": "ILO — Working Time and Work–Life Balance Around the World (2023)",
+            "x": 0,
+            "y": 3,
+            "size": 80,
+            "year": 2023,
+            "type": "отчёт",
+            "url": "https://www.ilo.org/global/publications/books/WCMS_1047303",
+            "description": "Эмпирика: переход к 30–32 ч/нед возможен без падения производительности в ряде экономик."
+        },
+        {
+            "title": "Роберт Поллин — Green New Deal (2018–2023)",
+            "x": 5,
+            "y": -4,
+            "size": 70,
+            "year": 2021,
+            "type": "научные статьи/отчёты",
+            "url": "https://www.peri.umass.edu/economists/robert-pollin",
+            "description": "Переход к «зелёной» энергетике создаёт значительную занятость; скепсис к идее минимального труда в ближайшие десятилетия."
+        },
+        {
+            "title": "Van Parijs & Vanderborght — Basic Income (1990s–2010s статьи)",
+            "x": -5,
+            "y": 4,
+            "size": 70,
+            "year": 2000,
+            "type": "статьи",
+            "url": "https://en.wikipedia.org/wiki/Philippe_Van_Parijs",
+            "description": "Теоретические основания ББД задолго до мейнстрима; ретроспективно — недооценка политических барьеров."
+        },
+        {
+            "title": "Kate Raworth — Doughnut Economics (2017)",
+            "x": 0,
+            "y": 2,
+            "size": 80,
+            "year": 2017,
+            "type": "книга/рамка",
+            "url": "https://doughnuteconomics.org",
+            "description": "Модель «социального фундамента и экологического потолка»; применяется муниципально (Амстердам), осторожный оптимизм."
+        },
+        {
+            "title": "Srnicek & Williams — Inventing the Future (лекции/статьи)",
+            "x": 10,
+            "y": 6,
+            "size": 60,
+            "year": 2016,
+            "type": "статьи/лекции",
+            "url": "https://www.versobooks.com/en/books/2342-inventing-the-future",
+            "description": "Политическая стратегия ускорения к обществу с меньшим трудом; временной горизонт — средне-/долгосрочный."
         }
-    ]
-}</script>
+    ],
+    "notes": [
+        "Координаты являются экспертными оценками для сравнительной навигации, а не строгими измерениями.",
+        "Размер пузыря (size) агрегирует: цитируемость/индекс h, публичные продажи/охват, внедрение в политику или городские программы.",
+        "Добавлено поле url для прямых ссылок на ресурсы."
+    ],
+    "version": "1.2"
+}
+</script>
 
 <script>
     /* ======================= State & DOM refs ======================= */
@@ -205,7 +395,7 @@
     const margin = 28; // внутренний отступ в px (экранных)
     let fit = { s:1, tx:0, ty:0 };   // world -> screen (авто)
     let user = { s:1, tx:0, ty:0 };  // screen -> screen (пан/зум)
-    const R_WORLD = 6;               // фиксированный радиус (в мировых единицах)
+    const R_WORLD = 0.3;               // фиксированный радиус (в мировых единицах, уменьшен)
 
     /* ============================= Utils ============================= */
     function safe(s){ return String(s ?? '').replace(/[<>&]/g, m => ({'<':'&lt;','>':'&gt;','&':'&amp;'}[m])) }
@@ -346,14 +536,23 @@
         const [sx, sy] = worldToScreen(p.x, p.y);
         const alpha = intensityFromSize(p.size);
 
-        // круг
+        // вычисление цвета по size
         ctx.save();
-        ctx.globalAlpha = alpha;
-        ctx.strokeStyle = stroke;
-        ctx.lineWidth = 2;
+        const normalizedSize = Math.max(0, Math.min(10, p.size || 0)) / 10; // Normalize size to [0, 1]
+        const fillColor = `rgb(0, 0, ${Math.round(255 * normalizedSize)})`; // Map size to blue intensity
+        ctx.fillStyle = fillColor;
+
         ctx.beginPath();
-        ctx.arc(sx, sy, Math.max(2, Math.abs(R)), 0, Math.PI*2);
-        ctx.stroke();
+
+        // книги рисуются квадратами
+        if (p.type === "книга") {
+            const side = Math.max(2, Math.abs(R)) * 2;
+            ctx.rect(sx - side / 2, sy - side / 2, side, side); // Draw square centered at (sx, sy)
+        } else {
+            ctx.arc(sx, sy, Math.max(2, Math.abs(R)), 0, Math.PI * 2); // Draw circle
+        }
+
+        ctx.fill();
         ctx.restore();
 
         // заголовок
@@ -607,7 +806,16 @@
         try{
           const parsed = JSON.parse(reader.result);
           if(!Array.isArray(parsed.points)) throw new Error('В JSON отсутствует массив points');
-          data = parsed; jsonInput.value = JSON.stringify(data, null, 2);
+          // Умножаем все `size` на 10
+          data = parsed;
+          if (Array.isArray(data.points)) {
+              data.points.forEach(p => {
+                  if (typeof p.size === "number") {
+                      p.size *= 10;
+                  }
+              });
+          }
+          jsonInput.value = JSON.stringify(data, null, 2);
           applyData();
         }catch(err){ alert('Ошибка разбора файла: ' + err.message); }
       };
