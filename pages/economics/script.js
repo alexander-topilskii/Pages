@@ -505,6 +505,23 @@
       renderSelection(p);
     });
     function renderSelection(p){
+      let againstHtml = '';
+      if (p.against && Array.isArray(p.against.key_points) && p.against.key_points.length > 0) {
+        againstHtml = `
+          <div class="row">
+            <strong>Контраргументы:</strong>
+            <ul>
+              ${p.against.key_points.map(kp => `
+                <li>
+                  ${safe(kp.short_description)}
+                  ${kp.url ? ` <a href="${safe(kp.url)}" target="_blank" rel="noopener">↗</a>` : ''}
+                </li>
+              `).join('')}
+            </ul>
+          </div>
+        `;
+      }
+
       selectedCard.hidden = false;
       selectedCard.innerHTML = `
         <h2>Selected</h2>
@@ -513,6 +530,7 @@
         ${p.type?`<div class="row"><strong>Тип:</strong> ${safe(p.type)}</div>`:''}
         ${p.description?`<div class="row">${safe(p.description)}</div>`:''}
         ${Array.isArray(p.key_takeaways)&&p.key_takeaways.length?`<div class="row"><strong>Ключевые выводы:</strong><ul>${p.key_takeaways.map(k=>`<li>${safe(k)}</li>`).join('')}</ul></div>`:''}
+        ${againstHtml}
         ${p.size !== undefined ? `
         <div class="row">
             <strong>Влияние:</strong> ${p.size}
