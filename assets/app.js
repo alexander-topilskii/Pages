@@ -12,6 +12,7 @@ const els = {
 
 const state = { data: null, expanded: new Set(), filter: '' };
 const initialHistoryLength = history.length;
+const DATA_URL = 'https://raw.githubusercontent.com/alexander-topilskii/Pages/main/data/site.json';
 
 // --- Sidebar menu toggle (mobile)
 els.menuBtn?.addEventListener('click', () => toggleSidebar(true));
@@ -26,13 +27,9 @@ function toggleSidebar(open){
 init();
 async function init(){
   try{
-    if(window.siteData){
-      state.data = window.siteData;
-    }else{
-      const res = await fetch('./data/site.json?v=' + Date.now());
-      if(!res.ok) throw new Error('Не удалось загрузить data/site.json');
-      state.data = await res.json();
-    }
+    const res = await fetch(DATA_URL + '?v=' + Date.now());
+    if(!res.ok) throw new Error('Не удалось загрузить site.json');
+    state.data = await res.json();
     const firstId = state.data.categories?.[0]?.id;
     if(firstId) state.expanded.add(firstId);
     render();
