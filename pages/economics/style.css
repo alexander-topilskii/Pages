@@ -84,7 +84,7 @@
             border-color: var(--accent);
         }
 
-        .below-grid{display:grid; gap:20px; grid-template-columns:1fr 1fr;
+        .below-grid{display:grid; gap:20px; grid-template-columns:3fr 1fr;
           padding:6px clamp(12px,3vw,28px) 28px}
         .col{background:var(--panel); border:1px solid #1b2540; border-radius:14px; padding:14px; box-shadow:var(--shadow)}
         .selected-card{ background:#ffffffee; border:1px solid #233255; border-radius:12px; padding:12px; margin-bottom:12px }
