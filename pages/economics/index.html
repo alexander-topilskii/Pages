@@ -565,7 +565,7 @@
         if (points.length > 1) {
           const [centerX, centerY] = worldToScreen(baseX, baseY);
 
-          const adjustedRadius = Math.max(2, R * 0.7); // Reduce size for stack visualization
+          const adjustedRadius = Math.max(1, R * 0.35); // Reduce size for stack visualization
           const stackSeparation = adjustedRadius * 2.5;
           const totalStackHeight = stackSeparation * (points.length - 1);
           const startY = centerY - totalStackHeight / 2;
@@ -717,7 +717,7 @@
 
         if (points.length > 1) {
             const [centerX, centerY] = worldToScreen(baseX, baseY);
-            const adjustedRadius = Math.max(2, R * 0.7);
+            const adjustedRadius = Math.max(1, R * 0.35);
             const stackSeparation = adjustedRadius * 2.5;
             const totalStackHeight = stackSeparation * (points.length - 1);
             const startY = centerY - totalStackHeight / 2;
