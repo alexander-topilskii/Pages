@@ -3,73 +3,77 @@
 <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <title>Маршрут чтения: будущее труда, УБД и пост‑рост — для неподготовленного читателя</title>
+    <title>Маршрут чтения: будущее труда, УБД и пост‑рост — лёгкий вход</title>
     <style>
         :root{
-          --bg: #0b0d10;
-          --card: #13171c;
-          --muted: #9aa4b2;
-          --text: #e8edf2;
-          --accent: #4cc9f0;
-          --accent-2: #80ffea;
-          --ok: #58d68d;
-          --warn: #f39c12;
-          --danger: #e74c3c;
-          --border: #22303c;
-        }
-        @media (prefers-color-scheme: light) {
-          :root{ --bg:#f7f9fb; --card:#ffffff; --muted:#4b5563; --text:#0b0d10; --border:#e5e7eb; }
+          --bg: #f7f9fb;
+          --card: #ffffff;
+          --muted: #4b5563;
+          --text: #0b0d10;
+          --border: #e5e7eb;
+          /* Цвета шагов */
+          --c1:#22c55e; --c2:#06b6d4; --c3:#f59e0b; --c4:#6366f1; --c5:#ef4444;
         }
         *{ box-sizing:border-box }
         body{
           margin:0; font-family: system-ui, -apple-system, Segoe UI, Roboto, Inter, "Helvetica Neue", Arial, "Noto Sans", "Apple Color Emoji", "Segoe UI Emoji";
-          color:var(--text); background: linear-gradient(180deg, var(--bg), #0b0d10 60%);
+          font-size: 18px; line-height: 1.6; color:var(--text); background: var(--bg);
         }
         header{
           position:sticky; top:0; z-index:10; backdrop-filter: blur(8px);
-          background: color-mix(in oklab, var(--bg), transparent 35%);
-          border-bottom:1px solid var(--border);
+          background: rgba(255,255,255,0.92); border-bottom:1px solid var(--border); transition: all .2s ease;
         }
         .wrap{ max-width: 980px; margin: 0 auto; padding: 16px 20px; }
-        h1{ font-size: clamp(24px, 3.2vw, 34px); line-height:1.15; margin: 8px 0 6px; }
-        .sub{ color:var(--muted); font-size: 14px; margin-bottom: 12px; }
+        h1{ font-size: clamp(26px, 3.2vw, 36px); line-height:1.15; margin: 8px 0 6px; }
+        .sub{ color:var(--muted); font-size: 15px; margin-bottom: 12px; }
         .card{ background:var(--card); border:1px solid var(--border); border-radius:16px; padding:16px; }
         .toolbar{ display:flex; gap:12px; flex-wrap:wrap; align-items:center; }
         .toolbar .grow{ flex:1 1 auto }
-        input[type="search"]{ width:100%; border:1px solid var(--border); background:transparent; color:var(--text);
-          padding:10px 12px; border-radius:10px; outline:none; }
+        input[type="search"]{ width:100%; border:1px solid var(--border); background:#fff; color:var(--text);
+          padding:12px 14px; border-radius:12px; outline:none; }
         select, button{
           border:1px solid var(--border); background:var(--card); color:var(--text);
-          padding:10px 12px; border-radius:10px; cursor:pointer; font-weight:600;
+          padding:12px 14px; border-radius:12px; cursor:pointer; font-weight:600;
         }
-        button:hover{ border-color: color-mix(in oklab, var(--accent), black 20%); }
-        .progress{ height:10px; background:#11151a; border:1px solid var(--border); border-radius:999px; overflow:hidden; }
-        .bar{ height:100%; width:0%; background: linear-gradient(90deg, var(--accent), var(--accent-2)); transition:width .25s ease; }
-        details{ border:1px solid var(--border); border-radius:14px; padding:10px 12px; background: color-mix(in oklab, var(--card), black 2%); }
+        button:hover{ border-color:#cbd5e1 }
+
+        /* Прогресс: цветные сегменты по шагам */
+        .progress{ height:16px; background:#f1f5f9; border:1px solid var(--border); border-radius:999px; overflow:hidden; display:flex; }
+        .seg{ height:100%; position:relative; flex:0 0 auto; }
+        .seg .fill{ position:absolute; left:0; top:0; bottom:0; width:0%; transition:width .25s ease; }
+        .seg .rest{ position:absolute; right:0; top:0; bottom:0; width:100%; background:rgba(0,0,0,0.06); }
+
+        /* Схлопывание заголовка: остаётся только строка прогресса */
+        header.collapsed .wrap > h1,
+        header.collapsed .wrap > .sub,
+        header.collapsed .wrap .card .toolbar,
+        header.collapsed .wrap .card .hint:first-of-type { display:none !important; }
+        header.collapsed .wrap .card{ padding:8px 16px; }
+
+        details{ border:1px solid var(--border); border-radius:14px; padding:10px 12px; background:#fff; }
         details + details{ margin-top:10px; }
-        summary{ cursor:pointer; list-style:none; display:flex; gap:10px; align-items:center; }
+        summary{ cursor:pointer; list-style:none; display:flex; gap:12px; align-items:center; }
         summary::-webkit-details-marker{ display:none }
-        .step-badge{ display:inline-flex; align-items:center; justify-content:center; font-weight:800;
-          background: color-mix(in oklab, var(--accent), black 60%); color:white; border-radius:10px; padding:4px 10px; font-size:12px; }
-        .step-desc{ color:var(--muted); font-size:13px; margin:6px 0 0 0; }
-        ul.list{ list-style:none; padding:0; margin:12px 0 0 0; display:grid; grid-template-columns: 1fr; gap:10px; }
+        .step-badge{ display:inline-flex; align-items:center; justify-content:center; font-weight:800; color:#111; border-radius:12px; padding:4px 10px; font-size:12px; border:1px solid var(--border); }
+        .step-desc{ color:var(--muted); font-size:14px; margin:6px 0 0 0; }
+        ul.list{ list-style:none; padding:0; margin:12px 0 0 0; display:grid; grid-template-columns: 1fr; gap:12px; }
         @media(min-width:720px){ ul.list{ grid-template-columns: 1fr 1fr } }
-        li.item{ border:1px dashed var(--border); border-radius:12px; padding:10px 10px; display:flex; gap:10px; align-items:flex-start; background: color-mix(in oklab, var(--card), black 4%); }
+        li.item{ border:1px dashed var(--border); border-radius:12px; padding:12px; display:flex; gap:10px; align-items:flex-start; background:#fff; }
         .check{ transform: translateY(2px); }
-        .meta{ font-size:12px; color:var(--muted); }
-        .title{ font-weight:700; }
-        .pill{ font-size:11px; padding:2px 8px; border-radius:999px; border:1px solid var(--border); }
+        .meta{ font-size:13px; color:var(--muted); }
+        .title{ font-weight:700; font-size: 17px; }
+        .pill{ font-size:12px; padding:2px 8px; border-radius:999px; border:1px solid var(--border); }
         .type{ margin-left:auto; }
         .controls{ display:flex; gap:8px; flex-wrap:wrap; margin-top:10px; }
-        .hint{ color:var(--muted); font-size:12px; }
-        .footer{ color:var(--muted); font-size:12px; text-align:center; margin:24px 0 16px; }
+        .hint{ color:var(--muted); font-size:13px; }
+        .footer{ color:var(--muted); font-size:13px; text-align:center; margin:24px 0 16px; }
 
         @media print{
           header, .toolbar, .controls, .footer, .hint { display:none !important }
           body{ background:#fff; color:#111 }
           .card, details, li.item{ border-color:#ddd; background:#fff }
-          input[type="checkbox"]{ appearance:none; display:inline-block; width:10px; height:10px; border:1px solid #555; margin-right:6px; position:relative; }
-          input[type="checkbox"][data-checked="true"]::after{ content:"✓"; position:absolute; left:1px; top:-3px; font-size:12px; }
+          input[type="checkbox"]{ appearance:none; display:inline-block; width:12px; height:12px; border:1px solid #555; margin-right:6px; position:relative; }
+          input[type="checkbox"][data-checked="true"]::after{ content:"✓"; position:absolute; left:1px; top:-3px; font-size:14px; }
         }
     </style>
 </head>
@@ -77,7 +81,7 @@
 <header>
     <div class="wrap">
         <h1>Маршрут чтения: будущее труда, УБД и пост‑рост</h1>
-        <div class="sub">Дружелюбный порядок для неподготовленного читателя: от простого к сложному. Отмечайте прочитанное — прогресс сохранится локально.</div>
+        <div class="sub">Удобный порядок для неподготовленного читателя: от простого к сложному. Отмечайте прочитанное — прогресс хранится в cookie.</div>
         <div class="card" role="region" aria-label="Панель управления">
             <div class="toolbar">
                 <div class="grow"><input id="q" type="search" placeholder="Поиск по названию/автору/типу… (например: УБД, 4‑day week, отчёт, дегрост)" aria-label="Поиск"/></div>
@@ -93,31 +97,34 @@
                 <button id="btn-import" title="Импортировать прогресс из файла">Импорт</button>
                 <input id="file-import" type="file" accept="application/json" hidden />
             </div>
-            <div class="hint" style="margin-top:8px">Подсказка: начните с Шага 1. Внутри каждого шага читайте по порядку сверху вниз.</div>
             <div class="hint" style="margin-top:10px">Прогресс по всем шагам:</div>
-            <div class="progress" aria-label="Прогресс чтения" aria-live="polite"><div class="bar" id="bar"></div></div>
+            <div class="progress" id="progress" aria-label="Прогресс чтения" aria-live="polite"></div>
         </div>
     </div>
 </header>
 
 <main class="wrap" id="app" aria-live="polite"></main>
 
-<div class="wrap footer">Сделано для удобного старта: без ссылок и спойлеров, только порядок. Прогресс хранится в <code>localStorage</code> вашего браузера.</div>
+<div class="wrap footer">Сделано для удобного старта: без ссылок и спойлеров, только порядок. Прогресс хранится в <code>cookie</code> вашего браузера.</div>
 
 <script>
     // --- ДАННЫЕ ---
-    /**
-     * level: 1..5 (Шаг)
-     * type: book | report | article | case | data | history
-     */
+    const steps = {
+      1: { title: 'Шаг 1 — Вход в тему', desc: 'Самые доступные и популярные книги: УБД, 4‑дневка, «пончик», общий оптимистичный контекст.', color:getComputedStyle(document.documentElement).getPropertyValue('--c1').trim() },
+      2: { title: 'Шаг 2 — Вводные о будущем', desc: 'Переходим к крупным сценариям и дебатам о росте и технологиях. Всё ещё читается легко.', color:getComputedStyle(document.documentElement).getPropertyValue('--c2').trim() },
+      3: { title: 'Шаг 3 — Современные дискуссии и критика', desc: 'Глубже в политику технологий, финансы государства, платформы и спор вокруг автоматизации.', color:getComputedStyle(document.documentElement).getPropertyValue('--c3').trim() },
+      4: { title: 'Шаг 4 — Практика и кейсы', desc: 'Пилоты и отчёты: 4‑дневная неделя, УБД, рынок труда, энергетика, продовольствие.', color:getComputedStyle(document.documentElement).getPropertyValue('--c4').trim() },
+      5: { title: 'Шаг 5 — Углубление', desc: 'Классика, теория и новейшие академические обзоры. Читать по интересу и времени.', color:getComputedStyle(document.documentElement).getPropertyValue('--c5').trim() }
+    };
+
+    /** level: 1..5; type: book|report|article|case|data|history */
     const items = [
-      // Шаг 1 — Вход в тему
+      // Шаг 1
       {id:'bregman-2016', level:1, type:'book', title:'Utopia for Realists', author:'Рутгер Брегман', year:2016, note:'Вводная про УБД и 4‑дневку'},
       {id:'standing-2017', level:1, type:'book', title:'Basic Income: And How We Can Make It Happen', author:'Гай Стэндинг', year:2017, note:'Как устроить УБД простым языком'},
       {id:'raworth-2017', level:1, type:'book', title:'Doughnut Economics', author:'Кейт Раворт', year:2017, note:'Экономика «пончика»: рамка целей'},
       {id:'bastani-2019', level:1, type:'book', title:'Fully Automated Luxury Communism', author:'Аарон Бастани', year:2019, note:'Оптимистичная визия автоматизации'},
-
-      // Шаг 2 — Вводные о будущем
+      // Шаг 2
       {id:'harari-2015', level:2, type:'book', title:'Homo Deus', author:'Юваль Ной Харари', year:2015, note:'Поп‑футуризм о трендах'},
       {id:'mason-2015', level:2, type:'book', title:'Postcapitalism', author:'Пол Мейсон', year:2015, note:'Сценарии перемен'},
       {id:'srnicek-williams-2015', level:2, type:'book', title:'Inventing the Future', author:'Ник Срничек, Алекс Уильямс', year:2015, note:'Политика ускорения перемен'},
@@ -129,8 +136,7 @@
       {id:'varoufakis-2020', level:2, type:'book', title:'Another Now', author:'Янис Варуфакис', year:2020, note:'Роман‑эксперимент об альтернативах'},
       {id:'hamilton-2003', level:2, type:'book', title:'Growth Fetish', author:'Клайв Хэмилтон', year:2003, note:'Критика культа ВВП'},
       {id:'kurzweil-2005', level:2, type:'book', title:'The Singularity Is Near', author:'Рэй Курцвейл', year:2005, note:'Техно‑футуризм (для контраста)'},
-
-      // Шаг 3 — Современные дискуссии и критика
+      // Шаг 3
       {id:'zuboff-2019', level:3, type:'book', title:'Эпоха надзорного капитализма', author:'Шошана Зубофф', year:2019, note:'Данные, власть, платформы'},
       {id:'mazzucato-2018', level:3, type:'book', title:'The Value of Everything', author:'Мариана Маццукато', year:2018, note:'Кто создаёт ценность'},
       {id:'kelton-2020', level:3, type:'book', title:'The Deficit Myth', author:'Стефани Келтон', year:2020, note:'Госдолг без паники (MMT)'},
@@ -144,8 +150,7 @@
       {id:'nguyen-2020', level:3, type:'article', title:'On the implementation of UBI…', author:'Le Dong Hai Nguyen', year:2020, note:'Дизайн УБД при техно‑безработице'},
       {id:'economist-2016', level:3, type:'article', title:'Basically Flawed', author:'The Economist', year:2016, note:'Поп‑критика УБД (контрарг.)'},
       {id:'smil-2019', level:3, type:'book', title:'Growth', author:'Вацлав Смил', year:2019, note:'Трезвый взгляд на рост'},
-
-      // Шаг 4 — Практика и кейсы
+      // Шаг 4
       {id:'kela-2019', level:4, type:'report', title:'Finland Basic Income Experiment (2017–2018)', author:'KELA', year:2019, note:'Результаты эксперимента УБД'},
       {id:'4day-uk-2023', level:4, type:'report', title:'4 Day Week UK Pilot (2022–2023) — итоговый отчёт', author:'4 Day Week Global', year:2023, note:'Крупный пилот 4‑дневки'},
       {id:'spain-valencia-2024', level:4, type:'report', title:'Spain/Valencia 4‑day Week Pilots (2021–2024)', author:'Региональные отчёты', year:2024, note:'Европейские пилоты'},
@@ -159,8 +164,7 @@
       {id:'sofi-2024', level:4, type:'report', title:'FAO/WFP — SOFI 2024', author:'FAO/WFP', year:2024, note:'Продовольственная безопасность'},
       {id:'wb-agri-2023', level:4, type:'report', title:'World Bank — Agriculture Overview (2023)', author:'World Bank', year:2023, note:'Обзор агросектора'},
       {id:'ict-energy-2023', level:4, type:'report', title:'ICT/AI Energy Use — Constraint on Full Automation (meta‑analyses)', author:'Meta‑analyses', year:2023, note:'Энергия и лимиты ИИ'},
-
-      // Шаг 5 — Углубление
+      // Шаг 5
       {id:'bookchin-1971', level:5, type:'book', title:'Post‑Scarcity Anarchism', author:'Мюррей Букчин', year:1971, note:'Политфилософия изобилия'},
       {id:'kropotkin-1892', level:5, type:'book', title:'The Conquest of Bread', author:'Пётр Кропоткин', year:1892, note:'Классика анархо‑коммунизма'},
       {id:'hayek-1945', level:5, type:'article', title:'The Use of Knowledge in Society', author:'F. A. Hayek', year:1945, note:'Децентр. знание и цены'},
@@ -183,31 +187,30 @@
       {id:'soper-2020', level:5, type:'book', title:'Post‑Growth Living', author:'Kate Soper', year:2020, note:'Образ жизни без роста'}
     ];
 
-    const steps = {
-      1: { title: 'Шаг 1 — Вход в тему', desc: 'Самые доступные и популярные книги: УБД, 4‑дневка, «пончик», общий оптимистичный контекст.' },
-      2: { title: 'Шаг 2 — Вводные о будущем', desc: 'Переходим к крупным сценариям и дебатам о росте и технологиях. Всё ещё читается легко.' },
-      3: { title: 'Шаг 3 — Современные дискуссии и критика', desc: 'Глубже в политику технологий, финансы государства, платформы и спор вокруг автоматизации.' },
-      4: { title: 'Шаг 4 — Практика и кейсы', desc: 'Пилоты и отчёты: 4‑дневная неделя, УБД, рынок труда, энергетика, продовольствие.' },
-      5: { title: 'Шаг 5 — Углубление', desc: 'Классика, теория и новейшие академические обзоры. Читать по интересу и времени.' }
-    };
+    // Cookie‑хранилище
+    const cookieKey = 'reading-route-progress-v1';
+    function setCookie(name, value, days){
+      const d = new Date(); d.setTime(d.getTime() + (days*24*60*60*1000));
+      document.cookie = `${name}=${encodeURIComponent(value)};expires=${d.toUTCString()};path=/`;
+    }
+    function getCookie(name){
+      const v = document.cookie.split('; ').find(row=>row.startsWith(name+'='));
+      return v ? decodeURIComponent(v.split('=')[1]) : null;
+    }
+    const loadState = () => { try{ return JSON.parse(getCookie(cookieKey)||'{}'); }catch{ return {}; } };
+    const saveState = st => setCookie(cookieKey, JSON.stringify(st), 365);
+    let state = loadState();
 
-    // --- УТИЛИТЫ ---
+    // Утилиты
     const $$ = (sel, root=document) => Array.from(root.querySelectorAll(sel));
     const $ = (sel, root=document) => root.querySelector(sel);
-    const slug = s => s.toLowerCase().replace(/[^a-zа-я0-9]+/gi,'-');
-    const lsKey = 'reading-route-progress-v1';
-    const loadState = () => { try{ return JSON.parse(localStorage.getItem(lsKey)||'{}'); }catch{ return {}; } };
-    const saveState = st => localStorage.setItem(lsKey, JSON.stringify(st));
+    const humanType = t => ({book:'книга', report:'отчёт', article:'статья/эссе', case:'кейс', data:'данные', history:'история'})[t] || t;
 
-    let state = loadState(); // { [id]: true }
-
-    // --- РЕНДЕР ---
+    // Рендер
     function render(){
-      const app = document.getElementById('app');
-      app.innerHTML = '';
-
-      const q = ($('#q').value||'').trim().toLowerCase();
-      const stepFilter = $('#filter-step').value;
+      const app = $('#app'); app.innerHTML = '';
+      const q = ($('#q')?.value||'').trim().toLowerCase();
+      const stepFilter = $('#filter-step')?.value || 'all';
 
       const grouped = new Map();
       for (const it of items){
@@ -224,16 +227,15 @@
         const box = document.createElement('section');
         const d = document.createElement('details'); d.open = true;
         const s = document.createElement('summary');
-        s.innerHTML = `<span class="step-badge">${level}</span> <strong>${steps[level].title}</strong>`;
+        const color = steps[level].color;
+        s.innerHTML = `<span class="step-badge" style="background:${color}1a;border-color:${color}">${level}</span> <strong>${steps[level].title}</strong>`;
         d.appendChild(s);
         const p = document.createElement('p'); p.className = 'step-desc'; p.textContent = steps[level].desc; d.appendChild(p);
 
-        // Controls
         const controls = document.createElement('div'); controls.className = 'controls';
         const btnAll = document.createElement('button'); btnAll.textContent = 'Отметить всё в шаге';
         const btnNone = document.createElement('button'); btnNone.textContent = 'Снять все отметки';
-        controls.append(btnAll, btnNone);
-        d.appendChild(controls);
+        controls.append(btnAll, btnNone); d.appendChild(controls);
 
         const ul = document.createElement('ul'); ul.className = 'list';
         const arr = grouped.get(level).sort((a,b)=> a.year - b.year || a.title.localeCompare(b.title, 'ru'));
@@ -250,25 +252,15 @@
           ul.appendChild(li);
         });
 
-        // Handlers for group buttons
-        btnAll.addEventListener('click', ()=>{
-          for (const it of grouped.get(level)) state[it.id] = true;
-          saveState(state); updateChecks(); updateProgress();
-        });
-        btnNone.addEventListener('click', ()=>{
-          for (const it of grouped.get(level)) delete state[it.id];
-          saveState(state); updateChecks(); updateProgress();
-        });
+        // Групповые кнопки
+        btnAll.addEventListener('click', ()=>{ for (const it of grouped.get(level)) state[it.id] = true; saveState(state); updateChecks(); updateProgress(); });
+        btnNone.addEventListener('click', ()=>{ for (const it of grouped.get(level)) delete state[it.id]; saveState(state); updateChecks(); updateProgress(); });
 
         d.appendChild(ul); box.appendChild(d); app.appendChild(box);
       });
 
       attachCheckHandlers();
       updateProgress();
-    }
-
-    function humanType(t){
-      return ({book:'книга', report:'отчёт', article:'статья/эссе', case:'кейс', data:'данные', history:'история'})[t] || t;
     }
 
     function attachCheckHandlers(){
@@ -278,51 +270,60 @@
           if (e.target.checked) state[id] = true; else delete state[id];
           saveState(state); updateProgress();
         });
-        // for print
         cb.setAttribute('data-checked', cb.checked ? 'true' : 'false');
         cb.addEventListener('change', ()=> cb.setAttribute('data-checked', cb.checked ? 'true' : 'false'));
       });
     }
 
-    function updateChecks(){
-      $$('.check').forEach(cb => { const id = cb.dataset.id; cb.checked = !!state[id]; cb.setAttribute('data-checked', cb.checked ? 'true' : 'false'); });
-    }
+    function updateChecks(){ $$('.check').forEach(cb => { const id = cb.dataset.id; cb.checked = !!state[id]; cb.setAttribute('data-checked', cb.checked ? 'true' : 'false'); }); }
 
     function updateProgress(){
       const total = items.length;
+      const perLevel = {};
+      for (const it of items){ perLevel[it.level] = perLevel[it.level] || {total:0, done:0}; perLevel[it.level].total++; if (state[it.id]) perLevel[it.level].done++; }
+      const progressEl = document.getElementById('progress');
+      progressEl.innerHTML = '';
+      const sumTotals = Object.values(perLevel).reduce((a,b)=>a + (b.total||0), 0) || 1;
+      Object.keys(steps).forEach(levelStr => {
+        const level = Number(levelStr);
+        const t = (perLevel[level]?.total)||0; if (!t) return;
+        const d = (perLevel[level]?.done)||0;
+        const seg = document.createElement('div'); seg.className='seg';
+        seg.style.width = (t*100/sumTotals)+'%';
+        const fill = document.createElement('div'); fill.className='fill'; fill.style.background = steps[level].color; fill.style.width = (d*100/t)+'%';
+        const rest = document.createElement('div'); rest.className='rest';
+        seg.append(fill, rest); progressEl.appendChild(seg);
+      });
       const done = Object.keys(state).filter(id => items.find(i=>i.id===id)).length;
       const pct = total ? Math.round(done*100/total) : 0;
-      $('#bar').style.width = pct + '%';
-      $('#bar').setAttribute('aria-label', `Готово ${pct}%`);
+      progressEl.setAttribute('aria-label', `Готово ${pct}%`);
     }
 
-    // --- Экспорт/импорт ---
+    // Экспорт/импорт
     $('#btn-export').addEventListener('click', ()=>{
       const data = { version:1, checked: Object.keys(state) };
       const blob = new Blob([JSON.stringify(data, null, 2)], {type:'application/json'});
       const url = URL.createObjectURL(blob);
-      const a = document.createElement('a'); a.href=url; a.download='reading-progress.json'; a.click();
-      setTimeout(()=>URL.revokeObjectURL(url), 1000);
+      const a = document.createElement('a'); a.href=url; a.download='reading-progress.json'; a.click(); setTimeout(()=>URL.revokeObjectURL(url), 1000);
     });
     $('#btn-import').addEventListener('click', ()=> $('#file-import').click());
     $('#file-import').addEventListener('change', async (e)=>{
       const file = e.target.files[0]; if(!file) return;
-      try{
-        const text = await file.text();
-        const data = JSON.parse(text);
-        if (Array.isArray(data.checked)){
-          state = {}; data.checked.forEach(id=> state[id]=true);
-          saveState(state); render();
-        } else { alert('Неожиданный формат файла'); }
+      try{ const text = await file.text(); const data = JSON.parse(text);
+        if (Array.isArray(data.checked)){ state = {}; data.checked.forEach(id=> state[id]=true); saveState(state); render(); }
+        else alert('Неожиданный формат файла');
       }catch(err){ alert('Не удалось импортировать: '+err.message); }
       e.target.value='';
     });
 
-    // --- Фильтры и поиск ---
-    $('#q').addEventListener('input', ()=> render());
-    $('#filter-step').addEventListener('change', ()=> render());
+    // Схлопывание хедера при скролле — оставляем только прогресс
+    const hdr = document.querySelector('header');
+    window.addEventListener('scroll', ()=>{
+      const y = window.scrollY || document.documentElement.scrollTop;
+      if (y > 80) hdr.classList.add('collapsed'); else hdr.classList.remove('collapsed');
+    });
 
-    // Первичный рендер
+    // Рендер на старте
     render();
 </script>
 </body>
