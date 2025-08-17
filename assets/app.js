@@ -128,7 +128,6 @@ function openPage(url){
   els.viewer.classList.add('active');
   els.grid.style.display = 'none';
   els.welcome.style.display = 'none';
-  els.backBtn.style.display = history.length > initialHistoryLength ? 'inline-flex' : 'none';
 }
 
 function closePage(){
@@ -136,7 +135,6 @@ function closePage(){
   els.viewer.classList.remove('active');
   els.grid.style.display = '';
   els.welcome.style.display = '';
-  els.backBtn.style.display = 'none';
 }
 
 function tryOpenFromHash(){
