@@ -1,0 +1,329 @@
+<!doctype html>
+<html lang="ru">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Маршрут чтения: будущее труда, УБД и пост‑рост — для неподготовленного читателя</title>
+    <style>
+        :root{
+          --bg: #0b0d10;
+          --card: #13171c;
+          --muted: #9aa4b2;
+          --text: #e8edf2;
+          --accent: #4cc9f0;
+          --accent-2: #80ffea;
+          --ok: #58d68d;
+          --warn: #f39c12;
+          --danger: #e74c3c;
+          --border: #22303c;
+        }
+        @media (prefers-color-scheme: light) {
+          :root{ --bg:#f7f9fb; --card:#ffffff; --muted:#4b5563; --text:#0b0d10; --border:#e5e7eb; }
+        }
+        *{ box-sizing:border-box }
+        body{
+          margin:0; font-family: system-ui, -apple-system, Segoe UI, Roboto, Inter, "Helvetica Neue", Arial, "Noto Sans", "Apple Color Emoji", "Segoe UI Emoji";
+          color:var(--text); background: linear-gradient(180deg, var(--bg), #0b0d10 60%);
+        }
+        header{
+          position:sticky; top:0; z-index:10; backdrop-filter: blur(8px);
+          background: color-mix(in oklab, var(--bg), transparent 35%);
+          border-bottom:1px solid var(--border);
+        }
+        .wrap{ max-width: 980px; margin: 0 auto; padding: 16px 20px; }
+        h1{ font-size: clamp(24px, 3.2vw, 34px); line-height:1.15; margin: 8px 0 6px; }
+        .sub{ color:var(--muted); font-size: 14px; margin-bottom: 12px; }
+        .card{ background:var(--card); border:1px solid var(--border); border-radius:16px; padding:16px; }
+        .toolbar{ display:flex; gap:12px; flex-wrap:wrap; align-items:center; }
+        .toolbar .grow{ flex:1 1 auto }
+        input[type="search"]{ width:100%; border:1px solid var(--border); background:transparent; color:var(--text);
+          padding:10px 12px; border-radius:10px; outline:none; }
+        select, button{
+          border:1px solid var(--border); background:var(--card); color:var(--text);
+          padding:10px 12px; border-radius:10px; cursor:pointer; font-weight:600;
+        }
+        button:hover{ border-color: color-mix(in oklab, var(--accent), black 20%); }
+        .progress{ height:10px; background:#11151a; border:1px solid var(--border); border-radius:999px; overflow:hidden; }
+        .bar{ height:100%; width:0%; background: linear-gradient(90deg, var(--accent), var(--accent-2)); transition:width .25s ease; }
+        details{ border:1px solid var(--border); border-radius:14px; padding:10px 12px; background: color-mix(in oklab, var(--card), black 2%); }
+        details + details{ margin-top:10px; }
+        summary{ cursor:pointer; list-style:none; display:flex; gap:10px; align-items:center; }
+        summary::-webkit-details-marker{ display:none }
+        .step-badge{ display:inline-flex; align-items:center; justify-content:center; font-weight:800;
+          background: color-mix(in oklab, var(--accent), black 60%); color:white; border-radius:10px; padding:4px 10px; font-size:12px; }
+        .step-desc{ color:var(--muted); font-size:13px; margin:6px 0 0 0; }
+        ul.list{ list-style:none; padding:0; margin:12px 0 0 0; display:grid; grid-template-columns: 1fr; gap:10px; }
+        @media(min-width:720px){ ul.list{ grid-template-columns: 1fr 1fr } }
+        li.item{ border:1px dashed var(--border); border-radius:12px; padding:10px 10px; display:flex; gap:10px; align-items:flex-start; background: color-mix(in oklab, var(--card), black 4%); }
+        .check{ transform: translateY(2px); }
+        .meta{ font-size:12px; color:var(--muted); }
+        .title{ font-weight:700; }
+        .pill{ font-size:11px; padding:2px 8px; border-radius:999px; border:1px solid var(--border); }
+        .type{ margin-left:auto; }
+        .controls{ display:flex; gap:8px; flex-wrap:wrap; margin-top:10px; }
+        .hint{ color:var(--muted); font-size:12px; }
+        .footer{ color:var(--muted); font-size:12px; text-align:center; margin:24px 0 16px; }
+
+        @media print{
+          header, .toolbar, .controls, .footer, .hint { display:none !important }
+          body{ background:#fff; color:#111 }
+          .card, details, li.item{ border-color:#ddd; background:#fff }
+          input[type="checkbox"]{ appearance:none; display:inline-block; width:10px; height:10px; border:1px solid #555; margin-right:6px; position:relative; }
+          input[type="checkbox"][data-checked="true"]::after{ content:"✓"; position:absolute; left:1px; top:-3px; font-size:12px; }
+        }
+    </style>
+</head>
+<body>
+<header>
+    <div class="wrap">
+        <h1>Маршрут чтения: будущее труда, УБД и пост‑рост</h1>
+        <div class="sub">Дружелюбный порядок для неподготовленного читателя: от простого к сложному. Отмечайте прочитанное — прогресс сохранится локально.</div>
+        <div class="card" role="region" aria-label="Панель управления">
+            <div class="toolbar">
+                <div class="grow"><input id="q" type="search" placeholder="Поиск по названию/автору/типу… (например: УБД, 4‑day week, отчёт, дегрост)" aria-label="Поиск"/></div>
+                <select id="filter-step" aria-label="Фильтр по шагу">
+                    <option value="all">Все шаги</option>
+                    <option value="1">Шаг 1 — Вход в тему</option>
+                    <option value="2">Шаг 2 — Вводные о будущем</option>
+                    <option value="3">Шаг 3 — Современные дискуссии и критика</option>
+                    <option value="4">Шаг 4 — Практика и кейсы</option>
+                    <option value="5">Шаг 5 — Углубление</option>
+                </select>
+                <button id="btn-export" title="Экспортировать прогресс в файл">Экспорт</button>
+                <button id="btn-import" title="Импортировать прогресс из файла">Импорт</button>
+                <input id="file-import" type="file" accept="application/json" hidden />
+            </div>
+            <div class="hint" style="margin-top:8px">Подсказка: начните с Шага 1. Внутри каждого шага читайте по порядку сверху вниз.</div>
+            <div class="hint" style="margin-top:10px">Прогресс по всем шагам:</div>
+            <div class="progress" aria-label="Прогресс чтения" aria-live="polite"><div class="bar" id="bar"></div></div>
+        </div>
+    </div>
+</header>
+
+<main class="wrap" id="app" aria-live="polite"></main>
+
+<div class="wrap footer">Сделано для удобного старта: без ссылок и спойлеров, только порядок. Прогресс хранится в <code>localStorage</code> вашего браузера.</div>
+
+<script>
+    // --- ДАННЫЕ ---
+    /**
+     * level: 1..5 (Шаг)
+     * type: book | report | article | case | data | history
+     */
+    const items = [
+      // Шаг 1 — Вход в тему
+      {id:'bregman-2016', level:1, type:'book', title:'Utopia for Realists', author:'Рутгер Брегман', year:2016, note:'Вводная про УБД и 4‑дневку'},
+      {id:'standing-2017', level:1, type:'book', title:'Basic Income: And How We Can Make It Happen', author:'Гай Стэндинг', year:2017, note:'Как устроить УБД простым языком'},
+      {id:'raworth-2017', level:1, type:'book', title:'Doughnut Economics', author:'Кейт Раворт', year:2017, note:'Экономика «пончика»: рамка целей'},
+      {id:'bastani-2019', level:1, type:'book', title:'Fully Automated Luxury Communism', author:'Аарон Бастани', year:2019, note:'Оптимистичная визия автоматизации'},
+
+      // Шаг 2 — Вводные о будущем
+      {id:'harari-2015', level:2, type:'book', title:'Homo Deus', author:'Юваль Ной Харари', year:2015, note:'Поп‑футуризм о трендах'},
+      {id:'mason-2015', level:2, type:'book', title:'Postcapitalism', author:'Пол Мейсон', year:2015, note:'Сценарии перемен'},
+      {id:'srnicek-williams-2015', level:2, type:'book', title:'Inventing the Future', author:'Ник Срничек, Алекс Уильямс', year:2015, note:'Политика ускорения перемен'},
+      {id:'jackson-2009', level:2, type:'book', title:'Prosperity Without Growth', author:'Тим Джексон', year:2009, note:'Ранний анти‑рост'},
+      {id:'heinberg-2011', level:2, type:'book', title:'The End of Growth', author:'Ричард Хейнберг', year:2011, note:'Пределы роста'},
+      {id:'wright-2010', level:2, type:'book', title:'Envisioning Real Utopias', author:'Эрик Олин Райт', year:2010, note:'Практические утопии'},
+      {id:'hickel-2020', level:2, type:'book', title:'Less is More', author:'Джейсон Хикель', year:2020, note:'Дегрост понятным языком'},
+      {id:'jackson-2021', level:2, type:'book', title:'Post Growth', author:'Тим Джексон', year:2021, note:'Жизнь после роста'},
+      {id:'varoufakis-2020', level:2, type:'book', title:'Another Now', author:'Янис Варуфакис', year:2020, note:'Роман‑эксперимент об альтернативах'},
+      {id:'hamilton-2003', level:2, type:'book', title:'Growth Fetish', author:'Клайв Хэмилтон', year:2003, note:'Критика культа ВВП'},
+      {id:'kurzweil-2005', level:2, type:'book', title:'The Singularity Is Near', author:'Рэй Курцвейл', year:2005, note:'Техно‑футуризм (для контраста)'},
+
+      // Шаг 3 — Современные дискуссии и критика
+      {id:'zuboff-2019', level:3, type:'book', title:'Эпоха надзорного капитализма', author:'Шошана Зубофф', year:2019, note:'Данные, власть, платформы'},
+      {id:'mazzucato-2018', level:3, type:'book', title:'The Value of Everything', author:'Мариана Маццукато', year:2018, note:'Кто создаёт ценность'},
+      {id:'kelton-2020', level:3, type:'book', title:'The Deficit Myth', author:'Стефани Келтон', year:2020, note:'Госдолг без паники (MMT)'},
+      {id:'susskind-2020', level:3, type:'book', title:'A World Without Work', author:'Даниэль Сасскинд', year:2020, note:'Автоматизация и занятость'},
+      {id:'kimmerer-2023', level:3, type:'article', title:'The Serviceberry', author:'Robin Wall Kimmerer', year:2023, note:'Эссе о взаимо‑дарении'},
+      {id:'srnicek-2017', level:3, type:'book', title:'Platform Capitalism', author:'Ник Срничек', year:2017, note:'Архитектура платформ'},
+      {id:'brindle-2018', level:3, type:'book', title:'Новое тёмное время', author:'Джеймс Бридл', year:2018, note:'Инфошум и техно‑тени'},
+      {id:'kallis-2019', level:3, type:'article', title:'Degrowth and the Critique of Luxury Communism', author:'Giorgos Kallis', year:2019, note:'Критика FALC'},
+      {id:'benanav-2020', level:3, type:'book', title:'Automation and the Future of Work', author:'Aaron Benanav', year:2020, note:'Скепсис про полную автоматизацию'},
+      {id:'rasoolinejad-2019', level:3, type:'article', title:'UBI: The Last Bullet in the Darkness', author:'Mohammad Rasoolinejad', year:2019, note:'Аргументы за УБД'},
+      {id:'nguyen-2020', level:3, type:'article', title:'On the implementation of UBI…', author:'Le Dong Hai Nguyen', year:2020, note:'Дизайн УБД при техно‑безработице'},
+      {id:'economist-2016', level:3, type:'article', title:'Basically Flawed', author:'The Economist', year:2016, note:'Поп‑критика УБД (контрарг.)'},
+      {id:'smil-2019', level:3, type:'book', title:'Growth', author:'Вацлав Смил', year:2019, note:'Трезвый взгляд на рост'},
+
+      // Шаг 4 — Практика и кейсы
+      {id:'kela-2019', level:4, type:'report', title:'Finland Basic Income Experiment (2017–2018)', author:'KELA', year:2019, note:'Результаты эксперимента УБД'},
+      {id:'4day-uk-2023', level:4, type:'report', title:'4 Day Week UK Pilot (2022–2023) — итоговый отчёт', author:'4 Day Week Global', year:2023, note:'Крупный пилот 4‑дневки'},
+      {id:'spain-valencia-2024', level:4, type:'report', title:'Spain/Valencia 4‑day Week Pilots (2021–2024)', author:'Региональные отчёты', year:2024, note:'Европейские пилоты'},
+      {id:'amsterdam-doughnut-2021', level:4, type:'case', title:'Amsterdam Doughnut City (2020–) — применение рамки «пончика»', author:'Amsterdam/Raworth', year:2021, note:'Политика на практике'},
+      {id:'bc-basic-income-2020', level:4, type:'report', title:'British Columbia Basic Income Expert Panel Report', author:'BC Expert Panel', year:2020, note:'Комиссия по УБД'},
+      {id:'oecd-2017', level:4, type:'report', title:'Basic Income as a Policy Option', author:'OECD', year:2017, note:'Сценарии и издержки'},
+      {id:'ilo-2023', level:4, type:'report', title:'Working Time and Work–Life Balance Around the World', author:'ILO', year:2023, note:'Время работы в мире'},
+      {id:'gig-2021', level:4, type:'report', title:'Gig/Platform Work — контроль и нестабильность', author:'Эмпирика 2010s–2020s', year:2021, note:'Труд платформ'},
+      {id:'energiewende-2020', level:4, type:'data', title:'Germany Energiewende — занятость в ВИЭ (2000s–2020s)', author:'DE studies', year:2020, note:'Рабочие места в ВИЭ'},
+      {id:'fao-calories-2024', level:4, type:'data', title:'FAO — Global Calories per Capita (1960–2023) — тренд', author:'FAO', year:2024, note:'Пищевой долгосрок'},
+      {id:'sofi-2024', level:4, type:'report', title:'FAO/WFP — SOFI 2024', author:'FAO/WFP', year:2024, note:'Продовольственная безопасность'},
+      {id:'wb-agri-2023', level:4, type:'report', title:'World Bank — Agriculture Overview (2023)', author:'World Bank', year:2023, note:'Обзор агросектора'},
+      {id:'ict-energy-2023', level:4, type:'report', title:'ICT/AI Energy Use — Constraint on Full Automation (meta‑analyses)', author:'Meta‑analyses', year:2023, note:'Энергия и лимиты ИИ'},
+
+      // Шаг 5 — Углубление
+      {id:'bookchin-1971', level:5, type:'book', title:'Post‑Scarcity Anarchism', author:'Мюррей Букчин', year:1971, note:'Политфилософия изобилия'},
+      {id:'kropotkin-1892', level:5, type:'book', title:'The Conquest of Bread', author:'Пётр Кропоткин', year:1892, note:'Классика анархо‑коммунизма'},
+      {id:'hayek-1945', level:5, type:'article', title:'The Use of Knowledge in Society', author:'F. A. Hayek', year:1945, note:'Децентр. знание и цены'},
+      {id:'cleaver-1979', level:5, type:'book', title:'Reading Capital Politically', author:'Гарри Кливeр', year:1979, note:'Политическое чтение Маркса'},
+      {id:'black-1985', level:5, type:'book', title:'The Abolition of Work', author:'Боб Блэк', year:1985, note:'Провокация о труде'},
+      {id:'tainter-1988', level:5, type:'book', title:'Collapse of Complex Societies', author:'Джозеф Тейнтер', year:1988, note:'Сложность и распад'},
+      {id:'harvey-2014', level:5, type:'book', title:'Seventeen Contradictions and the End of Capitalism', author:'Дэвид Харви', year:2014, note:'Критика политэкон'},
+      {id:'vanparijs-2017', level:5, type:'book', title:'Basic Income', author:'Ф. ван Пэрайс, Я. Вандерборгт', year:2017, note:'Канонический учебник УБД'},
+      {id:'van-der-veen-groot-2024', level:5, type:'article', title:'Revisiting the capitalist road to communism', author:'Robert van der Veen & Loek Groot', year:2024, note:'Обновлённая дискуссия'},
+      {id:'langridge-2024', level:5, type:'article', title:'Unconditional Basic Income and a Degrowth Transition', author:'N. Langridge', year:2024, note:'УБД x дегрост'},
+      {id:'dehouche-2024', level:5, type:'report', title:'Post‑Labor Economics: A Systematic Review', author:'Nassim Dehouche', year:2024, note:'Библиографический обзор'},
+      {id:'schmelzer-2022', level:5, type:'book', title:'The Future Is Degrowth', author:'Matthias Schmelzer и др.', year:2022, note:'Синтез по дегросту'},
+      {id:'christophers-2024', level:5, type:'book', title:'The Price is Wrong', author:'Brett Christophers', year:2024, note:'Критика ценовых сигналов'},
+      {id:'offe-2008', level:5, type:'article', title:'A Basic Income for All', author:'Claus Offe', year:2008, note:'Аргументы за/против УБД'},
+      {id:'benanav-2022', level:5, type:'article', title:'Beyond Capitalism—1', author:'Aaron Benanav', year:2022, note:'Теоретическое углубление'},
+      {id:'project-cybersyn-1972', level:5, type:'history', title:'Project Cybersyn — Chile (1971–1973)', author:'Исторический кейс', year:1972, note:'Киберпланирование'},
+      {id:'ussr-ineff-1980', level:5, type:'history', title:'Late‑Soviet Planning Inefficiencies', author:'Историческая литература', year:1980, note:'Ограничения планирования'},
+      {id:'pollin-2021', level:5, type:'book', title:'Green New Deal', author:'Роберт Поллин', year:2021, note:'Инвестпрограммы и занятость'},
+      {id:'cockshott-1993', level:5, type:'book', title:'Towards a New Socialism', author:'Пол Кокшотт, Аллин Котррелл', year:1993, note:'Вычисл. планирование'},
+      {id:'soper-2020', level:5, type:'book', title:'Post‑Growth Living', author:'Kate Soper', year:2020, note:'Образ жизни без роста'}
+    ];
+
+    const steps = {
+      1: { title: 'Шаг 1 — Вход в тему', desc: 'Самые доступные и популярные книги: УБД, 4‑дневка, «пончик», общий оптимистичный контекст.' },
+      2: { title: 'Шаг 2 — Вводные о будущем', desc: 'Переходим к крупным сценариям и дебатам о росте и технологиях. Всё ещё читается легко.' },
+      3: { title: 'Шаг 3 — Современные дискуссии и критика', desc: 'Глубже в политику технологий, финансы государства, платформы и спор вокруг автоматизации.' },
+      4: { title: 'Шаг 4 — Практика и кейсы', desc: 'Пилоты и отчёты: 4‑дневная неделя, УБД, рынок труда, энергетика, продовольствие.' },
+      5: { title: 'Шаг 5 — Углубление', desc: 'Классика, теория и новейшие академические обзоры. Читать по интересу и времени.' }
+    };
+
+    // --- УТИЛИТЫ ---
+    const $$ = (sel, root=document) => Array.from(root.querySelectorAll(sel));
+    const $ = (sel, root=document) => root.querySelector(sel);
+    const slug = s => s.toLowerCase().replace(/[^a-zа-я0-9]+/gi,'-');
+    const lsKey = 'reading-route-progress-v1';
+    const loadState = () => { try{ return JSON.parse(localStorage.getItem(lsKey)||'{}'); }catch{ return {}; } };
+    const saveState = st => localStorage.setItem(lsKey, JSON.stringify(st));
+
+    let state = loadState(); // { [id]: true }
+
+    // --- РЕНДЕР ---
+    function render(){
+      const app = document.getElementById('app');
+      app.innerHTML = '';
+
+      const q = ($('#q').value||'').trim().toLowerCase();
+      const stepFilter = $('#filter-step').value;
+
+      const grouped = new Map();
+      for (const it of items){
+        if (stepFilter !== 'all' && String(it.level) !== stepFilter) continue;
+        const hay = `${it.title} ${it.author} ${it.type} ${it.note}`.toLowerCase();
+        if (q && !hay.includes(q)) continue;
+        if (!grouped.has(it.level)) grouped.set(it.level, []);
+        grouped.get(it.level).push(it);
+      }
+
+      const levels = Array.from(grouped.keys()).sort((a,b)=>a-b);
+
+      levels.forEach(level => {
+        const box = document.createElement('section');
+        const d = document.createElement('details'); d.open = true;
+        const s = document.createElement('summary');
+        s.innerHTML = `<span class="step-badge">${level}</span> <strong>${steps[level].title}</strong>`;
+        d.appendChild(s);
+        const p = document.createElement('p'); p.className = 'step-desc'; p.textContent = steps[level].desc; d.appendChild(p);
+
+        // Controls
+        const controls = document.createElement('div'); controls.className = 'controls';
+        const btnAll = document.createElement('button'); btnAll.textContent = 'Отметить всё в шаге';
+        const btnNone = document.createElement('button'); btnNone.textContent = 'Снять все отметки';
+        controls.append(btnAll, btnNone);
+        d.appendChild(controls);
+
+        const ul = document.createElement('ul'); ul.className = 'list';
+        const arr = grouped.get(level).sort((a,b)=> a.year - b.year || a.title.localeCompare(b.title, 'ru'));
+
+        arr.forEach(it => {
+          const li = document.createElement('li'); li.className = 'item';
+          const id = it.id;
+          const cb = document.createElement('input'); cb.type='checkbox'; cb.className='check'; cb.id = 'ck-'+id; cb.checked = !!state[id]; cb.setAttribute('aria-label', 'Отметить как прочитанное');
+          cb.dataset.id = id;
+          const label = document.createElement('label'); label.setAttribute('for', 'ck-'+id);
+          label.innerHTML = `<div class="title">${it.author} — <em>${it.title}</em> (${it.year})</div><div class="meta">${humanType(it.type)} • ${it.note||''}</div>`;
+          const type = document.createElement('span'); type.className='pill type'; type.textContent = humanType(it.type);
+          li.append(cb, label, type);
+          ul.appendChild(li);
+        });
+
+        // Handlers for group buttons
+        btnAll.addEventListener('click', ()=>{
+          for (const it of grouped.get(level)) state[it.id] = true;
+          saveState(state); updateChecks(); updateProgress();
+        });
+        btnNone.addEventListener('click', ()=>{
+          for (const it of grouped.get(level)) delete state[it.id];
+          saveState(state); updateChecks(); updateProgress();
+        });
+
+        d.appendChild(ul); box.appendChild(d); app.appendChild(box);
+      });
+
+      attachCheckHandlers();
+      updateProgress();
+    }
+
+    function humanType(t){
+      return ({book:'книга', report:'отчёт', article:'статья/эссе', case:'кейс', data:'данные', history:'история'})[t] || t;
+    }
+
+    function attachCheckHandlers(){
+      $$('.check').forEach(cb => {
+        cb.addEventListener('change', (e)=>{
+          const id = e.target.dataset.id;
+          if (e.target.checked) state[id] = true; else delete state[id];
+          saveState(state); updateProgress();
+        });
+        // for print
+        cb.setAttribute('data-checked', cb.checked ? 'true' : 'false');
+        cb.addEventListener('change', ()=> cb.setAttribute('data-checked', cb.checked ? 'true' : 'false'));
+      });
+    }
+
+    function updateChecks(){
+      $$('.check').forEach(cb => { const id = cb.dataset.id; cb.checked = !!state[id]; cb.setAttribute('data-checked', cb.checked ? 'true' : 'false'); });
+    }
+
+    function updateProgress(){
+      const total = items.length;
+      const done = Object.keys(state).filter(id => items.find(i=>i.id===id)).length;
+      const pct = total ? Math.round(done*100/total) : 0;
+      $('#bar').style.width = pct + '%';
+      $('#bar').setAttribute('aria-label', `Готово ${pct}%`);
+    }
+
+    // --- Экспорт/импорт ---
+    $('#btn-export').addEventListener('click', ()=>{
+      const data = { version:1, checked: Object.keys(state) };
+      const blob = new Blob([JSON.stringify(data, null, 2)], {type:'application/json'});
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a'); a.href=url; a.download='reading-progress.json'; a.click();
+      setTimeout(()=>URL.revokeObjectURL(url), 1000);
+    });
+    $('#btn-import').addEventListener('click', ()=> $('#file-import').click());
+    $('#file-import').addEventListener('change', async (e)=>{
+      const file = e.target.files[0]; if(!file) return;
+      try{
+        const text = await file.text();
+        const data = JSON.parse(text);
+        if (Array.isArray(data.checked)){
+          state = {}; data.checked.forEach(id=> state[id]=true);
+          saveState(state); render();
+        } else { alert('Неожиданный формат файла'); }
+      }catch(err){ alert('Не удалось импортировать: '+err.message); }
+      e.target.value='';
+    });
+
+    // --- Фильтры и поиск ---
+    $('#q').addEventListener('input', ()=> render());
+    $('#filter-step').addEventListener('change', ()=> render());
+
+    // Первичный рендер
+    render();
+</script>
+</body>
+</html>
