@@ -462,6 +462,22 @@
         `;
       }
 
+      let analyticsHtml = '';
+      if (p.analytics) {
+        const analyticsKeys = ['approach', 'driver', 'growth_stance', 'scale', 'power_structure'];
+        const analyticsItems = analyticsKeys.map(key => {
+            const axis = data.axes[key];
+            if (!axis) return '';
+            const valueKey = p.analytics[key];
+            const value = axis.values.find(v => v.key === valueKey);
+            return `<li><strong>${safe(axis.label)}:</strong> ${safe(value ? value.label : valueKey)}</li>`;
+        }).join('');
+
+        if (analyticsItems) {
+            analyticsHtml = `<div class="row"><strong>Аналитика:</strong><ul>${analyticsItems}</ul></div>`;
+        }
+      }
+
       selectedCard.hidden = false;
       selectedCard.innerHTML = `
         <h2>Selected</h2>
@@ -470,6 +486,7 @@
         ${p.type?`<div class="row"><strong>Тип:</strong> ${safe(p.type)}</div>`:''}
         ${p.description?`<div class="row">${safe(p.description)}</div>`:''}
         ${Array.isArray(p.key_takeaways)&&p.key_takeaways.length?`<div class="row"><strong>Ключевые выводы:</strong><ul>${p.key_takeaways.map(k=>`<li>${safe(k)}</li>`).join('')}</ul></div>`:''}
+        ${analyticsHtml}
         ${againstHtml}
         ${p.size !== undefined ? `
         <div class="row">
