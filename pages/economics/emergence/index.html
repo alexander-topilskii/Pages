@@ -1,0 +1,500 @@
+<!doctype html>
+<html lang="ru">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Когда система решает сама: непреднамеренные последствия и логика институтов</title>
+    <style>
+        :root{
+          --bg:#f7fafc;         /* светлый фон */
+          --paper:#ffffff;      /* карточки */
+          --ink:#0f172a;        /* основной текст */
+          --sub:#475569;        /* вторичный текст */
+          --muted:#94a3b8;      /* приглушённый */
+          --brand:#2563eb;      /* акцент */
+          --brand-2:#60a5fa;    /* акцент светлее */
+          --ring: 0 0 0 4px rgba(37,99,235,.14);
+          --radius:16px;
+          --shadow: 0 8px 24px rgba(2,6,23,.08), 0 2px 8px rgba(2,6,23,.06);
+        }
+        *{box-sizing:border-box}
+        html,body{height:100%}
+        body{
+          margin:0;
+          font: 16px/1.6 ui-sans-serif, -apple-system, Segoe UI, Roboto, Inter, system-ui, "Noto Sans", "Helvetica Neue", Arial, "Apple Color Emoji", "Segoe UI Emoji";
+          color:var(--ink);
+          background: linear-gradient(180deg, #fbfdff 0%, var(--bg) 100%);
+        }
+        header{
+          position:relative;
+          padding: 56px 20px 28px;
+          background:
+            radial-gradient(1200px 400px at 50% -200px, rgba(96,165,250,.25), transparent 70%),
+            linear-gradient(180deg, #ffffff 0%, rgba(255,255,255,.9) 100%);
+          border-bottom: 1px solid #e2e8f0;
+          overflow:hidden;
+        }
+        .wrap{max-width:1100px;margin:0 auto;padding:0 20px}
+        .title{
+          font-size: clamp(28px, 3.6vw, 44px);
+          line-height:1.15;
+          margin:0 0 8px;
+          letter-spacing:-.02em;
+        }
+        .subtitle{color:var(--sub);margin:0}
+        .pill{
+          display:inline-flex;align-items:center;gap:8px;
+          background: #eef2ff; color:#3730a3;
+          padding:8px 12px;border-radius:999px;
+          font-weight:600; font-size:14px;
+          border:1px solid #e0e7ff;
+        }
+        .grid{display:grid; gap:20px}
+        .hero-grid{grid-template-columns: 1.2fr .8fr; align-items:center}
+        @media (max-width:900px){.hero-grid{grid-template-columns:1fr}}
+
+        .card{
+          background:var(--paper);
+          border:1px solid #e2e8f0;
+          border-radius:var(--radius);
+          box-shadow:var(--shadow);
+        }
+        .card.pad{padding:20px}
+
+        nav.toc{display:flex;flex-wrap:wrap;gap:10px;margin-top:16px}
+        nav.toc a{
+          text-decoration:none;color:#1f2937;background:#ffffff;border:1px solid #e5e7eb;
+          padding:8px 12px;border-radius:10px;font-weight:600
+        }
+        nav.toc a:hover{box-shadow:0 0 0 3px rgba(31,41,55,.08)}
+
+        h2{font-size:clamp(22px,2.4vw,30px);margin:30px 0 14px}
+        h3{font-size:20px;margin:18px 0 10px}
+        p.lead{color:var(--sub)}
+
+        /* Глоссарий */
+        .terms{grid-template-columns: repeat(auto-fill, minmax(260px, 1fr))}
+        .term{padding:16px;border-left:4px solid var(--brand);}
+        .term h4{margin:0 0 6px;font-size:16px}
+        .term p{margin:0;color:var(--sub)}
+
+        /* Таблицы книг */
+        .table{width:100%;border-collapse:separate;border-spacing:0;border:1px solid #e5e7eb;border-radius:14px;overflow:hidden;background:var(--paper)}
+        .table th,.table td{padding:14px 16px;vertical-align:top}
+        .table thead th{position:sticky;top:0;background:#f8fafc;color:#0f172a;text-align:left;font-size:14px;border-bottom:1px solid #e5e7eb}
+        .table tbody tr+tr td{border-top:1px solid #eef2f7}
+        .table td ul{margin:0;padding-left:18px}
+        .kicker{font-weight:700;color:#0b5bd3}
+
+        .section{margin:34px 0}
+
+        /* Принт */
+        @media print{
+          header{box-shadow:none;border:none;padding:20px}
+          nav.toc{display:none}
+          .card{box-shadow:none}
+          .table thead th{position:static}
+        }
+
+        /* Небольшие бэйджи терминов в шапке */
+        .chips{display:flex;flex-wrap:wrap;gap:8px}
+        .chip{background:#edf2ff;border:1px solid #dbeafe;padding:6px 10px;border-radius:999px;font-size:12px;color:#1e40af}
+
+        /* Кнопки */
+        .actions{display:flex;gap:10px;flex-wrap:wrap;margin-top:14px}
+        .btn{appearance:none;border:none;background:var(--brand);color:#fff;padding:10px 14px;border-radius:10px;font-weight:700;cursor:pointer}
+        .btn.secondary{background:#fff;color:#0f172a;border:1px solid #e5e7eb}
+        .btn:focus{outline:none;box-shadow:var(--ring)}
+    </style>
+</head>
+<body>
+<header>
+    <div class="wrap grid hero-grid">
+        <div class="card pad">
+            <div class="pill">Эффекты системы без чьего‑то решения</div>
+            <h1 class="title">Когда система «решает сама»</h1>
+            <p class="subtitle">Почему в компаниях и политике многое происходит не по чьему‑то замыслу, а из‑за структуры правил, рутин и связей. Ниже — краткий глоссарий и проверенная литература от простого к сложному, с практическими выводами для управления и прогнозирования.</p>
+            <nav class="toc">
+                <a href="#terms">Глоссарий</a>
+                <a href="#popular">Простые и популярные</a>
+                <a href="#advanced">Сложнее и глубже</a>
+            </nav>
+            <div class="actions">
+                <button class="btn" onclick="window.print()">Печать / PDF</button>
+                <button class="btn secondary" onclick="expandAll()">Развернуть тезисы</button>
+            </div>
+        </div>
+        <div class="card pad">
+            <h3 style="margin-top:0">Коротко по сути</h3>
+            <p class="lead">Многое из того, что мы наблюдаем как «решения», на деле — <strong>эмерджентные</strong> эффекты: результат взаимодействия правил, стандартных процедур и стимулирующих механизмов. Чтобы управлять такими явлениями, нужно работать со <em>структурой</em>, а не только с волевыми распоряжениями.</p>
+            <div class="chips">
+                <span class="chip">Эмерджентность</span>
+                <span class="chip">Непреднамеренные последствия</span>
+                <span class="chip">Path dependence</span>
+                <span class="chip">Логика институтов</span>
+                <span class="chip">Бюрократическая инерция</span>
+                <span class="chip">Mission creep</span>
+                <span class="chip">Ограниченная рациональность</span>
+                <span class="chip">SOP / орг. процесс</span>
+                <span class="chip">Паркинсоновские законы</span>
+                <span class="chip">Структурный детерминизм</span>
+            </div>
+        </div>
+    </div>
+</header>
+
+<main class="wrap">
+    <section id="terms" class="section">
+        <h2>Глоссарий: ключевые понятия</h2>
+        <div class="grid terms">
+            <div class="card term">
+                <h4>Эмерджентность (emergence)</h4>
+                <p>Итоговое поведение системы возникает из взаимодействий элементов и правил, а не из централизованного плана.</p>
+            </div>
+            <div class="card term">
+                <h4>Непреднамеренные последствия (unintended consequences)</h4>
+                <p>Эффекты целенаправленных действий, которые не были предусмотрены и часто противоположны намерениям.</p>
+            </div>
+            <div class="card term">
+                <h4>Path dependence / системная инерция</h4>
+                <p>Прошлые решения и архитектура ограничивают нынешний выбор и «запирают» траектории.</p>
+            </div>
+            <div class="card term">
+                <h4>Логика институтов</h4>
+                <p>Правила, роли и нормы формируют то, что считается «уместным» действием, независимо от чьих-либо намерений.</p>
+            </div>
+            <div class="card term">
+                <h4>Организационный процесс / SOP</h4>
+                <p>Стандартные процедуры и рутинные правила, через которые организации воспринимают задачи и выдают решения.</p>
+            </div>
+            <div class="card term">
+                <h4>Бюрократическая инерция и расширение мандата (mission creep)</h4>
+                <p>Склонность организаций саморасширяться и воспроизводить себя даже без прямой внешней цели.</p>
+            </div>
+            <div class="card term">
+                <h4>Ограниченная рациональность</h4>
+                <p>Люди и организации удовлетворяются «достаточно хорошими» решениями из-за ограничений времени и внимания.</p>
+            </div>
+            <div class="card term">
+                <h4>Паркинсоновские законы</h4>
+                <p>Наблюдения о том, что работа заполняет всё доступное время и что бюрократия растёт независимо от задач.</p>
+            </div>
+            <div class="card term">
+                <h4>Структурный детерминизм</h4>
+                <p>Идея, что структура системы в большой степени предопределяет поток событий и исходы.</p>
+            </div>
+        </div>
+    </section>
+
+    <section id="popular" class="section">
+        <h2>Книги — простые и популярные</h2>
+        <p class="lead">Начните отсюда: доступные объяснения, много примеров и готовые инструменты.</p>
+        <div class="card">
+            <table class="table">
+                <thead>
+                <tr>
+                    <th style="width:24%">Книга</th>
+                    <th style="width:32%">О чём</th>
+                    <th style="width:22%">Ключевые тезисы</th>
+                    <th style="width:22%">Практические выводы</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr>
+                    <td><strong>Donella Meadows — Thinking in Systems: A Primer</strong> (2008)</td>
+                    <td>Введение в системное мышление: запасы/потоки, петли обратной связи, задержки и точки приложения усилий.</td>
+                    <td>
+                        <ul>
+                            <li>Поведение рождается из структуры.</li>
+                            <li>Положительные/отрицательные обратные связи формируют траектории.</li>
+                            <li>Задержки и пороги искажают интуицию.</li>
+                            <li>Рычаги изменений часто неочевидны.</li>
+                        </ul>
+                    </td>
+                    <td>
+                        <ul>
+                            <li>Картируйте петли влияния перед реформой.</li>
+                            <li>Создавайте буферы и ранние индикаторы.</li>
+                            <li>Ищите «рычаги»: правила, потоки информации, цели.</li>
+                        </ul>
+                    </td>
+                </tr>
+                <tr>
+                    <td><strong>Dietrich Dörner — The Logic of Failure</strong> (1989/1996)</td>
+                    <td>Почему умные люди ошибаются в управлении сложными системами; результаты поведенческих симуляций.</td>
+                    <td>
+                        <ul>
+                            <li>Слепота к динамике и побочным эффектам.</li>
+                            <li>Сверхуверенность и линейное мышление.</li>
+                            <li>Плохая обратная связь порождает лавины ошибок.</li>
+                        </ul>
+                    </td>
+                    <td>
+                        <ul>
+                            <li>Пилоты и «малые ставки» вместо тотальных реформ.</li>
+                            <li>Premortem и мониторинг побочных эффектов.</li>
+                            <li>Проектируйте циклы быстрой обратной связи.</li>
+                        </ul>
+                    </td>
+                </tr>
+                <tr>
+                    <td><strong>Jerry Z. Muller — The Tyranny of Metrics</strong> (2018)</td>
+                    <td>Как культ метрик и KPI искажает поведение (эффект Гудхарта/Кэмпбелла) и рождает «работу на показатель».</td>
+                    <td>
+                        <ul>
+                            <li>«Когда показатель становится целью — он перестаёт быть хорошим показателем».</li>
+                            <li>Метрики вытесняют профессиональное суждение.</li>
+                            <li>Игра с показателями неизбежна.</li>
+                        </ul>
+                    </td>
+                    <td>
+                        <ul>
+                            <li>Ограничивайте число KPI, меняйте их по ротации.</li>
+                            <li>Комбинируйте количественные и качественные оценки.</li>
+                            <li>Поощряйте «правильные процессы», а не только результаты.</li>
+                        </ul>
+                    </td>
+                </tr>
+                <tr>
+                    <td><strong>Tim Harford — Adapt</strong> (2011)</td>
+                    <td>Сложные системы улучшаются через вариации, отбор и обратную связь — а не через единый гениальный план.</td>
+                    <td>
+                        <ul>
+                            <li>Эксперименты &gt; централизованные реформы.</li>
+                            <li>Неудачи — источник знаний.</li>
+                            <li>Децентрализация ускоряет обучение.</li>
+                        </ul>
+                    </td>
+                    <td>
+                        <ul>
+                            <li>Запускайте пилоты с «kill‑criteria» и сроками.</li>
+                            <li>Собирайте данные локально, масштабируйте постепенно.</li>
+                            <li>Стройте культуру безопасных ошибок.</li>
+                        </ul>
+                    </td>
+                </tr>
+                <tr>
+                    <td><strong>James C. Scott — Seeing Like a State</strong> (1998)</td>
+                    <td>Как стремление к «читабельности» мира для государства/менеджмента ведёт к упрощениям и провалам больших схем.</td>
+                    <td>
+                        <ul>
+                            <li>Локальное знание (mētis) незаменимо.</li>
+                            <li>Высокий модернизм опасен без обратной связи.</li>
+                            <li>Стандартизация создаёт слепые зоны.</li>
+                        </ul>
+                    </td>
+                    <td>
+                        <ul>
+                            <li>Планируйте поэтапно, с учётом местного контекста.</li>
+                            <li>Держите разнообразие метрик и каналов обратной связи.</li>
+                            <li>Оставляйте пространство для адаптации снизу.</li>
+                        </ul>
+                    </td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+    </section>
+
+    <section id="advanced" class="section">
+        <h2>Книги — сложнее и глубже (академические)</h2>
+        <p class="lead">Теоретические основы: почему структуры, процедуры и стимулы создают «самодействующие» эффекты.</p>
+        <div class="card">
+            <table class="table">
+                <thead>
+                <tr>
+                    <th style="width:24%">Книга</th>
+                    <th style="width:32%">О чём</th>
+                    <th style="width:22%">Ключевые тезисы</th>
+                    <th style="width:22%">Практические выводы</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr>
+                    <td><strong>Robert K. Merton — Social Theory and Social Structure</strong> (1968; эссе 1936)</td>
+                    <td>Классика про непреднамеренные последствия целенаправленных действий: источники и механизмы.</td>
+                    <td>
+                        <ul>
+                            <li>Неведение, ошибки, «императив сиюминутности», самоисполняющиеся/саморазрушающиеся прогнозы.</li>
+                            <li>Ценности и институции создают побочные эффекты.</li>
+                        </ul>
+                    </td>
+                    <td>
+                        <ul>
+                            <li>Premortem и «сканирование внешних эффектов» перед запуском.</li>
+                            <li>Планируйте механизмы обратной связи и корректировки курса.</li>
+                        </ul>
+                    </td>
+                </tr>
+                <tr>
+                    <td><strong>Charles Perrow — Normal Accidents</strong> (1984)</td>
+                    <td>Почему аварии в сложных плотно связанных системах «нормальны» и неизбежны.</td>
+                    <td>
+                        <ul>
+                            <li>Сложные взаимодействия × тесная сцепленность ⇒ каскады.</li>
+                            <li>Локальные исправления рождают новые уязвимости.</li>
+                        </ul>
+                    </td>
+                    <td>
+                        <ul>
+                            <li>Декуплирование, буферы, резервирование.</li>
+                            <li>Тренировки, «stop‑the‑line», культура доклада об инцидентах.</li>
+                        </ul>
+                    </td>
+                </tr>
+                <tr>
+                    <td><strong>James G. March &amp; Johan P. Olsen — Rediscovering Institutions</strong> (1989)</td>
+                    <td>«Логика уместности»: люди следуют ролям и правилам, а не максимизируют выгоду.</td>
+                    <td>
+                        <ul>
+                            <li>Идентичности и нормы управляют поведением.</li>
+                            <li>Правила упрощают выбор, но искажают цели.</li>
+                        </ul>
+                    </td>
+                    <td>
+                        <ul>
+                            <li>Работайте с ролями, символами, обучением рутин.</li>
+                            <li>Меняйте «правила игры», если хотите иных исходов.</li>
+                        </ul>
+                    </td>
+                </tr>
+                <tr>
+                    <td><strong>Herbert A. Simon — Administrative Behavior</strong> (1947)</td>
+                    <td>Ограниченная рациональность и архитектура принятия решений в организациях.</td>
+                    <td>
+                        <ul>
+                            <li>«Satisficing» вместо максимизации.</li>
+                            <li>Иерархии экономят внимание через правила и делегирование.</li>
+                        </ul>
+                    </td>
+                    <td>
+                        <ul>
+                            <li>Проектируйте простые эвристики там, где это безопасно.</li>
+                            <li>Пересматривайте SOP, где они создают ложные «локальные оптима».</li>
+                        </ul>
+                    </td>
+                </tr>
+                <tr>
+                    <td><strong>Michel Crozier — The Bureaucratic Phenomenon</strong> (1964)</td>
+                    <td>Почему бюрократии сдерживают изменения: власть строится на «зонах неопределённости».</td>
+                    <td>
+                        <ul>
+                            <li>Чем жёстче правила, тем выше игра в обход.</li>
+                            <li>Контроль над неопределённостью = источник власти.</li>
+                        </ul>
+                    </td>
+                    <td>
+                        <ul>
+                            <li>Уменьшайте монополии на информацию и исключения.</li>
+                            <li>Кросс‑функциональные команды и прозрачность правил.</li>
+                        </ul>
+                    </td>
+                </tr>
+                <tr>
+                    <td><strong>Graham Allison &amp; Philip Zelikow — Essence of Decision</strong> (1971/1999)</td>
+                    <td>Три модели объяснения решений государства: рациональный актор, орг. процесс (SOP) и бюрократическая политика.</td>
+                    <td>
+                        <ul>
+                            <li>Решение как выход конвейера SOP.</li>
+                            <li>Итоги — результат торга между ведомствами.</li>
+                        </ul>
+                    </td>
+                    <td>
+                        <ul>
+                            <li>Картируйте заинтересованных акторов, их календари и процедуры.</li>
+                            <li>Меняйте процедуры — изменится и «выход» системы.</li>
+                        </ul>
+                    </td>
+                </tr>
+                <tr>
+                    <td><strong>Anthony Downs — Inside Bureaucracy</strong> (1967)</td>
+                    <td>Типы бюрократов (зеалоты, адепты, консерваторы, клаймеры) и их стимулы.</td>
+                    <td>
+                        <ul>
+                            <li>Поведение отделов предсказуемо из их миссий.</li>
+                            <li>Карьерные стимулы искажают приоритеты.</li>
+                        </ul>
+                    </td>
+                    <td>
+                        <ul>
+                            <li>Балансируйте состав команд, выравнивайте стимулы.</li>
+                            <li>Проверяйте, не ведёт ли миссия к «mission creep».</li>
+                        </ul>
+                    </td>
+                </tr>
+                <tr>
+                    <td><strong>Paul Pierson — Politics in Time</strong> (2004)</td>
+                    <td>Политика во времени: возрастающая отдача, критические развилки и запирание траекторий.</td>
+                    <td>
+                        <ul>
+                            <li>Ранние шаги имеют непропорциональный вес.</li>
+                            <li>Секвенирование реформ важнее скорости.</li>
+                        </ul>
+                    </td>
+                    <td>
+                        <ul>
+                            <li>Инвестируйте в «правильные» ранние стандарты.</li>
+                            <li>Планируйте окна возможностей и перезапуски.</li>
+                        </ul>
+                    </td>
+                </tr>
+                <tr>
+                    <td><strong>William A. Niskanen — Bureaucracy and Representative Government</strong> (1971)</td>
+                    <td>Модель «бюджет‑максимизирующего» бюрократа и политика ведомств; полезно как «нулевая гипотеза» стимулов.</td>
+                    <td>
+                        <ul>
+                            <li>Ведомства стремятся к росту бюджета/штата.</li>
+                            <li>Асимметрия информации и захват процесса.</li>
+                        </ul>
+                    </td>
+                    <td>
+                        <ul>
+                            <li>Прозрачные бенчмарки по издержкам/выходу.</li>
+                            <li>Конкурентные сравнения, ограниченные мандаты.</li>
+                        </ul>
+                    </td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+    </section>
+
+    <section class="section">
+        <h2>Как применять это завтра</h2>
+        <div class="grid" style="grid-template-columns: repeat(auto-fill,minmax(260px,1fr))">
+            <div class="card pad">
+                <div class="kicker">1. Начните со структуры</div>
+                <p>Опишите правила, роли, метрики, петли обратной связи и задержки. Что именно система поощряет «по умолчанию»?</p>
+            </div>
+            <div class="card pad">
+                <div class="kicker">2. Мелкие ставки</div>
+                <p>Вводите изменения через пилоты с явными критериями успеха/отмены и быстрыми циклами обратной связи.</p>
+            </div>
+            <div class="card pad">
+                <div class="kicker">3. Метрики без тирании</div>
+                <p>Немного KPI, ротация показателей, пространство для экспертного суждения и «качественных» сигналов.</p>
+            </div>
+            <div class="card pad">
+                <div class="kicker">4. Декомпозиция рисков</div>
+                <p>Где система плотно сцеплена — размыкайте узлы, добавляйте буферы и тренировочные «остановы линии».</p>
+            </div>
+            <div class="card pad">
+                <div class="kicker">5. Работа с ролями и нормами</div>
+                <p>Правила и идентичности направляют поведение. Меняя SOP и «что считается уместным», меняете исходы.</p>
+            </div>
+        </div>
+    </section>
+
+    <footer class="section" style="color:var(--muted)">
+        Сделано для быстрого старта по теме. Подборка упорядочена от популярных обзоров к академическим основаниям.
+    </footer>
+</main>
+
+<script>
+    function expandAll(){
+      // Небольшой хелпер: если бы тезисы были спрятаны, тут можно было бы их раскрыть.
+      alert('Тезисы уже развёрнуты. Можно свернуть таблицу, распечатать или сохранить как PDF.');
+    }
+</script>
+</body>
+</html>
