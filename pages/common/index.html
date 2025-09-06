@@ -4,59 +4,62 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <title>Каталог: цензура, этика и политика в науке</title>
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap">
     <style>
         :root{
-          --bg:#0b0f14; --panel:#0f1620; --card:#111a26; --muted:#93a4b4; --text:#e8eef5; --acc:#6fb1ff; --chip:#213043; --ok:#9be37a; --warn:#ffd66f; --danger:#ff8a8a;
-          --radius:14px; --pad:18px; --shadow:0 10px 30px rgba(0,0,0,.35)
+          --bg:#f4f7fa; --panel:#ffffff; --card:#ffffff; --muted:#6b7a8a; --text:#2a3a4a; --acc:#4a90e2; --chip:#e8f1fd; --ok:#4caf50; --warn:#ff9800; --danger:#f44336;
+          --radius:16px; --pad:20px; --shadow:0 4px 12px rgba(0,0,0,.08)
         }
         *{box-sizing:border-box}
         html,body{height:100%}
-        body{margin:0; font:16px/1.55 system-ui,-apple-system,Segoe UI,Roboto,Inter,Arial,sans-serif; background:linear-gradient(180deg, #08101a, #0b1119 50%, #0a0f16); color:var(--text)}
+        body{margin:0; font:16px/1.6 'Inter',system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif; background:linear-gradient(180deg, #ffffff, #f8fbfe 50%, #f4f7fa); color:var(--text)}
 
-        header{position:sticky; top:0; z-index:5; backdrop-filter:saturate(1.2) blur(10px); background:linear-gradient(180deg, rgba(8,16,26,.9), rgba(8,16,26,.65)); border-bottom:1px solid #1d2938}
-        .wrap{max-width:1100px; margin:0 auto; padding:14px var(--pad)}
-        h1{margin:0; font-size:1.35rem; letter-spacing:.2px}
+        header{position:sticky; top:0; z-index:5; backdrop-filter:saturate(1.2) blur(12px); background:linear-gradient(180deg, rgba(255,255,255,.95), rgba(255,255,255,.85)); border-bottom:1px solid #e0e6ed}
+        .wrap{max-width:1100px; margin:0 auto; padding:16px var(--pad)}
+        h1{margin:0; font-size:1.4rem; font-weight:700; letter-spacing:.1px}
         .sub{color:var(--muted); font-size:.95rem}
 
-        .toolbar{display:grid; gap:10px; grid-template-columns:1fr; padding:12px var(--pad); background:var(--panel); border-bottom:1px solid #1d2938}
+        .toolbar{display:grid; gap:12px; grid-template-columns:1fr; padding:14px var(--pad); background:var(--panel); border-bottom:1px solid #e0e6ed; box-shadow:0 2px 4px rgba(0,0,0,.04)}
         @media (min-width:900px){ .toolbar{grid-template-columns: 1fr auto auto auto} }
-        .toolbar .group{display:flex; gap:8px; flex-wrap:wrap; align-items:center}
-        .toolbar input[type="search"], select{background:#0b1420; color:var(--text); border:1px solid #1c2a3b; border-radius:10px; padding:10px 12px; outline:none; min-width:220px}
-        .toolbar button, .chip{border:1px solid #26405f}
-        .toolbar button{background:#102235; color:var(--text); padding:10px 12px; border-radius:10px; cursor:pointer}
-        .toolbar button:hover{filter:brightness(1.1)}
+        .toolbar .group{display:flex; gap:10px; flex-wrap:wrap; align-items:center}
+        .toolbar input[type="search"], select{background:#f8fbfe; color:var(--text); border:1px solid #d1dbe5; border-radius:12px; padding:10px 14px; outline:none; min-width:240px; transition:border .2s}
+        .toolbar input[type="search"]:focus, select:focus{border-color:var(--acc)}
+        .toolbar button, .chip{border:1px solid #d1dbe5}
+        .toolbar button{background:#f8fbfe; color:var(--text); padding:10px 14px; border-radius:12px; cursor:pointer; transition:all .2s}
+        .toolbar button:hover{background:#e8f1fd; border-color:var(--acc)}
 
-        main{max-width:1100px; margin:20px auto; padding:0 var(--pad) 80px}
-        .grid{display:grid; gap:14px}
+        main{max-width:1100px; margin:24px auto; padding:0 var(--pad) 80px}
+        .grid{display:grid; gap:16px}
         @media (min-width:800px){ .grid{grid-template-columns:repeat(2,1fr)} }
         @media (min-width:1100px){ .grid{grid-template-columns:repeat(3,1fr)} }
 
-        .card{background:var(--card); border:1px solid #1c2a3b; border-radius:var(--radius); padding:16px; box-shadow:var(--shadow); position:relative; overflow:hidden}
+        .card{background:var(--card); border:1px solid #e0e6ed; border-radius:var(--radius); padding:18px; box-shadow:var(--shadow); position:relative; overflow:hidden; transition:transform .2s, box-shadow .2s}
+        .card:hover{transform:translateY(-2px); box-shadow:0 6px 16px rgba(0,0,0,.1)}
         .type{font-size:.75rem; text-transform:uppercase; letter-spacing:.12em; color:var(--muted)}
-        .title{margin:.15rem 0 .2rem; font-weight:650; font-size:1.05rem}
+        .title{margin:.15rem 0 .2rem; font-weight:700; font-size:1.1rem}
         .meta{font-size:.9rem; color:var(--muted)}
-        .desc{margin:.6rem 0; color:#d6e2ee}
+        .desc{margin:.6rem 0; color:#5a6a7a}
         .examples{margin:.6rem 0}
-        .examples summary{cursor:pointer; color:var(--acc)}
+        .examples summary{cursor:pointer; color:var(--acc); font-weight:500}
         ul{margin:.35rem 0 .1rem .95rem}
 
         .chips{display:flex; gap:6px; flex-wrap:wrap; margin:.4rem 0}
-        .chip{display:inline-flex; align-items:center; gap:6px; padding:6px 9px; border-radius:999px; background:var(--chip); color:#bcd2e6; font-size:.82rem}
-        .chip .dot{width:7px; height:7px; border-radius:50%}
+        .chip{display:inline-flex; align-items:center; gap:6px; padding:6px 10px; border-radius:999px; background:var(--chip); color:#4a90e2; font-size:.82rem; border:1px solid #d1dbe5}
+        .chip .dot{width:8px; height:8px; border-radius:50%}
 
-        .links a{display:inline-block; margin-right:10px; margin-top:6px; color:var(--acc); text-decoration:none}
-        .links a:hover{text-decoration:underline}
+        .links a{display:inline-block; margin-right:12px; margin-top:6px; color:var(--acc); text-decoration:none; transition:color .2s}
+        .links a:hover{color:#3070c0; text-decoration:underline}
 
         .legend{display:flex; flex-wrap:wrap; gap:8px}
         .legend .chip{opacity:.9}
 
-        .stance{position:absolute; top:10px; right:10px; display:flex; align-items:center; gap:6px; padding:6px 10px; border-radius:999px; font-size:.82rem; border:1px solid #26405f}
-        .stance.claim{background:#112a1c; color:#b7f4c5; border-color:#214f33}
-        .stance.debunk{background:#2a1411; color:#ffd1c7; border-color:#5a2a20}
+        .stance{position:absolute; top:12px; right:12px; display:flex; align-items:center; gap:6px; padding:6px 12px; border-radius:999px; font-size:.82rem; border:1px solid #d1dbe5; background:#f8fbfe}
+        .stance.claim{background:#e8f8f0; color:#4caf50; border-color:#c8e6c9}
+        .stance.debunk{background:#ffebee; color:#f44336; border-color:#ffcdd2}
 
         .pop{display:flex; align-items:center; gap:8px; margin-top:.4rem}
-        .bar{flex:1; height:8px; background:#0b1420; border:1px solid #1c2a3b; border-radius:999px; overflow:hidden}
-        .bar > span{display:block; height:100%; background:linear-gradient(90deg, #6fb1ff, #9be37a)}
+        .bar{flex:1; height:8px; background:#f8fbfe; border:1px solid #d1dbe5; border-radius:999px; overflow:hidden}
+        .bar > span{display:block; height:100%; background:linear-gradient(90deg, #4a90e2, #50c878); transition:width .3s}
         .pop .val{font-size:.8rem; color:var(--muted)}
 
         footer{max-width:1100px; margin:40px auto; padding:0 var(--pad) 40px; color:var(--muted)}
@@ -135,7 +138,7 @@
         const c = el('button','chip');
         c.type='button';
         const color = DATA.palette?.domains?.[topic];
-        c.innerHTML = `<span class=dot style="background:${color||'#6fb1ff'}"></span>${topic}`;
+        c.innerHTML = `<span class=dot style="background:${color||'#4a90e2'}"></span>${topic}`;
         c.onclick = ()=>{ c.classList.toggle('active'); update(); };
         wrap.appendChild(c);
       });
@@ -165,7 +168,7 @@
       (item.topics||[]).forEach(t=>{
         const ch=el('span','chip');
         const color = DATA.palette?.domains?.[t];
-        ch.innerHTML=`<span class="dot" style="background:${color||'#6fb1ff'}"></span>${t}`;
+        ch.innerHTML=`<span class="dot" style="background:${color||'#4a90e2'}"></span>${t}`;
         chips.appendChild(ch);
       });
       return chips;
@@ -179,7 +182,7 @@
       item.counter_ids.forEach(id=>{
         const found = allItems(DATA).find(x=>x.id===id);
         if(found){
-          const a = el('a'); a.href = `#${found.id}`; a.textContent = found.title; a.addEventListener('click', e=>{ e.preventDefault(); const t = document.getElementById(found.id); if(t){ t.scrollIntoView({behavior:'smooth', block:'center'}); t.animate([{outline:'2px solid #6fb1ff'},{outline:'none'}],{duration:1200}); }});
+          const a = el('a'); a.href = `#${found.id}`; a.textContent = found.title; a.addEventListener('click', e=>{ e.preventDefault(); const t = document.getElementById(found.id); if(t){ t.scrollIntoView({behavior:'smooth', block:'center'}); t.animate([{outline:'2px solid #4a90e2'},{outline:'none'}],{duration:1200}); }});
           wrap.appendChild(a);
         }
       });
@@ -227,6 +230,10 @@
     }
 
     function getActiveTopics(){
+      return Array.from(document.querySelectorAll('#topicChips .chip.active')).map(b=>b.textContent.trim());
+    }
+
+    function update(){
       return Array.from(document.querySelectorAll('#topicChips .chip.active')).map(b=>b.textContent.trim());
     }
 

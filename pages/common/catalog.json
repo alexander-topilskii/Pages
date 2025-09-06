@@ -10,7 +10,8 @@
       "политика": "#ff9800",
       "биобезопасность": "#9c27b0",
       "методология": "#03a9f4",
-      "медиа": "#e91e63"
+      "медиа": "#e91e63",
+      "генетика": "#f44336"
     },
     "stance": {
       "claim": {
@@ -368,6 +369,72 @@
       },
       "counters": [],
       "added": "2025-09-06"
+    },
+    {
+      "id": "superior-return-race-science-2019",
+      "type": "book",
+      "title": "Superior: The Return of Race Science",
+      "year": 2019,
+      "authors": [
+        "Angela Saini"
+      ],
+      "language": "English",
+      "translations": [],
+      "audience": [
+        "широкая публика",
+        "учёные"
+      ],
+      "summary": "Книга исследует возрождение научного расизма, аргументируя, что раса - социальный конструкт, и предупреждает о опасностях генетических исследований расовых различий, которые могут использоваться для оправдания дискриминации.",
+      "examples": [
+        {
+          "topic": "история",
+          "text": "Научный расизм от Линнея до нацистской идеологии, использование генетики для поддержки превосходства."
+        },
+        {
+          "topic": "современность",
+          "text": "Эксплуатация генетических исследований белыми националистами для утверждений о генетически distinct расах."
+        },
+        {
+          "topic": "здравоохранение",
+          "text": "Фокус на расе в медицине отвлекает от социально-экономических факторов, влияющих на здоровье."
+        }
+      ],
+      "topics": [
+        "генетика",
+        "политика",
+        "биобезопасность",
+        "методология"
+      ],
+      "keywords": [
+        "race science",
+        "scientific racism",
+        "genetics",
+        "social construct"
+      ],
+      "citations": 500,
+      "impact": 80,
+      "readability": 75,
+      "links": [
+        {
+          "label": "Wikipedia",
+          "url": "https://en.wikipedia.org/wiki/Superior:_The_Return_of_Race_Science"
+        }
+      ],
+      "resources": [],
+      "recommended_for": [
+        "научный расизм",
+        "этика в генетике",
+        "социальные конструкты расы"
+      ],
+      "popularity": 85,
+      "stance": "claim",
+      "stance_strength": "moderate",
+      "visual": {
+        "shape": "square",
+        "size": "medium"
+      },
+      "counters": [],
+      "added": "2025-09-06"
     }
   ],
   "articles": [
@@ -715,6 +782,141 @@
         "size": "small"
       },
       "counters": [],
+      "added": "2025-09-06"
+    },
+    {
+      "id": "stifling-debate-race-iq-2018",
+      "type": "article",
+      "title": "How Stifling Debate Around Race, Genes and IQ Can Do Harm",
+      "year": 2018,
+      "authors": [
+        "Bo Winegard",
+        "Ben Winegard",
+        "Brian Boutwell"
+      ],
+      "language": "English",
+      "audience": [
+        "учёные",
+        "политики"
+      ],
+      "summary": "Аргументирует, что подавление дебатов о расе, генах и IQ вредно для науки и общества, поскольку нет эмпирических доказательств асимметрии рисков, и такое подавление может игнорировать важные проблемы, такие как медицинские различия.",
+      "examples": [
+        {
+          "topic": "цензура",
+          "text": "E.O. Wilson обвинялся в оправдании геноцида после 'Sociobiology', подвергался骚扰."
+        },
+        {
+          "topic": "цензура",
+          "text": "Arthur Jensen нуждался в телохранителях после статьи о генетических limits IQ."
+        },
+        {
+          "topic": "цензура",
+          "text": "Charles Murray подвергся физическому нападению во время лекции в 2017."
+        }
+      ],
+      "topics": [
+        "генетика",
+        "политика",
+        "методология"
+      ],
+      "keywords": [
+        "race",
+        "genes",
+        "IQ",
+        "censorship",
+        "debate stifling"
+      ],
+      "citations": 200,
+      "impact": 70,
+      "readability": 65,
+      "links": [
+        {
+          "label": "Springer",
+          "url": "https://link.springer.com/article/10.1007/s40806-018-0152-x"
+        }
+      ],
+      "resources": [],
+      "recommended_for": [
+        "дебаты о расовых различиях",
+        "вред цензуры в науке"
+      ],
+      "popularity": 70,
+      "stance": "claim",
+      "stance_strength": "strong",
+      "visual": {
+        "shape": "diamond",
+        "size": "medium"
+      },
+      "counters": [
+        {
+          "id": "mythical-taboo-2021",
+          "relation": "opposing view"
+        }
+      ],
+      "added": "2025-09-06"
+    },
+    {
+      "id": "mythical-taboo-2021",
+      "type": "article",
+      "title": "The Mythical Taboo on Race and Intelligence",
+      "year": 2021,
+      "authors": [
+        "John P. Jackson Jr.",
+        "Andrew S. Winston"
+      ],
+      "language": "English",
+      "audience": [
+        "учёные"
+      ],
+      "summary": "Утверждает, что табу на hereditarian исследования расовых различий в интеллекте - миф, поскольку такие работы широко публикуются и цитируются с 1969 года, а претензии о цензуре преувеличены.",
+      "examples": [
+        {
+          "topic": "публикации",
+          "text": "Обширная история публикаций hereditarian исследований, показывающая отсутствие эффективного подавления."
+        },
+        {
+          "topic": "преувеличения",
+          "text": "Искажения в претензиях о физических угрозах и потере работы hereditarians."
+        }
+      ],
+      "topics": [
+        "генетика",
+        "методология",
+        "политика"
+      ],
+      "keywords": [
+        "race",
+        "intelligence",
+        "taboo",
+        "hereditarian research"
+      ],
+      "citations": 100,
+      "impact": 60,
+      "readability": 60,
+      "links": [
+        {
+          "label": "ResearchGate",
+          "url": "https://www.researchgate.net/publication/346142767_The_Mythical_Taboo_on_Race_and_Intelligence"
+        }
+      ],
+      "resources": [],
+      "recommended_for": [
+        "критика претензий о цензуре",
+        "история исследований расы и IQ"
+      ],
+      "popularity": 55,
+      "stance": "debunk",
+      "stance_strength": "strong",
+      "visual": {
+        "shape": "hexagon",
+        "size": "small"
+      },
+      "counters": [
+        {
+          "id": "stifling-debate-race-iq-2018",
+          "relation": "rebuttal"
+        }
+      ],
       "added": "2025-09-06"
     }
   ],
