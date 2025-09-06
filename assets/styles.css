@@ -64,3 +64,13 @@ body {
   .backdrop { display:none; position: fixed; inset: 0; background: rgba(0,0,0,.4); z-index: 9; }
   .backdrop.show { display:block; }
 }
+
+/* Small phones */
+@media (max-width: 600px) {
+  .sidebar { inset: 0; max-width: none; }
+}
+
+/* Wide desktops */
+@media (min-width: 1200px) {
+  .app { grid-template-columns: 320px 1fr; }
+}
