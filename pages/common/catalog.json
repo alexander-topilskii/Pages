@@ -918,6 +918,243 @@
         }
       ],
       "added": "2025-09-06"
+    },
+    {
+      "id": "h5n1-nsabb-redactions-2011-2012",
+      "type": "article",
+      "title": "H5N1: редактирование публикаций по рекомендации NSABB (2011–2012)",
+      "year": 2012,
+      "authors": ["NSABB", "Science", "Nature"],
+      "language": "English",
+      "audience": ["учёные", "редакторы", "политики"],
+      "summary": "NSABB рекомендовала не раскрывать ключевые методологические детали двух работ о передаче H5N1 между млекопитающими; журналы отложили публикации и вышли с частичными изменениями — пример селективного ограничения информации ради биобезопасности.",
+      "examples": [
+        {
+          "topic": "биобезопасность",
+          "text": "Временная задержка и редактирование секций «методы/материалы» в Science и Nature, чтобы снизить риск злоупотребления."
+        },
+        {
+          "topic": "процедуры",
+          "text": "Созыв международных консультаций (NSABB/WHO) и обсуждение постоянных рамок DURC/P3CO."
+        }
+      ],
+      "topics": ["биобезопасность", "методология", "политика"],
+      "keywords": ["DURC", "P3CO", "NSABB", "редактирование публикаций"],
+      "citations": 0,
+      "impact": 80,
+      "readability": 60,
+      "links": [
+        { "label": "Overview (EMBO/PMC)", "url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC3388791/" },
+        { "label": "Commentary (PMC)", "url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC3899166/" },
+        { "label": "Nature — дискуссия", "url": "https://www.nature.com/articles/481257a" },
+        { "label": "CIDRAP — сводка", "url": "https://www.cidrap.umn.edu/avian-influenza-bird-flu/experts-debate-aspects-h5n1-transmission-studies" },
+        { "label": "NTI — аналитика", "url": "https://www.nti.org/analysis/articles/between-publishing-and-perishing-h5n1-research-unleashes-unprecedented-dual-use-research-controversy/" }
+      ],
+      "resources": [],
+      "recommended_for": ["кейсы цензуры во благо", "политика публикаций", "биориски"],
+      "popularity": 62,
+      "stance": "claim",
+      "stance_strength": "strong",
+      "visual": { "shape": "octagon", "size": "medium" },
+      "counters": [
+        { "id": "durc-chilling-effects-2023", "relation": "opposing view" }
+      ],
+      "added": "2025-09-06"
+    },
+
+    {
+      "id": "durc-p3co-framework-2023",
+      "type": "article",
+      "title": "Обновление рамок DURC/P3CO: предв. экспертный контроль и выборочное раскрытие",
+      "year": 2023,
+      "authors": ["NSABB"],
+      "language": "English",
+      "audience": ["учёные", "политики", "биобезопасность-офицеры"],
+      "summary": "Итоговый отчёт NSABB предлагает интегрированную схему надзора за исследованиями с повышенными био-рисками, включая практики предв. обзора и, при необходимости, ограничения публикации деталей.",
+      "examples": [
+        {
+          "topic": "политика",
+          "text": "Рекомендации по унификации критериев и обязанностей исследователей/институтов (DURC, P3CO)."
+        },
+        {
+          "topic": "пабликация",
+          "text": "Опции: задержка, редактирование методов, дополнительные примечания по рискам."
+        }
+      ],
+      "topics": ["биобезопасность", "политика", "методология"],
+      "keywords": ["NSABB", "DURC", "P3CO", "oversight"],
+      "citations": 0,
+      "impact": 70,
+      "readability": 55,
+      "links": [
+        { "label": "NSABB Final Report (PDF)", "url": "https://osp.od.nih.gov/wp-content/uploads/2023/03/NSABB-Final-Report-Proposed-Biosecurity-Oversight-Framework-for-the-Future-of-Science.pdf" },
+        { "label": "Meeting Minutes Jan 2023 (PDF)", "url": "https://osp.od.nih.gov/wp-content/uploads/2023/05/FINAL_NSABB_2023-01-27_MINUTES.pdf" },
+        { "label": "Federal Register RFI", "url": "https://www.federalregister.gov/documents/2023/09/01/2023-18906/request-for-information-potential-changes-to-the-policies-for-oversight-of-dual-use-research-of" },
+        { "label": "CRS Brief (PDF)", "url": "https://www.congress.gov/crs_external_products/IN/PDF/IN12109/IN12109.2.pdf" }
+      ],
+      "resources": [],
+      "recommended_for": ["политика управления рисками", "этика публикаций"],
+      "popularity": 50,
+      "stance": "claim",
+      "stance_strength": "moderate",
+      "visual": { "shape": "diamond", "size": "small" },
+      "counters": [],
+      "added": "2025-09-06"
+    },
+
+    {
+      "id": "covid-youtube-moderation-2021",
+      "type": "article",
+      "title": "YouTube: расширение политики против медицинской дезинформации (2021→)",
+      "year": 2021,
+      "authors": ["YouTube"],
+      "language": "English",
+      "audience": ["журналисты", "учёные", "политики"],
+      "summary": "Расширение правил удаления/дисквалификации контента о вакцинах и COVID-19; исследования показывают, что модерация хэштегов снижает долю дезинформации, при этом возможны издержки (ошибки/охлаждающий эффект).",
+      "examples": [
+        {
+          "topic": "вакцины",
+          "text": "Удаление/закрытие каналов выдающих ложные утверждения об одобренных вакцинах."
+        },
+        {
+          "topic": "эффекты",
+          "text": "Эмпирическое снижение дезинформации и токсичности после модерации хэштегов; дебаты о границах допустимых ограничений."
+        }
+      ],
+      "topics": ["медиа", "биобезопасность", "политика"],
+      "keywords": ["COVID-19", "vaccines", "модерация", "misinformation"],
+      "citations": 0,
+      "impact": 75,
+      "readability": 70,
+      "links": [
+        { "label": "YouTube Blog (29 Sep 2021)", "url": "https://blog.youtube/news-and-events/managing-harmful-vaccine-content-youtube/" },
+        { "label": "YouTube Help — Medical misinformation", "url": "https://support.google.com/youtube/answer/13813322?hl=en" },
+        { "label": "Axios — расширение политики", "url": "https://www.axios.com/2021/09/29/youtube-anti-vax-misinformation-vaccination" },
+        { "label": "Study (New Media & Society, 2025)", "url": "https://journals.sagepub.com/doi/10.1177/14614448231187529" }
+      ],
+      "resources": [],
+      "recommended_for": ["практики модерации", "оценка эффективности"],
+      "popularity": 68,
+      "stance": "claim",
+      "stance_strength": "moderate",
+      "visual": { "shape": "square", "size": "medium" },
+      "counters": [
+        { "id": "lab-leak-policy-reversal-2021", "relation": "opposing view" }
+      ],
+      "added": "2025-09-06"
+    },
+
+    {
+      "id": "lab-leak-policy-reversal-2021",
+      "type": "article",
+      "title": "Facebook снял запрет на посты о «лабораторном происхождении» COVID-19 (май 2021)",
+      "year": 2021,
+      "authors": ["Meta/Facebook"],
+      "language": "English",
+      "audience": ["журналисты", "учёные", "политики"],
+      "summary": "Отмена прежнего запрета показала риск преждевременной модерации: ограничения могут подавлять легитимные гипотезы до завершения расследований.",
+      "examples": [
+        {
+          "topic": "политика платформ",
+          "text": "Пересмотр правил «в свете продолжающихся расследований» происхождения вируса."
+        }
+      ],
+      "topics": ["медиа", "методология", "политика"],
+      "keywords": ["lab-leak", "контент-политики", "чувствительные гипотезы"],
+      "citations": 0,
+      "impact": 65,
+      "readability": 70,
+      "links": [
+        { "label": "Washington Post", "url": "https://www.washingtonpost.com/technology/2021/05/27/facebook-covid-man-made/" },
+        { "label": "The Guardian", "url": "https://www.theguardian.com/technology/2021/may/27/facebook-lifts-ban-on-posts-claiming-covid-19-was-man-made" },
+        { "label": "ABC News", "url": "https://abcnews.go.com/Technology/facebook-lifts-ban-posts-claiming-covid-19-man/story?id=77931433" }
+      ],
+      "resources": [],
+      "recommended_for": ["риски чрезмерной модерации", "уроки для политик"],
+      "popularity": 60,
+      "stance": "debunk",
+      "stance_strength": "moderate",
+      "visual": { "shape": "hexagon", "size": "small" },
+      "counters": [],
+      "added": "2025-09-06"
+    },
+
+    {
+      "id": "climate-demonetization-2021",
+      "type": "article",
+      "title": "Google/YouTube: запрет монетизации «климат-отрицания» (2021) и его ограничения",
+      "year": 2021,
+      "authors": ["Google", "YouTube"],
+      "language": "English",
+      "audience": ["журналисты", "политики", "учёные"],
+      "summary": "Ограничение монетизации контента, отрицающего научный консенсус по изменению климата — пример «мягкой цензуры» во благо (снижение стимулов к распространению дезинформации); при этом часть «нового отрицания» ускользает от правил.",
+      "examples": [
+        {
+          "topic": "политика",
+          "text": "Запрет рекламы и доходов для контента, противоречащего устоявшемуся научному консенсусу."
+        },
+        {
+          "topic": "обход правил",
+          "text": "Смещение к нарративам «климат полезен/безвреден», атакам на решения и зелёную энергетику."
+        }
+      ],
+      "topics": ["экология", "медиа", "политика"],
+      "keywords": ["климатическая дезинформация", "демонетизация", "политики платформ"],
+      "citations": 0,
+      "impact": 70,
+      "readability": 65,
+      "links": [
+        { "label": "Axios — анонс", "url": "https://www.axios.com/2021/10/07/google-youtube-climate-change" },
+        { "label": "TechCrunch — детали политики", "url": "https://techcrunch.com/2021/10/07/google-youtube-climate-change-denial-ban/" },
+        { "label": "CAAD — отчёт (PDF)", "url": "https://caad.info/wp-content/uploads/2023/05/YouTubes-Climate-Denial-Dollars.pdf" },
+        { "label": "The Verge — «новое отрицание»", "url": "https://www.theverge.com/2024/1/16/24040015/youtube-google-climate-change-new-denial-advertising-report" }
+      ],
+      "resources": [],
+      "recommended_for": ["экономические стимулы дезинформации", "оценка эффективности мер"],
+      "popularity": 58,
+      "stance": "claim",
+      "stance_strength": "moderate",
+      "visual": { "shape": "triangle", "size": "small" },
+      "counters": [],
+      "added": "2025-09-06"
+    },
+
+    {
+      "id": "medrxiv-preprint-screening-2020",
+      "type": "article",
+      "title": "medRxiv/bioRxiv: усиленный скрининг COVID-препринтов и предупреждения для прессы",
+      "year": 2020,
+      "authors": ["medRxiv", "bioRxiv"],
+      "language": "English",
+      "audience": ["журналисты", "учёные", "редакторы"],
+      "summary": "Неформальная «мягкая цензура»: пометки о недопустимости трактовать препринты как установленные факты и усиленный скрининг COVID-материалов, чтобы снизить вред от преждевременного освещения.",
+      "examples": [
+        {
+          "topic": "дисклеймеры",
+          "text": "Яркие предупреждения: «не использовать для клинической практики, не подавать как установленную информацию в СМИ»."
+        },
+        {
+          "topic": "скрининг",
+          "text": "Повышенное внимание модераторов к качеству COVID-препринтов и сообщениям о злоупотреблениях."
+        }
+      ],
+      "topics": ["методология", "медиа"],
+      "keywords": ["preprints", "модерация", "COVID-19", "репликация"],
+      "citations": 0,
+      "impact": 55,
+      "readability": 75,
+      "links": [
+        { "label": "medRxiv COVID hub", "url": "https://connect.medrxiv.org/relate/content/181" },
+        { "label": "Review on preprints & quality", "url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC8348262/" }
+      ],
+      "resources": [],
+      "recommended_for": ["медиа-этика", "работа с препринтами"],
+      "popularity": 50,
+      "stance": "claim",
+      "stance_strength": "weak",
+      "visual": { "shape": "circle", "size": "small" },
+      "counters": [],
+      "added": "2025-09-06"
     }
   ],
   "videos": [
