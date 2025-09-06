@@ -1,0 +1,466 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Цензура, этика и политика в науке — каталог из JSON</title>
+    <style>
+        :root{
+          --bg:#0b0f14; --panel:#0f1620; --card:#111a26; --muted:#93a4b4; --text:#e8eef5; --acc:#6fb1ff; --chip:#213043; --ok:#9be37a; --warn:#ffd66f;
+          --radius:14px; --pad:18px; --shadow:0 10px 30px rgba(0,0,0,.35)
+        }
+        *{box-sizing:border-box}
+        html,body{height:100%}
+        body{margin:0; font:16px/1.55 system-ui,-apple-system,Segoe UI,Roboto,Inter,Arial,sans-serif; background:linear-gradient(180deg, #08101a, #0b1119 50%, #0a0f16); color:var(--text)}
+
+        header{position:sticky; top:0; z-index:5; backdrop-filter:saturate(1.2) blur(10px); background:linear-gradient(180deg, rgba(8,16,26,.9), rgba(8,16,26,.65)); border-bottom:1px solid #1d2938}
+        .wrap{max-width:1100px; margin:0 auto; padding:14px var(--pad)}
+        h1{margin:0; font-size:1.35rem; letter-spacing:.2px}
+        .sub{color:var(--muted); font-size:.95rem}
+
+        .toolbar{display:grid; gap:10px; grid-template-columns:1fr; padding:12px var(--pad); background:var(--panel); border-bottom:1px solid #1d2938}
+        @media (min-width:900px){ .toolbar{grid-template-columns: 1fr auto auto auto} }
+        .toolbar .group{display:flex; gap:8px; flex-wrap:wrap; align-items:center}
+        .toolbar input[type="search"], select{background:#0b1420; color:var(--text); border:1px solid #1c2a3b; border-radius:10px; padding:10px 12px; outline:none; min-width:220px}
+        .toolbar button, .chip{border:1px solid #26405f}
+        .toolbar button{background:#102235; color:var(--text); padding:10px 12px; border-radius:10px; cursor:pointer}
+        .toolbar button:hover{filter:brightness(1.1)}
+
+        main{max-width:1100px; margin:20px auto; padding:0 var(--pad) 80px}
+        .grid{display:grid; gap:14px}
+        @media (min-width:800px){ .grid{grid-template-columns:repeat(2,1fr)} }
+        @media (min-width:1100px){ .grid{grid-template-columns:repeat(3,1fr)} }
+
+        .card{background:var(--card); border:1px solid #1c2a3b; border-radius:var(--radius); padding:16px; box-shadow:var(--shadow)}
+        .type{font-size:.75rem; text-transform:uppercase; letter-spacing:.12em; color:var(--muted)}
+        .title{margin:.15rem 0 .2rem; font-weight:650; font-size:1.05rem}
+        .meta{font-size:.9rem; color:var(--muted)}
+        .desc{margin:.6rem 0; color:#d6e2ee}
+        .examples{margin:.6rem 0}
+        .examples summary{cursor:pointer; color:var(--acc)}
+        ul{margin:.35rem 0 .1rem .95rem}
+
+        .chips{display:flex; gap:6px; flex-wrap:wrap; margin:.4rem 0}
+        .chip{display:inline-flex; align-items:center; gap:6px; padding:6px 9px; border-radius:999px; background:var(--chip); color:#bcd2e6; font-size:.82rem}
+        .chip .dot{width:7px; height:7px; border-radius:50%; background:var(--acc)}
+
+        .links a{display:inline-block; margin-right:10px; margin-top:6px; color:var(--acc); text-decoration:none}
+        .links a:hover{text-decoration:underline}
+
+        details.schema{background:#0f1723; border:1px dashed #203149; padding:12px; border-radius:10px; margin:20px 0}
+        code{background:#0b1420; border:1px solid #1c2a3b; padding:2px 6px; border-radius:6px}
+
+        footer{max-width:1100px; margin:40px auto; padding:0 var(--pad) 40px; color:var(--muted)}
+
+        .uploader{display:flex; gap:10px; flex-wrap:wrap}
+        .uploader input[type=file]{display:none}
+        .uploader label{background:#0f2236; border:1px solid #1f3550; padding:10px 12px; border-radius:10px; cursor:pointer}
+        textarea#json{width:100%; min-height:140px; background:#0a1320; color:var(--text); border:1px solid #1c2a3b; border-radius:12px; padding:12px}
+        .error{color:#ff9f9f; margin-top:6px}
+    </style>
+</head>
+<body>
+<header>
+    <div class="wrap">
+        <h1>Каталог: цензура, этика и политика в науке</h1>
+        <div class="sub">Сайт читает JSON и рендерит карточки книг, статей и видео. Можно фильтровать по темам (тегам), искать и сортировать.</div>
+    </div>
+</header>
+
+<section class="toolbar">
+    <div class="group">
+        <input id="q" type="search" placeholder="Поиск: название, автор, пример…" />
+        <select id="type">
+            <option value="all">Все типы</option>
+            <option value="book">Книги</option>
+            <option value="article">Статьи/исследования</option>
+            <option value="video">Видео/фильмы</option>
+        </select>
+        <select id="sort">
+            <option value="relevance">Сортировка: релевантность</option>
+            <option value="year_desc">Сначала новые</option>
+            <option value="year_asc">Сначала старые</option>
+            <option value="title_asc">По названию (А→Я)</option>
+        </select>
+        <button id="reset">Сброс</button>
+    </div>
+    <div class="group" id="topicChips"></div>
+    <div class="group">
+        <div class="uploader">
+            <input type="file" id="file" accept="application/json" />
+            <label for="file">Загрузить JSON</label>
+            <button id="loadSample">Загрузить пример</button>
+            <button id="applyJson">Применить JSON ниже</button>
+        </div>
+    </div>
+    <div class="group" style="grid-column:1/-1">
+        <textarea id="json" placeholder="Вставьте сюда JSON по схеме ниже и нажмите ‘Применить JSON ниже’."></textarea>
+        <div id="error" class="error"></div>
+    </div>
+</section>
+
+<main>
+    <details class="schema">
+        <summary><strong>Схема данных (JSON)</strong></summary>
+        <p>Ожидается объект с ключами <code>books</code>, <code>articles</code>, <code>videos</code>. Каждый элемент поддерживает поля:</p>
+        <pre style="white-space:pre-wrap; margin-top:8px"><code>{
+  "books": [
+    {
+      "id": "merchants-of-doubt-2010",
+      "type": "book",
+      "title": "Merchants of Doubt",
+      "year": 2010,
+      "authors": ["Naomi Oreskes", "Erik Conway"],
+      "summary": "Как создавали искусственное сомнение вокруг консенсусных научных фактов.",
+      "examples": [
+        {"topic": "курение", "text": "Финансирование табачной индустрией исследований, затягивающих признание связи с раком."},
+        {"topic": "климат", "text": "Лоббистские кампании под лозунгом ‘наука не доказана’ при растущем CO₂ и температуре."}
+      ],
+      "topics": ["корпоративное влияние", "климат", "курение", "манипуляция"],
+      "links": [
+        {"label": "Wiki", "url": "https://en.wikipedia.org/wiki/Merchants_of_Doubt"}
+      ],
+      "recommended_for": ["корпоративные манипуляции", "общественная политика"]
+    }
+  ],
+  "articles": [ /* объекты как у книг, но type: "article" */ ],
+  "videos":   [ /* объекты как у книг, но type: "video"   */ ]
+}</code></pre>
+        <p>Поле <code>topics</code> используется как теги и для фильтров. Поле <code>examples</code> — список конкретных кейсов.</p>
+    </details>
+
+    <div id="results" class="grid" aria-live="polite"></div>
+</main>
+
+<footer>
+    <div class="wrap">
+        Источник данных можно дополнять без изменения кода: просто обновите JSON.
+        Поддерживается загрузка из файла или вставка вручную.
+    </div>
+</footer>
+
+<script>
+    // --- Demo sample data (rich, can be replaced by file / textarea) ---
+    const SAMPLE = {
+      books: [
+        {
+          id: "merchants-of-doubt-2010",
+          type: "book",
+          title: "Merchants of Doubt",
+          year: 2010,
+          authors: ["Naomi Oreskes", "Erik Conway"],
+          summary: "Как небольшая сеть учёных и политических консультантов десятилетиями создавала искусственное сомнение вокруг консенсусных выводов в здравоохранении и экологии.",
+          examples: [
+            { topic: "курение", text: "Табачные компании финансировали ‘контр-исследования’ и коммуникационные кампании, ставящие под вопрос связь курения с раком лёгких, требовали невозможных уровней ‘доказанности’, создавали экспертные панели с конфликтом интересов." },
+            { topic: "озон", text: "Химиндустрия отрицала разрушение озона хлорфторуглеродами; тактики: постановка под сомнение измерений, перенос акцента на ‘стоимость для экономики’, задержка регуляций до появления ‘абсолютной уверенности’." },
+            { topic: "кислотные дожди", text: "Энергетический сектор спонсировал исследования, минимизирующие вклад SO₂/NOx в закисление озёр и урон лесам; акцент на ‘естественную вариативность’ как объяснение." },
+            { topic: "климат", text: "Кампании ‘наука не доказана’, cherry-picking периодов охлаждения, атаки ad hominem на климатологов, использование медийного ‘ложного баланса’ для равного представления маргинальных мнений." }
+          ],
+          topics: ["корпоративное влияние", "климат", "курение", "озон", "кислотные дожди", "публичные коммуникации", "манипуляция"],
+          links: [
+            { label: "Wikipedia", url: "https://en.wikipedia.org/wiki/Merchants_of_Doubt" },
+            { label: "Документальный фильм", url: "https://www.imdb.com/title/tt3675568/" }
+          ],
+          recommended_for: ["корпоративные манипуляции", "регуляторная политика", "наука и медиа"]
+        },
+        {
+          id: "bending-science-2008",
+          type: "book",
+          title: "Bending Science",
+          year: 2008,
+          authors: ["Thomas O. McGarity", "Wendy Wagner"],
+          summary: "Как юридические и политические инструменты позволяют искажать экспертные заключения и научные данные на всех стадиях — от постановки вопроса до публикации и регуляторного импакта.",
+          examples: [
+            { topic: "фармацевтика", text: "Селективная публикация клинических испытаний, NDA, договоры, ограничивающие раскрытие негативных результатов; ghostwriting статей от имени академиков." },
+            { topic: "экология", text: "‘Независимые’ исследования с корпоративным финансированием занижают риски токсикантов; агрессивное лоббирование критериев доказательств в регуляциях." },
+            { topic: "судебная экспертиза", text: "‘Бои экспертов’ в судах: подготовка ‘научных’ отчётов ради юридической победы, а не ради истины; Daubert standard как поле для процедурных игр." }
+          ],
+          topics: ["регулирование", "фармацевтика", "экология", "конфликт интересов", "право и наука"],
+          links: [
+            { label: "Publisher page", url: "https://global.oup.com/academic/product/bending-science-9780674028155" }
+          ],
+          recommended_for: ["регуляции и право", "оценка качества доказательств"]
+        },
+        {
+          id: "science-under-siege-1998",
+          type: "book",
+          title: "Science Under Siege",
+          year: 1998,
+          authors: ["Todd Wilkinson"],
+          summary: "Репортажи о государственних учёных, столкнувшихся с давлением, переводами и карьерными санкциями за ‘неудобные’ экологические данные.",
+          examples: [
+            { topic: "нац.парки", text: "Сотрудники, фиксирующие ухудшение качества воздуха и биоразнообразия, получают запреты на публичные заявления, ‘заморозку’ проектов, непрофильные переводы." },
+            { topic: "рыбные ресурсы", text: "Данные о падении популяций подавляются из-за индустриального лобби; отчёты ‘теряются’ до политически удобного момента." }
+          ],
+          topics: ["репрессии", "госслужба", "экология", "академическая свобода"],
+          links: [],
+          recommended_for: ["страх репрессий", "этика госнауки", "whistleblowing"]
+        },
+        {
+          id: "misbehaving-science-2014",
+          type: "book",
+          title: "Misbehaving Science",
+          year: 2014,
+          authors: ["Aaron Panofsky"],
+          summary: "Соц-история поведенческой генетики: как идеология, карьерные стимулы и научные конфликты формируют теории и данные.",
+          examples: [
+            { topic: "интеллект и наследуемость", text: "Опасения обвинений в расизме ведут к чрезмерной самоцензуре; конкурирующие школы ‘раскладывают’ данные под заранее ожидаемые выводы." },
+            { topic: "финансирование", text: "Выбор тем и методик под грантовую конъюнктуру → lock-in на ‘безопасных’ гипотезах." }
+          ],
+          topics: ["самоцензура", "идеология", "методология", "социология науки"],
+          links: [],
+          recommended_for: ["внутренняя цензура", "научные культуры"]
+        },
+        {
+          id: "new-politics-of-science-1984",
+          type: "book",
+          title: "The New Politics of Science",
+          year: 1984,
+          authors: ["David Dickson"],
+          summary: "Классика о том, как элиты формируют повестку науки через распределение средств, советы и приоритеты.",
+          examples: [
+            { topic: "военно-тех", text: "Преимущество военных и аэрокосмических программ в финансировании → вытеснение альтернативных гражданских направлений." },
+            { topic: "закрытые комитеты", text: "Непрозрачные механизмы принятия решений о ‘перспективных’ областях." }
+          ],
+          topics: ["политика науки", "финансирование", "приоритеты", "институты"],
+          links: [],
+          recommended_for: ["структура политики науки", "история науки"]
+        }
+      ],
+      articles: [
+        {
+          id: "prosocial-censorship-2023",
+          type: "article",
+          title: "Prosocial motives underlie scientific censorship by scientists",
+          year: 2023,
+          authors: ["Graso et al."],
+          summary: "Эксперименты показывают: учёные готовы ограничивать публикации из ‘про-социальных’ мотивов (защита групп, предотвращение вреда), что создаёт внутреннюю цензуру.",
+          examples: [
+            { topic: "редакционная политика", text: "Участники поддерживают отказ в публикации рискованных материалов даже при методологическом качестве." },
+            { topic: "самоцензура", text: "Готовность избегать тем с ‘репутационными’ рисками для группы/института." }
+          ],
+          topics: ["самоцензура", "этика", "редакции"],
+          links: [
+            { label: "PMC", url: "https://pmc.ncbi.nlm.nih.gov/articles/PMC10691350/" }
+          ],
+          recommended_for: ["механизмы внутренней цензуры"]
+        },
+        {
+          id: "scientific-dissent-2013",
+          type: "article",
+          title: "Scientific dissent and public policy",
+          year: 2013,
+          authors: ["Oreskes" , "Conway", "others"],
+          summary: "Значение научного инакомыслия и как политика использует ‘отсутствие консенсуса’ для прокрастинации регуляций.",
+          examples: [
+            { topic: "климат", text: "Риторика неопределённости для остановки климат-политики." }
+          ],
+          topics: ["диссент", "политика", "климат"],
+          links: [
+            { label: "PMC", url: "https://pmc.ncbi.nlm.nih.gov/articles/PMC3589084/" }
+          ],
+          recommended_for: ["роль несогласия"]
+        },
+        {
+          id: "bad-science-selection-2016",
+          type: "article",
+          title: "The Natural Selection of Bad Science",
+          year: 2016,
+          authors: ["Smaldino", "McElreath"],
+          summary: "Как стимулы публикаций эволюционно отбирают слабые методики и ‘положительные’ результаты.",
+          examples: [
+            { topic: "p-hacking", text: "Награды за ‘значимость’ → системное искажение исследований." }
+          ],
+          topics: ["публикационный уклон", "методология", "стимулы"],
+          links: [
+            { label: "arXiv", url: "https://arxiv.org/abs/1605.09511" }
+          ],
+          recommended_for: ["качество доказательств"]
+        },
+        {
+          id: "publication-bias-2016",
+          type: "article",
+          title: "Publication bias and the canonization of false facts",
+          year: 2016,
+          authors: ["Nissen", "others"],
+          summary: "Модели показывают, как селекция публикаций закрепляет ложные факты в научном каноне.",
+          examples: [
+            { topic: "селективность", text: "Положительные результаты публикуются чаще, ‘отрицательные’ исчезают → искажение литературы." }
+          ],
+          topics: ["publication bias", "репликации"],
+          links: [
+            { label: "arXiv", url: "https://arxiv.org/abs/1609.00494" }
+          ],
+          recommended_for: ["репликационный кризис"]
+        }
+      ],
+      videos: [
+        {
+          id: "merchants-doc-2014",
+          type: "video",
+          title: "Merchants of Doubt (докфильм)",
+          year: 2014,
+          authors: ["Robert Kenner"],
+          summary: "Экранизация книги Орскес и Конвея о технологиях сомнения и медийной стратегии.",
+          examples: [
+            { topic: "медиа", text: "‘Ложный баланс’ в ТВ-дебатах: 50/50 эфир между консенсусом и маргинальными позициями." }
+          ],
+          topics: ["медиа", "манипуляция", "климат", "курение"],
+          links: [
+            { label: "IMDb", url: "https://www.imdb.com/title/tt3675568/" }
+          ],
+          recommended_for: ["визуальное введение"]
+        }
+      ]
+    };
+
+    // --- State ---
+    let DATA = { books:[], articles:[], videos:[] };
+    let ACTIVE_TOPICS = new Set();
+
+    // --- Utils ---
+    const $ = sel => document.querySelector(sel);
+    const el = (tag, cls) => { const n=document.createElement(tag); if(cls) n.className=cls; return n; };
+    const norm = s => (s||"").toString().toLowerCase();
+    const allItems = d => [ ...(d.books||[]), ...(d.articles||[]), ...(d.videos||[]) ];
+
+    function collectTopics(items){
+      const t = new Set();
+      items.forEach(x => (x.topics||[]).forEach(t.add, t));
+      return Array.from(t).sort((a,b)=>a.localeCompare(b,'ru'));
+    }
+
+    function score(item, q){
+      if(!q) return 0;
+      const hay = [item.title, (item.authors||[]).join(' '), item.summary, ...(item.examples||[]).map(e=>e.text)].map(norm).join(' \n ');
+      const terms = norm(q).split(/\s+/).filter(Boolean);
+      let s = 0; terms.forEach(t=>{ if(hay.includes(t)) s += 1; });
+      return -s; // для sort: меньше лучше
+    }
+
+    function renderTopicChips(items){
+      const wrap = $("#topicChips");
+      wrap.innerHTML = "<span class=type>Темы:</span>";
+      collectTopics(items).forEach(topic=>{
+        const c = el('button','chip');
+        c.type='button';
+        c.innerHTML = `<span class=dot></span>${topic}`;
+        c.ariaPressed = ACTIVE_TOPICS.has(topic);
+        c.onclick = ()=>{ ACTIVE_TOPICS.has(topic)?ACTIVE_TOPICS.delete(topic):ACTIVE_TOPICS.add(topic); update(); };
+        wrap.appendChild(c);
+      });
+      if(!wrap.children.length){ wrap.textContent = "Темы появятся после загрузки данных"; }
+    }
+
+    function card(item){
+      const c = el('article','card');
+      c.innerHTML = `
+        <div class="type">${ item.type === 'book' ? 'Книга' : item.type === 'article' ? 'Статья/исследование' : 'Видео/фильм' }</div>
+        <div class="title">${item.title}</div>
+        <div class="meta">${ (item.authors||[]).join(', ') } ${ item.year? ' • '+item.year: ''}</div>
+        <div class="desc">${ item.summary || ''}</div>
+      `;
+      if(item.examples && item.examples.length){
+        const det = el('details','examples');
+        const sum = el('summary'); sum.textContent = 'Примеры и кейсы';
+        const ul = el('ul');
+        item.examples.forEach(e=>{ const li=el('li'); li.innerHTML = `<strong>${e.topic}:</strong> ${e.text}`; ul.appendChild(li); });
+        det.appendChild(sum); det.appendChild(ul); c.appendChild(det);
+      }
+      if(item.topics && item.topics.length){
+        const chips = el('div','chips');
+        item.topics.forEach(t=>{ const ch=el('span','chip'); ch.innerHTML=`<span class="dot"></span>${t}`; chips.appendChild(ch); });
+        c.appendChild(chips);
+      }
+      if(item.links && item.links.length){
+        const links = el('div','links');
+        item.links.forEach(l=>{ const a=el('a'); a.href=l.url; a.target='_blank'; a.rel='noopener noreferrer'; a.textContent=l.label||'Ссылка'; links.appendChild(a); });
+        c.appendChild(links);
+      }
+      if(item.recommended_for && item.recommended_for.length){
+        const rec = el('div','meta');
+        rec.innerHTML = `Рекомендуется для: ${item.recommended_for.join(', ')}`;
+        c.appendChild(rec);
+      }
+      return c;
+    }
+
+    function update(){
+      const q = $('#q').value.trim();
+      const type = $('#type').value;
+      const sort = $('#sort').value;
+
+      let items = allItems(DATA);
+      // filter by type
+      if(type !== 'all') items = items.filter(x=>x.type===type);
+      // filter by topics
+      if(ACTIVE_TOPICS.size){
+        items = items.filter(x => (x.topics||[]).some(t=>ACTIVE_TOPICS.has(t)));
+      }
+      // filter by query
+      if(q){
+        const qn = norm(q);
+        items = items.filter(x=>{
+          const hay = [x.title, (x.authors||[]).join(' '), x.summary, ...(x.examples||[]).map(e=>`${e.topic} ${e.text}`)].join(' \n ').toLowerCase();
+          return qn.split(/\s+/).every(t=>hay.includes(t));
+        });
+      }
+      // sort
+      if(sort==='year_desc') items.sort((a,b)=>(b.year||0)-(a.year||0));
+      else if(sort==='year_asc') items.sort((a,b)=>(a.year||0)-(b.year||0));
+      else if(sort==='title_asc') items.sort((a,b)=>a.title.localeCompare(b.title,'ru'));
+      else if(sort==='relevance') items.sort((a,b)=> score(a,q)-score(b,q));
+
+      const root = $('#results');
+      root.innerHTML = '';
+      if(!items.length){
+        const empty = el('div','meta'); empty.textContent = 'Ничего не найдено. Измените фильтры или загрузите данные.'; root.appendChild(empty); return;
+      }
+      items.forEach(i=> root.appendChild(card(i)));
+    }
+
+    // --- Loading ---
+    function loadData(obj){
+      const merge = { books: obj.books||[], articles: obj.articles||[], videos: obj.videos||[] };
+      DATA = merge;
+      renderTopicChips(allItems(DATA));
+      update();
+    }
+
+    // File upload
+    document.getElementById('file').addEventListener('change', ev=>{
+      const f = ev.target.files[0]; if(!f) return;
+      const reader = new FileReader();
+      reader.onload = () => {
+        try{ const obj = JSON.parse(reader.result); $('#error').textContent=''; loadData(obj); $('#json').value = JSON.stringify(obj, null, 2); }
+        catch(e){ $('#error').textContent = 'Ошибка парсинга JSON из файла: ' + e.message; }
+      };
+      reader.readAsText(f, 'utf-8');
+    });
+
+    // Apply from textarea
+    document.getElementById('applyJson').addEventListener('click', ()=>{
+      try{
+        const obj = JSON.parse($('#json').value);
+        $('#error').textContent='';
+        loadData(obj);
+      }catch(e){ $('#error').textContent = 'Ошибка парсинга JSON из поля: ' + e.message; }
+    });
+
+    document.getElementById('loadSample').addEventListener('click', ()=>{
+      $('#json').value = JSON.stringify(SAMPLE, null, 2);
+      loadData(SAMPLE);
+    });
+
+    document.getElementById('reset').addEventListener('click', ()=>{
+      $('#q').value=''; $('#type').value='all'; $('#sort').value='relevance'; ACTIVE_TOPICS.clear(); update();
+    });
+
+    ['q','type','sort'].forEach(id=> document.getElementById(id).addEventListener('input', update));
+
+    // Boot with sample
+    $('#json').value = JSON.stringify(SAMPLE, null, 2);
+    loadData(SAMPLE);
+</script>
+</body>
+</html>
