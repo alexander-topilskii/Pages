@@ -66,7 +66,7 @@
 <header>
     <div class="wrap">
         <h1 id="siteTitle">Каталог: цензура, этика и политика в науке</h1>
-        <div id="siteDesc" class="sub">Все тексты и настройки берутся из локального JSON ниже.</div>
+        <div id="siteDesc" class="sub">Все тексты и настройки берутся из внешнего JSON-файла.</div>
     </div>
 </header>
 
@@ -97,142 +97,9 @@
 </main>
 
 <footer>
-    <div class="wrap" id="footerNote">Данные загружаются из локального JSON-объекта внутри страницы. Для продакшена вынесите его в отдельный файл.</div>
+    <div class="wrap" id="footerNote">Данные загружаются из внешнего JSON-файла.</div>
 </footer>
 
-<!-- Локальный JSON: все тексты страницы, палитры, легенды и данные каталога -->
-<script id="catalog" type="application/json">
-    {
-        "site": {
-            "title": "Каталог: Цензура, Этика и Политика в Науке",
-            "description": "Обзор книг, статей и фильмов с примерами кейсов. Стансы, популярность, палитра по доменам и легенда — всё настраивается в JSON.",
-            "footer": "Локальная демонстрация. Данные можно вынести в data.json и подключить через fetch."
-        },
-        "palette": {
-            "domains": {
-                "экология": "#4caf50",
-                "политика": "#ff9800",
-                "биобезопасность": "#9c27b0",
-                "методология": "#03a9f4",
-                "медиа": "#e91e63"
-            },
-            "stance": {
-                "claim": { "label": "Утверждает наличие цензуры", "icon": "🛑" },
-                "debunk": { "label": "Сомневается/опровергает цензуру", "icon": "🧪" }
-            }
-        },
-        "books": [
-            {
-                "id": "merchants-of-doubt-2010",
-                "type": "book",
-                "title": "Merchants of Doubt",
-                "year": 2010,
-                "authors": ["Naomi Oreskes", "Erik Conway"],
-                "summary": "Как небольшая сеть учёных и политконсультантов десятилетиями создавала сомнение вокруг консенсуса в здравоохранении и экологии.",
-                "examples": [
-                    { "topic": "курение", "text": "Финансирование табачной индустрией ‘контр-исследований’ и PR-кампаний, ставящих под сомнение связь с раком." },
-                    { "topic": "озон", "text": "Отрицание разрушения озона ХФУ: сомнение в измерениях, перенос фокуса на ‘стоимость’ регулирования." },
-                    { "topic": "кислотные дожди", "text": "Спонсируемые энергетикой работы, минимизирующие вклад SO₂/NOx; объяснение ущерба ‘естественной вариативностью’." },
-                    { "topic": "климат", "text": "Риторика ‘наука не доказана’, cherry-picking, медийный ‘ложный баланс’ 50/50." }
-                ],
-                "topics": ["экология", "медиа", "климат", "курение", "озон", "кислотные дожди"],
-                "links": [
-                    { "label": "Wikipedia", "url": "https://en.wikipedia.org/wiki/Merchants_of_Doubt" }
-                ],
-                "recommended_for": ["корпоративные манипуляции", "регуляторная политика", "наука и медиа"],
-                "popularity": 92,
-                "stance": "claim",
-                "counter_ids": ["critiques-merchants-2011"]
-            },
-            {
-                "id": "bending-science-2008",
-                "type": "book",
-                "title": "Bending Science",
-                "year": 2008,
-                "authors": ["Thomas O. McGarity", "Wendy Wagner"],
-                "summary": "Юридические и политические механизмы искажения экспертных заключений на всех стадиях — от вопроса до публикации.",
-                "examples": [
-                    { "topic": "фармацевтика", "text": "Селективная публикация клинических испытаний; договорные ограничения на раскрытие побочных эффектов." },
-                    { "topic": "экология", "text": "Исследования с корпоративным финансированием занижают риски токсикантов; лоббирование критериев доказательств." }
-                ],
-                "topics": ["политика", "экология", "право"],
-                "links": [],
-                "recommended_for": ["регуляции и право", "оценка качества доказательств"],
-                "popularity": 78,
-                "stance": "claim",
-                "counter_ids": []
-            }
-        ],
-        "articles": [
-            {
-                "id": "prosocial-censorship-2023",
-                "type": "article",
-                "title": "Prosocial motives underlie scientific censorship by scientists",
-                "year": 2023,
-                "authors": ["Graso et al."],
-                "summary": "Эксперименты показывают готовность учёных ограничивать публикации из ‘про-социальных’ мотивов.",
-                "examples": [
-                    { "topic": "редакции", "text": "Поддержка отказа в публикации ‘рискованных’ материалов при хорошем качестве методики." }
-                ],
-                "topics": ["методология", "этика"],
-                "links": [ { "label": "PMC", "url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC10691350/" } ],
-                "recommended_for": ["механизмы внутренней цензуры"],
-                "popularity": 65,
-                "stance": "claim",
-                "counter_ids": ["commentary-prosocial-2024"]
-            },
-            {
-                "id": "publication-bias-2016",
-                "type": "article",
-                "title": "Publication bias and the canonization of false facts",
-                "year": 2016,
-                "authors": ["Nissen", "others"],
-                "summary": "Как селекция публикаций закрепляет ложные ‘факты’ в каноне.",
-                "examples": [
-                    { "topic": "селективность", "text": "Положительные результаты публикуются чаще, ‘отрицательные’ исчезают." }
-                ],
-                "topics": ["методология"],
-                "links": [ { "label": "arXiv", "url": "https://arxiv.org/abs/1609.00494" } ],
-                "recommended_for": ["репликационный кризис"],
-                "popularity": 71,
-                "stance": "claim",
-                "counter_ids": []
-            },
-            {
-                "id": "critiques-merchants-2011",
-                "type": "article",
-                "title": "Critiques of 'Merchants of Doubt'",
-                "year": 2011,
-                "authors": ["Разные авторы"],
-                "summary": "Подборка критических комментариев: о чрезмерной персонализации причин и недооценке институциональных факторов.",
-                "examples": [ { "topic": "методология", "text": "Аргументы о том, что роль отдельных учёных переоценена относительно экономических структур и медиа-инфраструктуры." } ],
-                "topics": ["медиа", "методология"],
-                "links": [],
-                "recommended_for": ["альтернативные интерпретации"],
-                "popularity": 40,
-                "stance": "debunk",
-                "counter_ids": ["merchants-of-doubt-2010"]
-            }
-        ],
-        "videos": [
-            {
-                "id": "merchants-doc-2014",
-                "type": "video",
-                "title": "Merchants of Doubt (докфильм)",
-                "year": 2014,
-                "authors": ["Robert Kenner"],
-                "summary": "Экранизация книги о технологиях сомнения и медийной стратегии.",
-                "examples": [ { "topic": "медиа", "text": "Теледебаты с ‘ложным балансом’: 50/50 эфир консенсусу и маргинальной позиции." } ],
-                "topics": ["медиа", "экология"],
-                "links": [ { "label": "IMDb", "url": "https://www.imdb.com/title/tt3675568/" } ],
-                "recommended_for": ["визуальное введение"],
-                "popularity": 58,
-                "stance": "claim",
-                "counter_ids": []
-            }
-        ]
-    }
-</script>
 
 <script>
     // --- Helpers ---
@@ -241,13 +108,7 @@
     const norm = s => (s||"").toString().toLowerCase();
     const allItems = d => [ ...(d.books||[]), ...(d.articles||[]), ...(d.videos||[]) ];
 
-    // Load local JSON embedded in the page
-    let DATA = JSON.parse(document.getElementById('catalog').textContent);
-
-    // Fill site texts from JSON
-    $('#siteTitle').textContent = DATA.site?.title || $('#siteTitle').textContent;
-    $('#siteDesc').textContent  = DATA.site?.description || $('#siteDesc').textContent;
-    $('#footerNote').textContent= DATA.site?.footer || $('#footerNote').textContent;
+    let DATA;
 
     // Build domain legend from palette
     function renderLegend(){
@@ -401,18 +262,28 @@
       items.forEach(i=> root.appendChild(card(i)));
     }
 
-    // Init
-    renderLegend();
-    renderTopicChips(allItems(DATA));
-    update();
+    // Load data and init
+    fetch('catalog.json')
+      .then(r => r.json())
+      .then(json => {
+        DATA = json;
 
-    document.getElementById('reset').addEventListener('click', ()=>{
-      $('#q').value=''; $('#type').value='all'; $('#sort').value='relevance';
-      document.querySelectorAll('#topicChips .chip.active').forEach(b=>b.classList.remove('active'));
-      update();
-    });
+        $('#siteTitle').textContent = DATA.site?.title || $('#siteTitle').textContent;
+        $('#siteDesc').textContent  = DATA.site?.description || $('#siteDesc').textContent;
+        $('#footerNote').textContent= DATA.site?.footer || $('#footerNote').textContent;
 
-    ['q','type','sort'].forEach(id=> document.getElementById(id).addEventListener('input', update));
+        renderLegend();
+        renderTopicChips(allItems(DATA));
+        update();
+
+        document.getElementById('reset').addEventListener('click', ()=>{
+          $('#q').value=''; $('#type').value='all'; $('#sort').value='relevance';
+          document.querySelectorAll('#topicChips .chip.active').forEach(b=>b.classList.remove('active'));
+          update();
+        });
+
+        ['q','type','sort'].forEach(id=> document.getElementById(id).addEventListener('input', update));
+      });
 </script>
 </body>
 </html>
