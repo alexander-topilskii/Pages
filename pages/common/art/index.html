@@ -1,0 +1,297 @@
+<!doctype html>
+<html lang="ru">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Интерпретация, СПГС и «голубые занавески» — понятный гид</title>
+    <meta name="description" content="Единый справочник по явлению приписывания смыслов: от апофении и парадолии до герменевтики, рецептивной эстетики и &quot;смерти автора&quot;. Примеры, тезисы и источники для чтения и просмотра."/>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
+    <style>
+        :root{
+          --bg:#f8f9fb; --fg:#1a1c1f; --muted:#555d66; --card:#ffffff; --accent:#0066cc; --accent-2:#8a4fff;
+          --ring: 0 0 0 2px rgba(0,102,204,.2), 0 15px 40px -10px rgba(0,102,204,.1);
+        }
+        *{box-sizing:border-box}
+        html,body{height:100%}
+        body{margin:0;font-family:Inter,system-ui,-apple-system,Segoe UI,Roboto,Ubuntu,"Helvetica Neue",Arial; background:var(--bg); color:var(--fg)}
+        a{color:var(--accent); text-decoration:none}
+        a:hover{text-decoration:underline}
+        .container{max-width:1100px;margin:0 auto;padding:24px}
+        .header{position:sticky;top:0;backdrop-filter:saturate(1.2) blur(10px); background:rgba(255,255,255,.9); border-bottom:1px solid rgba(0,0,0,.06); z-index:30}
+        .brand{display:flex;gap:12px;align-items:center}
+        .logo{width:34px;height:34px; border-radius:10px; background: radial-gradient(120% 120% at 20% 10%, var(--accent), var(--accent-2)); box-shadow:var(--ring)}
+        .brand h1{font-size:16px;margin:0;font-weight:700;letter-spacing:.2px}
+        .hero{display:grid;grid-template-columns:1.1fr .9fr; gap:28px; align-items:center; padding:28px 0 10px}
+        .badge{display:inline-flex;gap:8px; align-items:center; padding:6px 10px; border-radius:999px; background:rgba(0,0,0,.04); border:1px solid rgba(0,0,0,.06); font-size:12px; color:var(--muted)}
+        .title{font-size:clamp(28px,4.5vw,44px); line-height:1.05; margin:12px 0 10px; font-weight:800}
+        .subtitle{color:var(--muted); font-size:clamp(14px,2.2vw,18px)}
+        .search{display:flex; gap:10px; align-items:center; background:var(--card); border:1px solid rgba(0,0,0,.08); padding:10px 12px; border-radius:14px; margin-top:16px}
+        .search input{flex:1; background:transparent; color:var(--fg); border:0; outline:none; font-size:15px}
+        .card{background:var(--card); border:1px solid rgba(0,0,0,.08); border-radius:18px; padding:18px; box-shadow: 0 10px 30px -15px rgba(0,0,0,.1)}
+        .grid{display:grid;grid-template-columns:repeat(3,1fr); gap:16px}
+        .grid-2{display:grid;grid-template-columns:repeat(2,1fr); gap:16px}
+        .muted{color:var(--muted)}
+        .small{font-size:12px}
+        .term{display:flex; justify-content:space-between; gap:10px; align-items:flex-start}
+        .term h3{margin:0 0 6px; font-size:18px}
+        .chips{display:flex; flex-wrap:wrap; gap:8px; margin-top:8px}
+        .chip{font-size:11px; padding:5px 8px; border:1px solid rgba(0,0,0,.1); border-radius:999px; color:var(--muted)}
+        .kbd{font-family:"JetBrains Mono", ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", monospace; font-size:12px; padding:2px 6px; border-radius:6px; background:rgba(0,0,0,.04); border:1px solid rgba(0,0,0,.1)}
+        .list{display:flex; flex-direction:column; gap:12px; margin:0; padding:0; list-style:none}
+        details{border:1px solid rgba(0,0,0,.08); border-radius:14px; padding:12px 14px; background:rgba(0,0,0,.02)}
+        details[open]{background:rgba(0,0,0,.04)}
+        summary{cursor:pointer; font-weight:600}
+        .examples li{margin-bottom:8px}
+        .ref{display:flex; gap:10px; align-items:flex-start}
+        .ref .dot{width:10px;height:10px;border-radius:50%; background:radial-gradient(100% 100% at 30% 30%, var(--accent), var(--accent-2)); margin-top:7px; box-shadow:0 0 0 3px rgba(0,102,204,.15)}
+        footer{border-top:1px solid rgba(0,0,0,.08); margin-top:32px; padding:20px 0 40px; color:var(--muted)}
+
+        @media (max-width: 960px){ .hero{grid-template-columns:1fr} .grid{grid-template-columns:1fr} .grid-2{grid-template-columns:1fr} }
+    </style>
+</head>
+<body>
+<header class="header">
+    <div class="container" style="display:flex;justify-content:space-between;align-items:center;gap:14px; padding-top:10px; padding-bottom:10px">
+        <div class="brand"><div class="logo" aria-hidden="true"></div><h1>Интерпретация и «СПГС»</h1></div>
+        <div class="kbd" title="Нажми, чтобы прокрутить к глоссарию" onclick="document.querySelector('#glossary').scrollIntoView({behavior:'smooth'})">G</div>
+    </div>
+</header>
+
+<main class="container">
+    <section class="hero">
+        <div>
+            <span class="badge">Справочник по \"нахождению смыслов\"</span>
+            <h2 class="title">Как мы считываем и приписываем смыслы в искусстве (и не только)</h2>
+            <p class="subtitle">От мемных «голубых занавесок» до герменевтики, рецептивной эстетики и апофении. Короткие определения, примеры, аккуратные формулировки — и первоисточники для углубления.</p>
+            <div class="search card">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><path d="M21 21l-4.3-4.3m1.8-5.5a7 7 0 1 1-14 0 7 7 0 0 1 14 0z" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg>
+                <input id="q" placeholder="Фильтр по терминам: апофения, герменевтика, Барта…" aria-label="Поиск по терминам" />
+            </div>
+            <p class="small muted" style="margin-top:10px">Подсказка: нажми <span class="kbd">G</span> — перейти к глоссарию. Нажми по термину — раскрыть примеры.</p>
+        </div>
+        <div class="card">
+            <h3 style="margin-top:0">Быстрое определение</h3>
+            <p><strong>Интерпретация</strong> — процесс, в котором наблюдатель извлекает и/или конструирует значение объекта (текста, фильма, музыки, изображения). Иногда мы видим <em>паттерны</em> там, где их не закладывали (<strong>апофения</strong>), а иногда смысл по определению рождается в встрече произведения и зрителя (герменевтика, <em>рецептивная эстетика</em>).</p>
+            <ul class="list examples">
+                <li>Мем «<em>голубые занавески</em>»: учитель читает символизм, автор — описывает факт.</li>
+                <li>Кино: зритель находит политическую аллегорию в нейтральной сцене — это может быть плод читательской оптики, а может быть обоснованная интерпретация, если укоренена в тексте и контексте.</li>
+            </ul>
+        </div>
+    </section>
+
+    <section id="glossary" style="margin-top:10px">
+        <h2 class="title" style="font-size:28px">Глоссарий и школы (с примерами)</h2>
+        <div class="grid" id="terms"></div>
+    </section>
+
+    <section style="margin-top:24px">
+        <div class="grid-2">
+            <div class="card">
+                <h3 style="margin-top:0">Когда «смысла нет»: осторожно с апофенией</h3>
+                <p class="muted">Увидеть закономерность легко — доказать её труднее. Хорошая интерпретация:</p>
+                <ul class="list">
+                    <li>Опирается на <strong>детали самого произведения</strong> (формальные признаки, мотивы, повторения).</li>
+                    <li>Учитывает <strong>контекст</strong> (исторический, жанровый, авторский корпус).</li>
+                    <li>Проходит <strong>проверку альтернативами</strong>: есть ли другие объяснения?</li>
+                </ul>
+            </div>
+            <div class="card">
+                <h3 style="margin-top:0">Когда «смысл есть»: свобода читателя ≠ произвол</h3>
+                <p class="muted">Даже в парадигмах «смерти автора» и «открытого произведения» действует рамка: не всякая интерпретация равна любой другой.</p>
+                <ul class="list">
+                    <li><strong>Согласованность</strong> с целым: толкование не должно противоречить структуре текста.</li>
+                    <li><strong>Эвристичность</strong>: интерпретация проясняет, а не затемняет.</li>
+                    <li><strong>Воспроизводимость</strong>: другие читатели могут её повторить, опираясь на те же индикаторы.</li>
+                </ul>
+            </div>
+        </div>
+    </section>
+
+    <section style="margin-top:24px">
+        <div class="card">
+            <h3 style="margin-top:0">Источники и дальнейшее чтение/просмотр</h3>
+            <div class="list">
+                <div class="ref"><div class="dot"></div><div>
+                    <strong>Герменевтика (общее)</strong>:
+                    <div class="muted small"><a href="https://plato.stanford.edu/entries/hermeneutics/" target="_blank" rel="noreferrer noopener">Stanford Encyclopedia of Philosophy — Hermeneutics</a>; см. также статью о <a href="https://plato.stanford.edu/entries/gadamer/" target="_blank" rel="noreferrer noopener">Гадамере</a>.</div>
+                </div></div>
+                <div class="ref"><div class="dot"></div><div>
+                    <strong>«Смерть автора»</strong> — Ролан Барт (1967/1968).
+                    <div class="muted small"><a href="https://writing.upenn.edu/~taransky/Barthes.pdf" target="_blank" rel="noreferrer noopener">PDF перевода на англ.</a></div>
+                </div></div>
+                <div class="ref"><div class="dot"></div><div>
+                    <strong>Рецептивная эстетика</strong>: Ханс Роберт Яусс; Вольфганг Изер.
+                    <div class="muted small"><a href="https://oxfordre.com/literature/display/10.1093/acrefore/9780190201098.001.0001/acrefore-9780190201098-e-1004" target="_blank" rel="noreferrer noopener">Oxford Research Encyclopedia — обзор</a>; обзор по Изеру: <a href="https://literariness.org/2018/02/12/key-theories-of-wolfgang-iser/" target="_blank" rel="noreferrer noopener">Literariness.org</a>.</div>
+                </div></div>
+                <div class="ref"><div class="dot"></div><div>
+                    <strong>Интерпретативные сообщества</strong> — Стэнли Фиш (1980).
+                    <div class="muted small"><a href="https://web.mit.edu/uricchio/Public/Documents/fish.pdf" target="_blank" rel="noreferrer noopener">Эссе «Is There a Text in This Class?» (PDF)</a> и книга на <a href="https://archive.org/details/istheretextinthi0000fish" target="_blank" rel="noreferrer noopener">Internet Archive</a>.</div>
+                </div></div>
+                <div class="ref"><div class="dot"></div><div>
+                    <strong>«Открытое произведение»</strong> — Умберто Эко (1962/1989).
+                    <div class="muted small"><a href="https://www.hup.harvard.edu/books/9780674639768" target="_blank" rel="noreferrer noopener">Harvard University Press</a> (описание книги).</div>
+                </div></div>
+                <div class="ref"><div class="dot"></div><div>
+                    <strong>«Против интерпретации»</strong> — Сьюзан Зонтаг (1964).
+                    <div class="muted small"><a href="https://sites.ualberta.ca/~dmiall/LiteraryReading/Readings/Sontag%20Against%20Interpretation.pdf" target="_blank" rel="noreferrer noopener">PDF эссе</a>.</div>
+                </div></div>
+                <div class="ref"><div class="dot"></div><div>
+                    <strong>Феноменология восприятия</strong> — Мерло-Понти (1945).
+                    <div class="muted small"><a href="https://plato.stanford.edu/entries/merleau-ponty/" target="_blank" rel="noreferrer noopener">Статья SEP об авторе</a>.</div>
+                </div></div>
+                <div class="ref"><div class="dot"></div><div>
+                    <strong>Апофения / парадолия</strong> — психология распознавания паттернов.
+                    <div class="muted small"><a href="https://www.britannica.com/biography/Klaus-Conrad" target="_blank" rel="noreferrer noopener">Британника о Клаусе Конраде</a> · <a href="https://en.wikipedia.org/wiki/Apophenia" target="_blank" rel="noreferrer noopener">Обзорная статья</a>.</div>
+                </div></div>
+            </div>
+        </div>
+    </section>
+
+    <section style="margin-top:24px">
+        <div class="grid-2">
+            <div class="card">
+                <h3 style="margin-top:0">FAQ: короткие формулировки</h3>
+                <details>
+                    <summary>Есть ли «самый правильный» смысл?</summary>
+                    <p>В академической практике говорят о <em>лучших</em> и <em>хуже</em> обоснованных интерпретациях, а не об «единственно верной». Смысл — это гипотеза, которую мы подтверждаем структурой произведения и контекстом.</p>
+                </details>
+                <details>
+                    <summary>Чем интерпретация отличается от СПГС?</summary>
+                    <p>СПГС (мемно) — это апофения: приписывание значений без опоры на текст и контекст. Интерпретация — аргументированная процедура чтения.</p>
+                </details>
+                <details>
+                    <summary>Можно ли «убрать автора»?</summary>
+                    <p>Тезис Барта о «смерти автора» — методологический приём, расширяющий спектр чтений; он не запрещает учитывать авторский контекст, но не даёт ему монополии на смысл.</p>
+                </details>
+            </div>
+            <div class="card">
+                <h3 style="margin-top:0">Шпаргалка: как защитить интерпретацию</h3>
+                <ol class="list">
+                    <li><strong>Цитируй форму</strong>: мотивы, композицию, повторы, контрасты.</li>
+                    <li><strong>Укажи контекст</strong>: жанр, эпоха, корпус автора.</li>
+                    <li><strong>Сравни с альтернативой</strong>: почему твоя версия сильнее?</li>
+                    <li><strong>Покажи эвристическую пользу</strong>: что она объясняет лучше?</li>
+                </ol>
+            </div>
+        </div>
+    </section>
+
+    <footer>
+        <div class="container">
+            <div style="display:flex;justify-content:space-between;gap:16px;flex-wrap:wrap">
+                <div>
+                    Сделано как единый HTML-файл · Тема: тёмная · Адаптив: да.
+                    <div class="small muted">Можно встроить в статический сайт или открыть локально как <code class="kbd">index.html</code>.</div>
+                </div>
+                <div class="small muted">© 2025 · CC BY-SA для текста страницы; ссылки на источники принадлежат своим правообладателям.</div>
+            </div>
+        </div>
+    </footer>
+</main>
+
+<script>
+    // Данные глоссария: термин, кратко, подробно, теги, пример
+    const DATA = [
+      {
+        term: 'Эстетическая интерпретация',
+        brief: 'Общее название процесса извлечения/конструирования смысла.',
+        tags: ['универсально','искусство','анализ'],
+        more: 'Процедура чтения/смотрения/слушания, включающая опору на форму, контекст и сравнительный анализ альтернатив. Визуальные искусства и музыка интерпретируются так же, как литература — через работу с \"языком\" медиума.',
+        example: 'Зритель видит в кадре лестницы в фильме метафору социального лифта — и проверяет это по монтажу, ракурсам и сюжетной функции.'
+      },
+      {
+        term: 'Герменевтика',
+        brief: 'Теория и практика интерпретации (истоки — текстовые дисциплины).',
+        tags: ['философия','методология'],
+        more: 'Современная герменевтика охватывает интерпретацию человеческих действий и артефактов (не только текстов). Гадамер подчёркивал историчность понимания: мы всегда читаем из \"горизонта\" своей эпохи.',
+        example: 'Один и тот же миф читают по‑разному в XIX и XXI веках — меняется \"горизонт ожиданий\".'
+      },
+      {
+        term: 'Рецептивная эстетика (Яусс, Изер)',
+        brief: 'Смысл рождается во встрече текста и читателя.',
+        tags: ['reader-response','литература'],
+        more: 'Яусс вводит \"горизонт ожиданий\" аудитории; Изер различает \"художественный полюс\" (текст) и \"эстетический\" (актуализация у читателя), а также \"имплицитного читателя\".',
+        example: 'Роман, провалившийся при публикации, через десятилетия становится классикой — изменился горизонт ожиданий.'
+      },
+      {
+        term: 'Интерпретативные сообщества (Фиш)',
+        brief: 'То, что мы считаем \"смыслом\", фиксируют практики общности читателей.',
+        tags: ['теория','социология'],
+        more: 'Интерпретации регулируются нормами групп (академия, фан-сообщество, профессиональная критика). \"Смысл\" — продукт во многом социальный.',
+        example: 'Одну и ту же песню по‑разному читают музыковеды и фандом — каждый в своих рамках доказательности.'
+      },
+      {
+        term: '«Смерть автора» (Барт)',
+        brief: 'Монополия автора на значение отвергается; на первый план — читатель.',
+        tags: ['постструктурализм'],
+        more: 'Текст — \"многомерное пространство цитат\"; важнее пути чтения, чем намерение автора. Это не запрет на учёт биографии, а отказ от \"единственно верного\" смысла.',
+        example: 'Интервью автора не отменяет структурные эффекты, возникающие в самом тексте/кадре.'
+      },
+      {
+        term: 'Деконструкция (Деррида)',
+        brief: 'Показывает нестабильность значений и оппозиций в тексте.',
+        tags: ['постструктурализм','философия языка'],
+        more: 'Смысл откладывается (différance), бинарные оппозиции неустойчивы. Анализ выявляет \"швы\" текста, где он сам себя подрывает.',
+        example: 'Герой, заявляющий о \"чистоте\", окружён образами смешения — текст сопротивляется собственной декларируемой идее.'
+      },
+      {
+        term: 'Семиотика искусства',
+        brief: 'Любое искусство — система знаков, которую можно \"читать\".',
+        tags: ['семиотика','эко'],
+        more: 'Код, сообщение, коннотации, денотации: инструменты чтения не ограничены словесными текстами.',
+        example: 'В живописи барокко атрибуты святых работают как знаки, считываемые зрителем.'
+      },
+      {
+        term: '«Открытое произведение» (Эко)',
+        brief: 'Произведение, рассчитанное на множественность завершений и путей чтения.',
+        tags: ['эстетика','эко'],
+        more: 'Открытость — не произвол: автор конструирует \"контролируемую неопределённость\". Зритель выполняет \"со‑композицию\".',
+        example: 'Интерактивная инсталляция меняется в зависимости от действий посетителя.'
+      },
+      {
+        term: 'Феноменология восприятия (Мерло‑Понти)',
+        brief: 'Смысл укоренён в телесном, перцептивном опыте наблюдателя.',
+        tags: ['феноменология'],
+        more: 'Мы воспринимаем мир как \"живо данное\", до теорий; искусство апеллирует к телесно‑перцептивным структурам.',
+        example: 'Картина Ротко \"работает\" как поле цвета — прежде любых словесных трактовок.'
+      },
+      {
+        term: '«Против интерпретации» (Зонтаг)',
+        brief: 'Осторожно: избыток трактовок может \"убивать\" переживание формы.',
+        tags: ['эссе','критика интерпретации'],
+        more: 'Зонтаг призывает \"к эротике искусства\": меньше аллегорий, больше внимания к форме, стилю, интенсивности.',
+        example: 'Вместо \"о чём это кино?\" — \"как оно это делает?\" (свет, монтаж, звук).'
+      },
+      {
+        term: 'Апофения / парадолия',
+        brief: 'Склонность видеть связи и образы в случайном (иногда — ложные смыслы).',
+        tags: ['когнитивные искажения'],
+        more: 'Термин \"апофения\" предложил Клаус Конрад (1958). Парадолия — частный случай: \"лица в облаках\". Полезно как предупреждение против \"СПГС\".',
+        example: 'Увидеть \"заговор\" в случайных совпадениях монтажных деталей.'
+      }
+    ];
+
+    const wrap = (html) => `<div class="card term" data-term>\n  <div style="flex:1">\n    <h3>${html.term}</h3>\n    <p class="muted">${html.brief}</p>\n    <div class="chips">${html.tags.map(t=>`<span class=\"chip\">${t}</span>`).join('')}</div>\n  </div>\n  <details style="min-width:44%">\n    <summary>Подробнее и пример</summary>\n    <p>${html.more}</p>\n    <p class="small muted"><em>Пример:</em> ${html.example}</p>\n  </details>\n</div>`;
+
+    const grid = document.querySelector('#terms');
+    const render = (query='') => {
+      const q = query.trim().toLowerCase();
+      grid.innerHTML = DATA
+        .filter(x => !q || x.term.toLowerCase().includes(q) || x.brief.toLowerCase().includes(q) || x.tags.join(' ').toLowerCase().includes(q))
+        .map(wrap).join('');
+    }
+    render();
+
+    document.getElementById('q').addEventListener('input', (e)=>render(e.target.value));
+
+    // Клавиша G — к глоссарию
+    document.addEventListener('keydown', (e)=>{
+      if((e.key==='g' || e.key==='G') && !/input|textarea/i.test(document.activeElement.tagName)){
+        document.querySelector('#glossary').scrollIntoView({behavior:'smooth'});
+      }
+    });
+</script>
+</body>
+</html>
