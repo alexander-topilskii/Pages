@@ -1,363 +1,369 @@
 <!DOCTYPE html>
 <html lang="ru">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Можно ли стать умнее? Обзор исследований</title>
     <style>
-        body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background: black;
-            color: #2c3e50;
-            margin: 0;
-            padding: 0;
-            line-height: 1.7;
-            position: relative;
-            overflow-x: hidden;
+        :root{
+          --bg:#0b0f14;
+          --panel:#0e141b99; /* стекло */
+          --card:#0f1621cc;
+          --text:#e6edf3;
+          --muted:#a5b1c2;
+          --accent:#4a90e2;
+          --accent-2:#9b59b6;
+          --success:#1abc9c;
+          --warn:#e67e22;
+          --danger:#e74c3c;
+          --chip:#152233;
+          --chip-border:#2b3a4d;
+          --glow: 0 0 30px rgba(74,144,226,.25);
+          --radius:16px;
         }
-        canvas#matrix {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            z-index: -1;
-            opacity: 0.5; /* Полупрозрачный для видимости контента */
+        *{box-sizing:border-box}
+        html,body{height:100%}
+        body{
+          margin:0; line-height:1.6; font-family: "Inter", system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
+          color:var(--text); background: radial-gradient(1200px 800px at 10% -10%, #1b2a41 0%, transparent 60%), radial-gradient(1000px 600px at 110% 10%, #291b41 0%, transparent 55%), var(--bg);
+          overflow-x:hidden;
         }
-        header {
-            text-align: center;
-            padding: 60px 20px;
-            background: rgba(255, 255, 255, 0.9);
-            border-bottom: 2px solid #4a90e2;
-            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
-            position: relative;
-            z-index: 1;
+        /* Matrix canvas */
+        canvas#matrix{position:fixed; inset:0; z-index:-2; opacity:.18;}
+        /* Glass header */
+        header{
+          position:sticky; top:0; z-index:5; backdrop-filter: blur(10px);
+          background: linear-gradient(180deg, #0f1621cc, #0f162100);
+          border-bottom: 1px solid #1e2a3a; box-shadow: var(--glow);
         }
-        h1 {
-            color: #4a90e2;
-            font-size: 2.8em;
-            margin: 0;
-            text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.1);
-        }
-        .intro {
-            font-size: 1.2em;
-            max-width: 800px;
-            margin: 20px auto;
-            color: #34495e;
-        }
-        .sort-options {
-            text-align: center;
-            margin: 20px 0;
-            position: relative;
-            z-index: 1;
-        }
-        .sort-options label {
-            font-size: 1.1em;
-            color: #34495e;
-            margin-right: 10px;
-        }
-        .sort-options select {
-            padding: 8px;
-            font-size: 1em;
-            border: 1px solid #4a90e2;
-            border-radius: 5px;
-            background: white;
-        }
-        .container {
-            max-width: 1200px;
-            margin: 40px auto;
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
-            gap: 30px;
-            padding: 0 20px;
-            position: relative;
-            z-index: 1;
-        }
-        .study-card {
-            background: #ffffff;
-            border-radius: 16px;
-            padding: 30px;
-            box-shadow: 0 6px 20px rgba(0, 0, 0, 0.08);
-            transition: transform 0.4s ease, box-shadow 0.4s ease;
-            position: relative;
-            overflow: hidden;
-        }
-        .study-card::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 5px;
-            background: linear-gradient(to right, #4a90e2, #9b59b6);
-            transition: height 0.4s ease;
-        }
-        .study-card:hover {
-            transform: translateY(-10px);
-            box-shadow: 0 12px 30px rgba(0, 0, 0, 0.15);
-        }
-        .study-card:hover::before {
-            height: 10px;
-        }
-        .study-title {
-            font-size: 1.5em;
-            color: #2c3e50;
-            margin-bottom: 5px;
-            border-bottom: 3px solid #4a90e2;
-            padding-bottom: 10px;
-        }
-        .study-authors {
-            font-size: 1.2em;
-            color: #34495e;
-            margin-bottom: 20px;
-        }
-        .study-details {
-            list-style: none;
-            padding: 0;
-            margin: 0 0 25px 0;
-        }
-        .study-details li {
-            margin-bottom: 12px;
-            font-size: 1.1em;
-            display: flex;
-            align-items: flex-start;
-            flex-direction: column;
-        }
-        .study-details li strong {
-            color: #4a90e2;
-            min-width: 150px;
-            flex-shrink: 0;
-            margin-bottom: 5px;
-        }
-        .how-to {
-            background: #e8f4fd;
-            border-left: 4px solid #4a90e2;
-            padding: 15px;
-            border-radius: 8px;
-            margin-bottom: 20px;
-            font-style: italic;
-        }
-        .counters {
-            background: #fdf2f2;
-            border-left: 4px solid #e74c3c;
-            padding: 15px;
-            border-radius: 8px;
-        }
-        .counters h3 {
-            font-size: 1.2em;
-            color: #e74c3c;
-            margin: 0 0 10px 0;
-        }
-        .counters ul {
-            list-style-type: disc;
-            padding-left: 20px;
-            margin: 0;
-        }
-        footer {
-            text-align: center;
-            padding: 30px 0;
-            color: #7f8c8d;
-            font-size: 0.95em;
-            background: rgba(255, 255, 255, 0.8);
-            border-top: 1px solid #e0e0e0;
-            position: relative;
-            z-index: 1;
-        }
-        /* Мобильная адаптация */
-        @media (max-width: 768px) {
-            header {
-                padding: 40px 15px;
-            }
-            h1 {
-                font-size: 2.2em;
-            }
-            .intro {
-                font-size: 1em;
-                padding: 0 15px;
-            }
-            .container {
-                grid-template-columns: 1fr;
-                gap: 20px;
-                padding: 0 15px;
-            }
-            .study-card {
-                padding: 20px;
-            }
-            .study-title {
-                font-size: 1.3em;
-            }
-            .study-authors {
-                font-size: 1em;
-            }
-            .study-details li {
-                font-size: 1em;
-            }
-            .study-details li strong {
-                min-width: auto;
-                margin-bottom: 3px;
-            }
-        }
-        @media (max-width: 480px) {
-            h1 {
-                font-size: 1.8em;
-            }
-            .intro {
-                font-size: 0.9em;
-            }
-            .study-card {
-                padding: 15px;
-            }
+        .hero{max-width:1200px; margin:0 auto; padding:28px 20px 18px}
+        h1{margin:0 0 8px; font-weight:800; letter-spacing:.2px; font-size:clamp(24px, 4vw, 40px); background:linear-gradient(90deg,var(--accent),var(--accent-2)); -webkit-background-clip:text; background-clip:text; color:transparent}
+        .intro{margin:0; color:var(--muted); font-size:clamp(14px,1.6vw,18px)}
+
+        /* Controls bar */
+        .controls{position:sticky; top:72px; z-index:4; backdrop-filter: blur(10px); background: #0b1320cc; border-bottom:1px solid #1e2a3a}
+        .controls-inner{display:flex; gap:12px; align-items:center; flex-wrap:wrap; max-width:1200px; margin:0 auto; padding:12px 20px}
+        .control{display:flex; align-items:center; gap:8px; background:var(--panel); border:1px solid #1e2a3a; padding:8px 10px; border-radius:12px}
+        select, input[type="search"]{appearance:none; border:none; outline:none; background:transparent; color:var(--text); font-size:14px; min-width:160px}
+        .label{color:var(--muted); font-size:12px; letter-spacing:.2px}
+        .toggle{cursor:pointer; padding:6px 10px; border-radius:10px; border:1px solid #1e2a3a; background:#0f1621;}
+        .toggle[aria-pressed="true"]{border-color:var(--accent); box-shadow:0 0 0 2px #4a90e233 inset}
+
+        /* Summary chips */
+        .summary{max-width:1200px; margin:16px auto 0; padding:0 20px; display:flex; flex-wrap:wrap; gap:8px}
+        .chip{display:inline-flex; align-items:center; gap:8px; padding:6px 10px; border:1px solid var(--chip-border); background:var(--chip); color:var(--text); border-radius:999px; font-size:12px}
+        .chip b{font-weight:700}
+
+        /* Grid */
+        .container{max-width:1200px; margin:18px auto 60px; padding:0 20px; display:grid; grid-template-columns:repeat(auto-fit, minmax(320px, 1fr)); gap:18px}
+
+        /* Cards */
+        .study-card{position:relative; background:var(--card); border:1px solid #1e2a3a; border-radius:var(--radius); padding:18px; box-shadow:0 10px 30px rgba(0,0,0,.25); overflow:hidden; transition:transform .25s ease, box-shadow .25s ease, border-color .25s}
+        .study-card::before{content:""; position:absolute; inset:0; background:linear-gradient(90deg, transparent, #4a90e20e, transparent); transform:translateX(-100%); transition:transform .8s ease}
+        .study-card:hover{transform:translateY(-4px); border-color:#264769}
+        .study-card:hover::before{transform:translateX(100%)}
+        .ribbon{position:absolute; top:0; left:0; height:4px; width:100%; background:linear-gradient(90deg,var(--accent),var(--accent-2))}
+        .study-title{font-size:18px; font-weight:700; margin:6px 0 4px}
+        .study-authors{font-size:14px; color:var(--muted); margin-bottom:10px}
+        .badges{display:flex; flex-wrap:wrap; gap:6px; margin-bottom:10px}
+        .badge{font-size:11px; padding:4px 8px; border-radius:999px; border:1px solid var(--chip-border); background:#0f1a26; color:#d8e1ea; letter-spacing:.2px}
+        .badge.et-within{border-color:#3b82f6}
+        .badge.et-near{border-color:#22c55e}
+        .badge.et-far{border-color:#eab308}
+        .badge.et-pop{border-color:#a855f7}
+
+        .study-details{display:grid; grid-template-columns: 1fr; gap:8px; margin:12px 0 14px; padding:0}
+        .kv{display:grid; grid-template-columns:140px 1fr; gap:8px; font-size:14px}
+        .kv .k{color:var(--muted)}
+        .effect{padding:10px; border-radius:12px; background: #0f1e2c; border:1px solid #1f3350; margin:10px 0}
+        .effect.positive{box-shadow: inset 0 0 0 1px rgba(26, 188, 156, .35)}
+        .effect.negative{box-shadow: inset 0 0 0 1px rgba(231, 76, 60, .35)}
+
+        .how-to{background:#0f1a26; border:1px dashed #214160; padding:12px; border-radius:12px; font-style:italic}
+
+        details.counters{margin-top:10px; background:#260f130f; border:1px solid #3a1b21; border-left:3px solid var(--danger); border-radius:12px; padding:10px}
+        details.counters > summary{cursor:pointer; color:#ffb4b4}
+        details.counters ul{margin:6px 0 0 18px}
+
+        footer{max-width:1200px; margin:40px auto; padding:20px; color:var(--muted); text-align:center; border-top:1px solid #1e2a3a}
+
+        /* Mobile */
+        @media (max-width:640px){
+          .kv{grid-template-columns:1fr}
+          .controls-inner{gap:8px}
         }
     </style>
 </head>
 <body>
 <canvas id="matrix"></canvas>
+
 <header>
-    <h1>Можно ли стать умнее? Ключевые исследования</h1>
-    <p class="intro">Обзор научных работ по повышению интеллекта: эффекты, методы, ограничения. Данные загружаются из JSON для удобного обновления. Для каждого исследования указано, как добиться эффекта.</p>
+    <div class="hero">
+        <h1>Можно ли стать умнее? Ключевые исследования</h1>
+        <p class="intro">Обновляемая витрина исследований об увеличении и снижении когнитивных способностей. Фильтры по тегам и типам переноса, сортировка и поиск по названию/авторам.</p>
+    </div>
 </header>
-<div class="sort-options">
-    <label for="sort-select">Сортировать по:</label>
-    <select id="sort-select">
-        <option value="default">По умолчанию</option>
-        <option value="sample_size">Размеру выборки (убыв.)</option>
-        <option value="effect">Наибольшему эффекту (убыв.)</option>
-        <option value="adults">На взрослых (взрослые сверху)</option>
-    </select>
+
+<!-- Controls -->
+<div class="controls" role="region" aria-label="Панель фильтров и сортировки">
+    <div class="controls-inner">
+        <div class="control">
+            <span class="label">Сортировать:</span>
+            <select id="sort-select" aria-label="Сортировка">
+                <option value="default">По умолчанию</option>
+                <option value="sample_size">Размер выборки (убыв.)</option>
+                <option value="effect">Наибольшему эффекту (убыв.)</option>
+                <option value="adults">Приоритет взрослого эффекта</option>
+                <option value="year">Год (новые сверху)</option>
+            </select>
+        </div>
+
+        <div class="control">
+            <span class="label">Фильтр по тегу:</span>
+            <select id="tag-filter" aria-label="Фильтр по тегу">
+                <option value="all">Все теги</option>
+            </select>
+        </div>
+
+        <div class="control">
+            <span class="label">Тип эффекта:</span>
+            <select id="etype-filter" aria-label="Тип эффекта">
+                <option value="all">Любой</option>
+                <option value="within-domain">Within-domain</option>
+                <option value="near-transfer">Near-transfer</option>
+                <option value="far-transfer">Far-transfer</option>
+                <option value="population-level">Population-level</option>
+            </select>
+        </div>
+
+        <div class="control" style="flex:1">
+            <span class="label">Поиск:</span>
+            <input type="search" id="q" placeholder="Название, авторы, дизайн..." aria-label="Поиск по исследованиям"/>
+        </div>
+
+        <button class="toggle" id="negatives" aria-pressed="false" title="Показывать работы со снижением показателей">Показывать снижения</button>
+    </div>
 </div>
-<div class="container" id="studies-container"></div>
+
+<!-- Summary chips -->
+<div class="summary" id="summary-chips" aria-live="polite"></div>
+
+<main class="container" id="studies-container" aria-live="polite"></main>
+
 <footer>
-    <p>Данные можно обновить, изменив объект JSON в скрипте. Дизайн: градиентный фон, анимированные карточки для оригинальности. Адаптировано для мобильных устройств. Добавлен эффект Матрицы на фоне.</p>
+    <p>Источник данных: <code>data.json</code>. Добавлены теги и <code>effect_type</code>. Карточки адаптированы под тёмную стеклянную тему, улучшены фильтры, поиск и доступность.</p>
 </footer>
+
 <script>
-    // Матрица эффект
-    const canvas = document.getElementById('matrix');
-    const ctx = canvas.getContext('2d');
-
-    canvas.height = window.innerHeight;
-    canvas.width = window.innerWidth;
-
-    const symbols = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789@#$%^&*()_+-=[]{}|;:,.<>?'.split('');
-
-    const fontSize = 16;
-    const columns = canvas.width / fontSize;
-
-    const drops = [];
-    for (let x = 0; x < columns; x++) {
-        drops[x] = 1;
+    /* ===== Matrix background ===== */
+    const cvs = document.getElementById('matrix');
+    const c = cvs.getContext('2d');
+    function resizeCanvas(){cvs.width=window.innerWidth; cvs.height=window.innerHeight}
+    resizeCanvas(); window.addEventListener('resize', resizeCanvas);
+    const symbols = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789@#$%^&*()_+-=[]{}|;:,.<>?';
+    const fontSize = 16; let columns = 0; let drops = [];
+    function initMatrix(){ columns = Math.floor(cvs.width / fontSize); drops = Array(columns).fill(1); }
+    initMatrix();
+    function draw(){
+      c.fillStyle = 'rgba(0,0,0,0.06)'; c.fillRect(0,0,cvs.width,cvs.height);
+      c.fillStyle = '#4a90e2'; c.font = fontSize + 'px monospace';
+      for(let i=0;i<drops.length;i++){
+        const ch = symbols[Math.floor(Math.random()*symbols.length)];
+        c.fillText(ch, i*fontSize, drops[i]*fontSize);
+        if(drops[i]*fontSize > cvs.height && Math.random() > 0.975) drops[i]=0;
+        drops[i]++;
+      }
     }
-
-    function draw() {
-        ctx.fillStyle = 'rgba(0, 0, 0, 0.05)';
-        ctx.fillRect(0, 0, canvas.width, canvas.height);
-
-        ctx.fillStyle = '#0F0';
-        ctx.font = fontSize + 'px arial';
-
-        for (let i = 0; i < drops.length; i++) {
-            const text = symbols[Math.floor(Math.random() * symbols.length)];
-            ctx.fillText(text, i * fontSize, drops[i] * fontSize);
-
-            if (drops[i] * fontSize > canvas.height && Math.random() > 0.975) {
-                drops[i] = 0;
-            }
-
-            drops[i]++;
-        }
-    }
-
     setInterval(draw, 33);
 
-    window.addEventListener('resize', () => {
-        canvas.height = window.innerHeight;
-        canvas.width = window.innerWidth;
-    });
-
-    // Данные исследований загружаются из внешнего файла рядом с index.html
+    /* ===== Data + UI ===== */
+    let RAW = { title:'', description:'', studies:[] };
     let studies = [];
 
-    fetch('data.json')
-        .then(r => {
-            if (!r.ok) throw new Error('Network response was not ok');
-            return r.json();
-        })
-        .then(data => {
-            studies = Array.isArray(data) ? data : (data.studies || []);
-            renderStudies(studies);
-        })
-        .catch(err => {
-            console.error('Не удалось загрузить data.json:', err);
-        });
-
-    function renderStudies(sortedStudies) {
-        const container = document.getElementById('studies-container');
-        container.innerHTML = '';
-        sortedStudies.forEach(study => {
-            const card = document.createElement('div');
-            card.className = 'study-card';
-
-            const title = document.createElement('div');
-            title.className = 'study-title';
-            title.textContent = study.title;
-            card.appendChild(title);
-
-            const authors = document.createElement('div');
-            authors.className = 'study-authors';
-            authors.textContent = `${study.authors}, ${study.year}`;
-            card.appendChild(authors);
-
-            const details = document.createElement('ul');
-            details.className = 'study-details';
-            details.innerHTML = `
-                <li><strong>Размер выборки:</strong> ${study.sample_size}</li>
-                <li><strong>Дизайн:</strong> ${study.design}</li>
-                <li><strong>Возрастная группа:</strong> ${study.age_group}</li>
-                <li><strong>Эффект:</strong> ${study.effect}</li>
-            `;
-            card.appendChild(details);
-
-            const howTo = document.createElement('div');
-            howTo.className = 'how-to';
-            howTo.innerHTML = `<strong>Как добиться:</strong> ${study.how_to_achieve}`;
-            card.appendChild(howTo);
-
-            const countersDiv = document.createElement('div');
-            countersDiv.className = 'counters';
-            const countersTitle = document.createElement('h3');
-            countersTitle.textContent = 'Контраргументы / Ограничения';
-            countersDiv.appendChild(countersTitle);
-            const countersList = document.createElement('ul');
-            study.counters.forEach(counter => {
-                const li = document.createElement('li');
-                li.textContent = counter;
-                countersList.appendChild(li);
-            });
-            countersDiv.appendChild(countersList);
-            card.appendChild(countersDiv);
-
-            container.appendChild(card);
-        });
+    async function loadData(){
+      try{
+        const r = await fetch('data.json');
+        const data = await r.json();
+        RAW = Array.isArray(data) ? {title:'', description:'', studies:data} : data;
+        studies = normalizeStudies(RAW.studies || []);
+        buildFilters(studies);
+        renderSummary(studies);
+        renderStudies(studies);
+      }catch(e){
+        console.error('Не удалось загрузить data.json', e);
+        // запасной вариант: пусто
+        studies = [];
+        renderSummary(studies); renderStudies(studies);
+      }
     }
 
-    // Изначальный рендер
-    renderStudies(studies);
+    function normalizeStudies(list){
+      return (list||[]).map((s,i)=>({
+        id: i,
+        title: s.title||'Без названия',
+        authors: s.authors||'—',
+        year: Number(String(s.year).match(/\d{4}/)?.[0]||0),
+        sample_size: s.sample_size||'—',
+        sample_num: Number(s.sample_num||0),
+        design: s.design||'—',
+        age_group: s.age_group||'—',
+        adult_priority: Number(s.adult_priority||0),
+        effect: s.effect||'—',
+        effect_num: Number(s.effect_num||0),
+        how_to_achieve: s.how_to_achieve||'—',
+        counters: Array.isArray(s.counters)? s.counters : [],
+        tags: Array.isArray(s.tags)? s.tags : [],
+        effect_type: s.effect_type || inferEffectType(s)
+      }));
+    }
 
-    // Сортировка
-    const sortSelect = document.getElementById('sort-select');
-    sortSelect.addEventListener('change', (e) => {
-        const value = e.target.value;
-        let sorted = [...studies];
+    function inferEffectType(s){
+      // простая эвристика
+      const e = (s.effect||'').toLowerCase();
+      if(/population|флинн/.test(e)) return 'population-level';
+      if(/raven|iq|g\b|флюид/i.test(e)) return 'far-transfer';
+      if(/раб(оч|.) память|исполн|скорост/i.test(e)) return 'near-transfer';
+      return 'within-domain';
+    }
 
-        if (value === 'sample_size') {
-            sorted.sort((a, b) => b.sample_num - a.sample_num);
-        } else if (value === 'effect') {
-            sorted.sort((a, b) => b.effect_num - a.effect_num);
-        } else if (value === 'adults') {
-            sorted.sort((a, b) => b.adult_priority - a.adult_priority);
+    // Build dropdowns from tags
+    function buildFilters(list){
+      const tagSel = document.getElementById('tag-filter');
+      const etSel = document.getElementById('etype-filter');
+      const tags = Array.from(new Set(list.flatMap(s=>s.tags))).sort((a,b)=>a.localeCompare(b,'ru'));
+      for(const t of tags){
+        const opt = document.createElement('option'); opt.value=t; opt.textContent=t; tagSel.appendChild(opt);
+      }
+      // listeners
+      document.getElementById('sort-select').addEventListener('change', applyAll);
+      tagSel.addEventListener('change', applyAll);
+      etSel.addEventListener('change', applyAll);
+      document.getElementById('q').addEventListener('input', debounce(applyAll, 150));
+      document.getElementById('negatives').addEventListener('click', (e)=>{
+        const el=e.currentTarget; const v = el.getAttribute('aria-pressed')==='true' ? 'false':'true';
+        el.setAttribute('aria-pressed', v); applyAll();
+      });
+    }
+
+    function applyAll(){
+      const sort = document.getElementById('sort-select').value;
+      const tag = document.getElementById('tag-filter').value;
+      const etype = document.getElementById('etype-filter').value;
+      const q = (document.getElementById('q').value||'').trim().toLowerCase();
+      const showNeg = document.getElementById('negatives').getAttribute('aria-pressed')==='true';
+
+      let list = studies.filter(s=>{
+        if(tag!=='all' && !s.tags.includes(tag)) return false;
+        if(etype!=='all' && s.effect_type!==etype) return false;
+        if(!showNeg && s.effect_num < 0) return false;
+        if(q){
+          const hay = `${s.title} ${s.authors} ${s.design} ${s.age_group} ${s.tags.join(' ')}`.toLowerCase();
+          if(!hay.includes(q)) return false;
+        }
+        return true;
+      });
+
+      // sort
+      const by = {
+        'sample_size': (a,b)=> b.sample_num - a.sample_num,
+        'effect': (a,b)=> b.effect_num - a.effect_num,
+        'adults': (a,b)=> b.adult_priority - a.adult_priority,
+        'year': (a,b)=> b.year - a.year
+      }[sort];
+      if(by) list.sort(by);
+
+      renderSummary(list);
+      renderStudies(list);
+    }
+
+    function renderSummary(list){
+      const mount = document.getElementById('summary-chips');
+      mount.innerHTML='';
+      const total = document.createElement('span'); total.className='chip';
+      total.innerHTML = `Всего работ: <b>${list.length}</b>`; mount.appendChild(total);
+      // by tag
+      const counts = new Map();
+      for(const s of list){ for(const t of s.tags){ counts.set(t, (counts.get(t)||0)+1); } }
+      for(const [t,n] of Array.from(counts.entries()).sort((a,b)=>b[1]-a[1])){
+        const chip = document.createElement('span'); chip.className='chip'; chip.textContent=`${t}: ${n}`; mount.appendChild(chip);
+      }
+      // effect avg
+      const eff = list.filter(s=>Number.isFinite(s.effect_num) && s.effect_num!==0);
+      if(eff.length){
+        const avg = (eff.reduce((acc,s)=>acc+s.effect_num,0)/eff.length).toFixed(1);
+        const chip = document.createElement('span'); chip.className='chip'; chip.innerHTML=`Средний |эффект_num|: <b>${avg}</b>`; mount.appendChild(chip);
+      }
+    }
+
+    function badgeForEffectType(t){
+      const map = {
+        'within-domain':['Within-domain','et-within'],
+        'near-transfer':['Near-transfer','et-near'],
+        'far-transfer':['Far-transfer','et-far'],
+        'population-level':['Population-level','et-pop']
+      };
+      const [label, cls] = map[t] || ['—',''];
+      const span = document.createElement('span'); span.className = `badge ${cls}`; span.textContent = label; return span;
+    }
+
+    function renderStudies(list){
+      const container = document.getElementById('studies-container');
+      container.innerHTML='';
+      if(!list.length){
+        const empty=document.createElement('div'); empty.className='study-card';
+        empty.innerHTML = '<div class="ribbon"></div><div class="study-title">Ничего не найдено</div><div class="study-authors">Попробуйте снять фильтры или изменить запрос.</div>';
+        container.appendChild(empty); return;
+      }
+      for(const s of list){
+        const card = document.createElement('article'); card.className='study-card'; card.setAttribute('tabindex','0');
+        card.innerHTML = '<div class="ribbon"></div>';
+        const title = document.createElement('div'); title.className='study-title'; title.textContent=s.title; card.appendChild(title);
+        const authors = document.createElement('div'); authors.className='study-authors'; authors.textContent=`${s.authors}${s.year?`, ${s.year}`:''}`; card.appendChild(authors);
+        const badges = document.createElement('div'); badges.className='badges';
+        badges.appendChild(badgeForEffectType(s.effect_type));
+        if(Array.isArray(s.tags)){
+          for(const t of s.tags){ const b=document.createElement('span'); b.className='badge'; b.textContent=t; badges.appendChild(b); }
+        }
+        card.appendChild(badges);
+
+        const details = document.createElement('div'); details.className='study-details';
+        details.appendChild(kv('Размер выборки', s.sample_size));
+        details.appendChild(kv('Дизайн', s.design));
+        details.appendChild(kv('Возрастная группа', s.age_group));
+        details.appendChild(kv('Приоритет взрослого эффекта', String(s.adult_priority)));
+        card.appendChild(details);
+
+        const eff = document.createElement('div'); eff.className = 'effect ' + (s.effect_num < 0 ? 'negative' : 'positive');
+        eff.innerHTML = `<b>Эффект:</b> ${escapeHTML(s.effect)}${Number.isFinite(s.effect_num) ? ` <span style="opacity:.7">(effect_num: ${s.effect_num})</span>`: ''}`;
+        card.appendChild(eff);
+
+        if(s.how_to_achieve && s.how_to_achieve !== '—'){
+          const how = document.createElement('div'); how.className='how-to';
+          how.innerHTML = `<strong>Как добиться:</strong> ${escapeHTML(s.how_to_achieve)}`; card.appendChild(how);
         }
 
-        renderStudies(sorted);
-    });
+        if(s.counters?.length){
+          const det = document.createElement('details'); det.className='counters';
+          const sum = document.createElement('summary'); sum.textContent = 'Контраргументы / Ограничения'; det.appendChild(sum);
+          const ul = document.createElement('ul');
+          for(const item of s.counters){ const li=document.createElement('li'); li.textContent=item; ul.appendChild(li); }
+          det.appendChild(ul); card.appendChild(det);
+        }
+
+        container.appendChild(card);
+      }
+    }
+
+    function kv(k,v){
+      const row = document.createElement('div'); row.className='kv';
+      const kEl = document.createElement('div'); kEl.className='k'; kEl.textContent=k;
+      const vEl = document.createElement('div'); vEl.className='v'; vEl.textContent=v; row.appendChild(kEl); row.appendChild(vEl); return row;
+    }
+
+    function debounce(fn,ms){ let t; return (...a)=>{ clearTimeout(t); t=setTimeout(()=>fn.apply(null,a),ms); } }
+    function escapeHTML(s){ return String(s).replace(/[&<>"']/g, m=>({"&":"&amp;","<":"&lt;",">":"&gt;","\"":"&quot;","'":"&#39;"}[m])); }
+
+    loadData();
 </script>
 </body>
 </html>
