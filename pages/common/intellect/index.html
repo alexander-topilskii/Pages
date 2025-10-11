@@ -1,0 +1,537 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Можно ли стать умнее? Обзор исследований</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: black;
+            color: #2c3e50;
+            margin: 0;
+            padding: 0;
+            line-height: 1.7;
+            position: relative;
+            overflow-x: hidden;
+        }
+        canvas#matrix {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -1;
+            opacity: 0.5; /* Полупрозрачный для видимости контента */
+        }
+        header {
+            text-align: center;
+            padding: 60px 20px;
+            background: rgba(255, 255, 255, 0.9);
+            border-bottom: 2px solid #4a90e2;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+            position: relative;
+            z-index: 1;
+        }
+        h1 {
+            color: #4a90e2;
+            font-size: 2.8em;
+            margin: 0;
+            text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.1);
+        }
+        .intro {
+            font-size: 1.2em;
+            max-width: 800px;
+            margin: 20px auto;
+            color: #34495e;
+        }
+        .sort-options {
+            text-align: center;
+            margin: 20px 0;
+            position: relative;
+            z-index: 1;
+        }
+        .sort-options label {
+            font-size: 1.1em;
+            color: #34495e;
+            margin-right: 10px;
+        }
+        .sort-options select {
+            padding: 8px;
+            font-size: 1em;
+            border: 1px solid #4a90e2;
+            border-radius: 5px;
+            background: white;
+        }
+        .container {
+            max-width: 1200px;
+            margin: 40px auto;
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+            gap: 30px;
+            padding: 0 20px;
+            position: relative;
+            z-index: 1;
+        }
+        .study-card {
+            background: #ffffff;
+            border-radius: 16px;
+            padding: 30px;
+            box-shadow: 0 6px 20px rgba(0, 0, 0, 0.08);
+            transition: transform 0.4s ease, box-shadow 0.4s ease;
+            position: relative;
+            overflow: hidden;
+        }
+        .study-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 5px;
+            background: linear-gradient(to right, #4a90e2, #9b59b6);
+            transition: height 0.4s ease;
+        }
+        .study-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 12px 30px rgba(0, 0, 0, 0.15);
+        }
+        .study-card:hover::before {
+            height: 10px;
+        }
+        .study-title {
+            font-size: 1.5em;
+            color: #2c3e50;
+            margin-bottom: 5px;
+            border-bottom: 3px solid #4a90e2;
+            padding-bottom: 10px;
+        }
+        .study-authors {
+            font-size: 1.2em;
+            color: #34495e;
+            margin-bottom: 20px;
+        }
+        .study-details {
+            list-style: none;
+            padding: 0;
+            margin: 0 0 25px 0;
+        }
+        .study-details li {
+            margin-bottom: 12px;
+            font-size: 1.1em;
+            display: flex;
+            align-items: flex-start;
+            flex-direction: column;
+        }
+        .study-details li strong {
+            color: #4a90e2;
+            min-width: 150px;
+            flex-shrink: 0;
+            margin-bottom: 5px;
+        }
+        .how-to {
+            background: #e8f4fd;
+            border-left: 4px solid #4a90e2;
+            padding: 15px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            font-style: italic;
+        }
+        .counters {
+            background: #fdf2f2;
+            border-left: 4px solid #e74c3c;
+            padding: 15px;
+            border-radius: 8px;
+        }
+        .counters h3 {
+            font-size: 1.2em;
+            color: #e74c3c;
+            margin: 0 0 10px 0;
+        }
+        .counters ul {
+            list-style-type: disc;
+            padding-left: 20px;
+            margin: 0;
+        }
+        footer {
+            text-align: center;
+            padding: 30px 0;
+            color: #7f8c8d;
+            font-size: 0.95em;
+            background: rgba(255, 255, 255, 0.8);
+            border-top: 1px solid #e0e0e0;
+            position: relative;
+            z-index: 1;
+        }
+        /* Мобильная адаптация */
+        @media (max-width: 768px) {
+            header {
+                padding: 40px 15px;
+            }
+            h1 {
+                font-size: 2.2em;
+            }
+            .intro {
+                font-size: 1em;
+                padding: 0 15px;
+            }
+            .container {
+                grid-template-columns: 1fr;
+                gap: 20px;
+                padding: 0 15px;
+            }
+            .study-card {
+                padding: 20px;
+            }
+            .study-title {
+                font-size: 1.3em;
+            }
+            .study-authors {
+                font-size: 1em;
+            }
+            .study-details li {
+                font-size: 1em;
+            }
+            .study-details li strong {
+                min-width: auto;
+                margin-bottom: 3px;
+            }
+        }
+        @media (max-width: 480px) {
+            h1 {
+                font-size: 1.8em;
+            }
+            .intro {
+                font-size: 0.9em;
+            }
+            .study-card {
+                padding: 15px;
+            }
+        }
+    </style>
+</head>
+<body>
+<canvas id="matrix"></canvas>
+<header>
+    <h1>Можно ли стать умнее? Ключевые исследования</h1>
+    <p class="intro">Обзор научных работ по повышению интеллекта: эффекты, методы, ограничения. Данные загружаются из JSON для удобного обновления. Для каждого исследования указано, как добиться эффекта.</p>
+</header>
+<div class="sort-options">
+    <label for="sort-select">Сортировать по:</label>
+    <select id="sort-select">
+        <option value="default">По умолчанию</option>
+        <option value="sample_size">Размеру выборки (убыв.)</option>
+        <option value="effect">Наибольшему эффекту (убыв.)</option>
+        <option value="adults">На взрослых (взрослые сверху)</option>
+    </select>
+</div>
+<div class="container" id="studies-container"></div>
+<footer>
+    <p>Данные можно обновить, изменив объект JSON в скрипте. Дизайн: градиентный фон, анимированные карточки для оригинальности. Адаптировано для мобильных устройств. Добавлен эффект Матрицы на фоне.</p>
+</footer>
+<script>
+    // Матрица эффект
+    const canvas = document.getElementById('matrix');
+    const ctx = canvas.getContext('2d');
+
+    canvas.height = window.innerHeight;
+    canvas.width = window.innerWidth;
+
+    const symbols = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789@#$%^&*()_+-=[]{}|;:,.<>?'.split('');
+
+    const fontSize = 16;
+    const columns = canvas.width / fontSize;
+
+    const drops = [];
+    for (let x = 0; x < columns; x++) {
+        drops[x] = 1;
+    }
+
+    function draw() {
+        ctx.fillStyle = 'rgba(0, 0, 0, 0.05)';
+        ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+        ctx.fillStyle = '#0F0';
+        ctx.font = fontSize + 'px arial';
+
+        for (let i = 0; i < drops.length; i++) {
+            const text = symbols[Math.floor(Math.random() * symbols.length)];
+            ctx.fillText(text, i * fontSize, drops[i] * fontSize);
+
+            if (drops[i] * fontSize > canvas.height && Math.random() > 0.975) {
+                drops[i] = 0;
+            }
+
+            drops[i]++;
+        }
+    }
+
+    setInterval(draw, 33);
+
+    window.addEventListener('resize', () => {
+        canvas.height = window.innerHeight;
+        canvas.width = window.innerWidth;
+    });
+
+    // Данные исследований
+    const data = {
+        "studies": [
+            {
+                "title": "Мета-анализ: Образование и IQ",
+                "authors": "Ritchie and Tucker-Drob",
+                "year": 2018,
+                "sample_size": ">600 000",
+                "sample_num": 600000,
+                "design": "Мета-анализ 42 исследований",
+                "age_group": "Разные возраста",
+                "adult_priority": 2, // 0 - дети, 1 - подростки, 2 - взрослые/разные, 3 - пожилые
+                "effect": "+3,4 пункта IQ на дополнительный год образования; эффект сохраняется во взрослой жизни",
+                "effect_num": 3.4,
+                "how_to_achieve": "Проходите дополнительные курсы или получайте высшее образование систематически.",
+                "counters": ["В обзоре не упомянуты значимые контраргументы."]
+            },
+            {
+                "title": "Влияние образования на IQ в датской когорте",
+                "authors": "Hegelund et al.",
+                "year": 2020,
+                "sample_size": "~30 000",
+                "sample_num": 30000,
+                "design": "Лонгитюдное когортное исследование",
+                "age_group": "Молодые взрослые",
+                "adult_priority": 2,
+                "effect": "+4,3 пункта IQ на год образования в молодости",
+                "effect_num": 4.3,
+                "how_to_achieve": "Увеличивайте годы обучения в школе или вузе, фокусируясь на академических предметах.",
+                "counters": ["Ограничено датской популяцией; возможное влияние социально-экономического статуса."]
+            },
+            {
+                "title": "Эффекты школьного обучения на интеллект (ABCD Study)",
+                "authors": "Разные (ABCD Consortium)",
+                "year": "Недавнее (после 2020)",
+                "sample_size": "6567",
+                "sample_num": 6567,
+                "design": "Регрессионный дизайн прерывистости",
+                "age_group": "Дети 8–11 лет",
+                "adult_priority": 0,
+                "effect": "+0,136 SD (~2 пункта IQ) на год обучения; сильнее для рабочей памяти",
+                "effect_num": 2,
+                "how_to_achieve": "Регулярно посещайте школу, особенно в младших классах, для накопления знаний.",
+                "counters": ["Только 3–5 классы; не компенсирует генетические/социальные различия."]
+            },
+            {
+                "title": "Тренировка креативного решения проблем",
+                "authors": "Kvashchev",
+                "year": "1970-е",
+                "sample_size": "~300",
+                "sample_num": 300,
+                "design": "Эксперимент с контрольной группой; 3 года еженедельных занятий",
+                "age_group": "Подростки 15–19 лет",
+                "adult_priority": 1,
+                "effect": "+10–15 пунктов IQ; до +27 на тестах флюидного интеллекта; сохраняется 1 год (Cohen's d=0,67)",
+                "effect_num": 15,
+                "how_to_achieve": "Еженедельно практикуйте креативные задачи в математике/науке в течение 3 лет.",
+                "counters": ["Старая работа; возможные методологические biases в советских исследованиях."]
+            },
+            {
+                "title": "Обзор тренировки рабочей памяти",
+                "authors": "Buschkuehl & Jaeggi",
+                "year": 2010,
+                "sample_size": "Разные (обзор 10+ исследований)",
+                "sample_num": 0, // Для обзоров - 0
+                "design": "Обзор литературы, включая RCT вроде Jaeggi et al. (2008: N=69, 8–19 дней dual n-back)",
+                "age_group": "Взрослые ~26 лет (пример Jaeggi)",
+                "adult_priority": 2,
+                "effect": "Рост флюидного IQ (например, +5–10 пунктов на Raven's Matrices); дозозависимый",
+                "effect_num": 10,
+                "how_to_achieve": "Ежедневно тренируйте dual n-back по 25 мин в течение 8–19 дней.",
+                "counters": ["Haier (2014): Нет общего роста IQ из-за методологических проблем; Redick et al. (2013): Нет трансфера в плацебо-контролируемом RCT; Colom et al. (2013): Улучшения в памяти, но не в интеллекте."]
+            },
+            {
+                "title": "Тренировка переключения задач",
+                "authors": "Karbach & Kray",
+                "year": 2009,
+                "sample_size": "168",
+                "sample_num": 168,
+                "design": "Эксперимент; 4 дня тренировок",
+                "age_group": "Все возраста",
+                "adult_priority": 2,
+                "effect": "Рост IQ на Raven's SPM",
+                "effect_num": 0, // Не указано число, ставим 0
+                "how_to_achieve": "Практикуйте task-switching упражнения по 4 дня.",
+                "counters": ["Короткий срок; ограниченный трансфер на общий IQ."]
+            },
+            {
+                "title": "Тренировка видеоигрой для пожилых",
+                "authors": "Basak et al.",
+                "year": 2008,
+                "sample_size": "39",
+                "sample_num": 39,
+                "design": "RCT; 4–5 недель (игра Rise of Nations)",
+                "age_group": "Пожилые",
+                "adult_priority": 3,
+                "effect": "Улучшение флюидного IQ",
+                "effect_num": 0,
+                "how_to_achieve": "Играйте в стратегические видеоигры по 4–5 недель.",
+                "counters": ["Маленькая выборка; специфично для стратегических игр."]
+            },
+            {
+                "title": "Интеллектуальные активности для пожилых",
+                "authors": "Stine-Morrow et al.",
+                "year": 2008,
+                "sample_size": "150",
+                "sample_num": 150,
+                "design": "Групповые; 6 месяцев",
+                "age_group": "Пожилые",
+                "adult_priority": 3,
+                "effect": "Улучшение флюидных способностей",
+                "effect_num": 0,
+                "how_to_achieve": "Участвуйте в групповых интеллектуальных занятиях по 6 месяцев.",
+                "counters": ["Групповая динамика может искажать результаты."]
+            },
+            {
+                "title": "Мета-анализ аэробных упражнений",
+                "authors": "Colcombe & Kramer",
+                "year": 2003,
+                "sample_size": "Разные",
+                "sample_num": 0,
+                "design": "Мета-анализ",
+                "age_group": "Пожилые",
+                "adult_priority": 3,
+                "effect": "+1–3 пункта IQ эквивалента от 6–12 месяцев упражнений; через BDNF",
+                "effect_num": 3,
+                "how_to_achieve": "Занимайтесь аэробикой (ходьба, бег) по 6–12 месяцев.",
+                "counters": ["Главно исполнительные функции; меньше доказательств для молодых."]
+            },
+            {
+                "title": "Физическая активность и когнитивные методы",
+                "authors": "UC Davis Study",
+                "year": 2022,
+                "sample_size": "Не указано",
+                "sample_num": 0,
+                "design": "Эксперимент с МРТ",
+                "age_group": "Низкоуспевающие индивиды",
+                "adult_priority": 2,
+                "effect": "Улучшение флюидного интеллекта; изменения нейронной активности",
+                "effect_num": 0,
+                "how_to_achieve": "Комбинируйте упражнения с когнитивными тренировками.",
+                "counters": ["Специфично для низкоуспевающих; нужна репликация."]
+            },
+            {
+                "title": "Уроки музыки и IQ",
+                "authors": "Schellenberg",
+                "year": 2004,
+                "sample_size": "Не указано (исследование детей)",
+                "sample_num": 0,
+                "design": "RCT",
+                "age_group": "Дети",
+                "adult_priority": 0,
+                "effect": "+7 пунктов IQ от регулярных уроков",
+                "effect_num": 7,
+                "how_to_achieve": "Берите регулярные уроки музыки для развития внимания и памяти.",
+                "counters": ["Может быть из-за внимания/мотивации, а не музыки."]
+            },
+            {
+                "title": "Генетика и окружение в IQ",
+                "authors": "Plomin et al.",
+                "year": 2018,
+                "sample_size": "Разные",
+                "sample_num": 0,
+                "design": "Обзор близнецовых/усыновительских исследований",
+                "age_group": "Разные",
+                "adult_priority": 2,
+                "effect": "Генетика 40–80% вариаций; окружение усиливает потенциал (питание, отсутствие токсинов)",
+                "effect_num": 0,
+                "how_to_achieve": "Поддерживайте здоровое питание и избегайте токсинов для реализации генетического потенциала.",
+                "counters": ["Подчеркивает пределы пластичности; не прямое вмешательство."]
+            },
+            {
+                "title": "Эффект Флинна",
+                "authors": "Flynn",
+                "year": 1987,
+                "sample_size": "Популяционный уровень",
+                "sample_num": 0,
+                "design": "Анализ трендов/мета-анализы",
+                "age_group": "Все",
+                "adult_priority": 2,
+                "effect": "+3 пункта IQ за десятилетие от улучшения образования/питания/здравоохранения",
+                "effect_num": 3,
+                "how_to_achieve": "Улучшайте общие условия жизни: образование, питание, здоровье.",
+                "counters": ["Общественный, не индивидуальный; недавние плато в некоторых странах."]
+            }
+        ]
+    };
+
+    let studies = data.studies;
+
+    function renderStudies(sortedStudies) {
+        const container = document.getElementById('studies-container');
+        container.innerHTML = '';
+        sortedStudies.forEach(study => {
+            const card = document.createElement('div');
+            card.className = 'study-card';
+
+            const title = document.createElement('div');
+            title.className = 'study-title';
+            title.textContent = study.title;
+            card.appendChild(title);
+
+            const authors = document.createElement('div');
+            authors.className = 'study-authors';
+            authors.textContent = `${study.authors}, ${study.year}`;
+            card.appendChild(authors);
+
+            const details = document.createElement('ul');
+            details.className = 'study-details';
+            details.innerHTML = `
+                <li><strong>Размер выборки:</strong> ${study.sample_size}</li>
+                <li><strong>Дизайн:</strong> ${study.design}</li>
+                <li><strong>Возрастная группа:</strong> ${study.age_group}</li>
+                <li><strong>Эффект:</strong> ${study.effect}</li>
+            `;
+            card.appendChild(details);
+
+            const howTo = document.createElement('div');
+            howTo.className = 'how-to';
+            howTo.innerHTML = `<strong>Как добиться:</strong> ${study.how_to_achieve}`;
+            card.appendChild(howTo);
+
+            const countersDiv = document.createElement('div');
+            countersDiv.className = 'counters';
+            const countersTitle = document.createElement('h3');
+            countersTitle.textContent = 'Контраргументы / Ограничения';
+            countersDiv.appendChild(countersTitle);
+            const countersList = document.createElement('ul');
+            study.counters.forEach(counter => {
+                const li = document.createElement('li');
+                li.textContent = counter;
+                countersList.appendChild(li);
+            });
+            countersDiv.appendChild(countersList);
+            card.appendChild(countersDiv);
+
+            container.appendChild(card);
+        });
+    }
+
+    // Изначальный рендер
+    renderStudies(studies);
+
+    // Сортировка
+    const sortSelect = document.getElementById('sort-select');
+    sortSelect.addEventListener('change', (e) => {
+        const value = e.target.value;
+        let sorted = [...studies];
+
+        if (value === 'sample_size') {
+            sorted.sort((a, b) => b.sample_num - a.sample_num);
+        } else if (value === 'effect') {
+            sorted.sort((a, b) => b.effect_num - a.effect_num);
+        } else if (value === 'adults') {
+            sorted.sort((a, b) => b.adult_priority - a.adult_priority);
+        }
+
+        renderStudies(sorted);
+    });
+</script>
+</body>
+</html>

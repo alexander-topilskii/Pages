@@ -24,7 +24,13 @@
           "title": "Цензура в науке",
           "emoji": "🗝️",
           "desc": "Цензура в науке",
-          "path": "pages/common/index.html"
+          "path": "pages/common/censored/index.html"
+        },
+        {
+          "title": "Прокачка интелекта",
+          "emoji": "🧠️",
+          "desc": "Прокачка интелекта",
+          "path": "pages/common/intellect/index.html"
         },
         {
           "title": "Голубые зановески",
