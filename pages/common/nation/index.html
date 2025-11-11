@@ -1,0 +1,225 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Победить Америку и выиграть грин-карту — гид по культурной двойственности</title>
+    <style>
+        :root{
+            --bg:#fafafa;--ink:#0e1116;--muted:#5b646d;--accent:#2563eb;--accent-2:#7c3aed;
+            --card:#ffffff;--line:#e6e8ee;--shadow:0 10px 30px rgba(2,6,23,.08);
+            --grad:linear-gradient(135deg,#e0eaff, #fff0f7 40%, #f7faff);
+        }
+        *{box-sizing:border-box}
+        html,body{margin:0;padding:0;background:var(--bg);color:var(--ink);font:16px/1.65 Inter, ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, "Helvetica Neue", Arial}
+        .wrap{max-width:1024px;margin:0 auto;padding:36px 20px}
+        header.hero{position:relative;overflow:hidden;border-radius:20px;background:var(--grad);box-shadow:var(--shadow);padding:38px 24px;margin-bottom:24px}
+        .title{font-size:34px;line-height:1.15;margin:0 0 6px;font-weight:800;letter-spacing:.2px}
+        .subtitle{color:var(--muted);font-size:16px;margin:0}
+        .meta{display:flex;gap:10px;flex-wrap:wrap;margin-top:14px}
+        .badge{border:1px solid var(--line);color:var(--muted);padding:6px 10px;border-radius:999px;font-size:12px;background:#fff8}
+
+        /* TOC */
+        .toc{position:sticky;top:10px;background:var(--card);border:1px solid var(--line);border-radius:16px;padding:14px 14px;box-shadow:var(--shadow)}
+        .toc h3{margin:0 0 8px;font-size:13px;color:var(--muted);text-transform:uppercase;letter-spacing:.08em}
+        .toc a{display:block;padding:6px 8px;border-radius:10px;color:var(--ink);text-decoration:none;font-size:14px}
+        .toc a:hover{background:#f3f5ff}
+
+        /* Sections */
+        section{background:var(--card);border:1px solid var(--line);border-radius:18px;padding:22px 18px;box-shadow:var(--shadow);margin:16px 0}
+        h2{font-size:22px;margin:0 0 8px}
+        h3{font-size:18px;margin:14px 0 6px}
+        p{margin:10px 0}
+        ul,ol{margin:8px 0 8px 18px}
+        li{margin:6px 0}
+        a{color:var(--accent);text-decoration:none}
+        a:hover{text-decoration:underline}
+
+        /* Cards grid */
+        .grid{display:grid;gap:12px}
+        .cols-2{grid-template-columns:repeat(auto-fit,minmax(280px,1fr))}
+
+        /* Callouts */
+        .callout{border:1px dashed var(--line);background:#f8fafc;border-radius:14px;padding:12px 14px}
+        .callout strong{color:#111827}
+
+        /* Table */
+        table{width:100%;border-collapse:collapse}
+        th,td{border:1px solid var(--line);padding:10px;vertical-align:top}
+        th{background:#f6f7fb}
+
+        /* Animation */
+        [data-reveal]{opacity:0;transform:translateY(10px);animation:reveal .7s cubic-bezier(.2,.7,.2,1) forwards}
+        [data-delay="1"]{animation-delay:.05s}
+        [data-delay="2"]{animation-delay:.1s}
+        [data-delay="3"]{animation-delay:.15s}
+        [data-delay="4"]{animation-delay:.2s}
+        @keyframes reveal{to{opacity:1;transform:translateY(0)}}
+
+        /* Accordion */
+        details{border:1px solid var(--line);border-radius:12px;padding:10px 12px;background:#fcfcff}
+        details+details{margin-top:8px}
+        summary{cursor:pointer;font-weight:600}
+
+        /* Footer */
+        footer{color:var(--muted);font-size:13px;margin:18px 0;text-align:center}
+
+        /* Layout */
+        .layout{display:grid;grid-template-columns:260px 1fr;gap:16px}
+        @media (max-width:900px){.layout{grid-template-columns:1fr}}
+
+        /* Chips */
+        .chip{display:inline-flex;align-items:center;gap:6px;border:1px solid var(--line);border-radius:999px;padding:6px 10px;background:#fff}
+        .chip i{width:18px;height:18px;display:inline-flex;align-items:center;justify-content:center;border-radius:999px;background:#eef2ff}
+    </style>
+</head>
+<body>
+<div class="wrap">
+    <header class="hero" data-reveal>
+        <h1 class="title">Победить Америку и выиграть грин‑карту</h1>
+        <p class="subtitle">Почему в российском сознании легко уживаются патриотическая бравада и желание «жить как на Западе». Короткий гид без жаргона.</p>
+        <div class="meta">
+            <span class="badge">⏱ 6–8 минут чтения</span>
+            <span class="badge">🎯 Введение для новичков</span>
+            <span class="badge">🧭 Ссылки на чтение в конце</span>
+        </div>
+    </header>
+
+    <div class="layout">
+        <nav class="toc" data-reveal data-delay="1">
+            <h3>Навигация</h3>
+            <a href="#start">С чего начать</a>
+            <a href="#pairs">Пары противоречий</a>
+            <a href="#why">Почему так устроено</a>
+            <a href="#domains">Где это видно</a>
+            <a href="#compare">Похоже у других</a>
+            <a href="#faq">FAQ для новичков</a>
+            <a href="#read">Список литературы</a>
+        </nav>
+
+        <main>
+            <section id="start" data-reveal>
+                <h2>С чего начать</h2>
+                <p><strong>Короткая идея:</strong> в России исторически сосуществуют две системы правил: официальная и бытовая. Человек может искренне поддерживать государство и одновременно ругать его практики. Это не лицемерие, а <em>рабочая стратегия</em> жизни в неоднородных институтах.</p>
+                <div class="grid cols-2">
+                    <div class="callout"><strong>Образ-помощник:</strong> как переключатель режимов. Публично — «режим символов и ритуалов», приватно — «режим здравого смысла и связей».</div>
+                    <div class="callout"><strong>Запомнить:</strong> двойственность ≠ слабость характера. Это адаптация к противоречивым сигналам среды.</div>
+                </div>
+            </section>
+
+            <section id="pairs" data-reveal data-delay="1">
+                <h2>Ключевые пары противоречий</h2>
+                <table>
+                    <thead><tr><th>Аспект</th><th>Пара</th><th>Как ощущается в жизни</th></tr></thead>
+                    <tbody>
+                    <tr><td>Власть</td><td>«Сильный лидер» ↔ недоверие к чиновникам</td><td>Уважение к символам при критике «как это работает».</td></tr>
+                    <tr><td>Свобода</td><td>Личная автономия ↔ опека государства</td><td>«Не мешайте» и одновременно «помогите решить».</td></tr>
+                    <tr><td>Закон</td><td>Буква ↔ «по совести»</td><td>Процедуры важны, но справедливость — важнее.</td></tr>
+                    <tr><td>Запад</td><td>Технологическое восхищение ↔ ценностная критика</td><td>Пользоваться «ихним», но «жить по-нашему».</td></tr>
+                    <tr><td>Экономика</td><td>Почёт труда ↔ подозрение к богатству</td><td>«Работай честно», но «богатство — подозрительно».</td></tr>
+                    <tr><td>Будущее</td><td>Фатализм ↔ миссия</td><td>«Как выйдет» и «мы ещё всем покажем».</td></tr>
+                    <tr><td>Этничность</td><td>Имперский универсализм ↔ иерархия «своих»</td><td>«Все свои», но «свои — по рангу».</td></tr>
+                    </tbody>
+                </table>
+            </section>
+
+            <section id="why" data-reveal data-delay="2">
+                <h2>Почему так устроено</h2>
+                <div class="grid cols-2">
+                    <div class="callout">
+                        <strong>Наследие империи и позднего социализма.</strong>
+                        <p>Официальная идеология и неформальные правила жили параллельно. Люди привыкли «читать между строк» и держать две системы координат.</p>
+                    </div>
+                    <div class="callout">
+                        <strong>Множественные модерности.</strong>
+                        <p>Модернизация шла рывками. В итоге — гибрид: западные технологии + местные коды смысла.</p>
+                    </div>
+                    <div class="callout">
+                        <strong>Когнитивная экономия.</strong>
+                        <p>Переключение между кодами снижает трение в противоречивой среде и повышает выживаемость.</p>
+                    </div>
+                    <div class="callout">
+                        <strong>Публичное и частное «я».</strong>
+                        <p>Публично — лояльность, приватно — критическое мышление. Оба режима искренни, но контекстны.</p>
+                    </div>
+                </div>
+            </section>
+
+            <section id="domains" data-reveal data-delay="3">
+                <h2>Где это видно в повседневности</h2>
+                <ul>
+                    <li class="chip"><i>🎖️</i> Празднуем государственные символы, но не верим местной администрации.</li>
+                    <li class="chip"><i>⚖️</i> Признаём суд, но считаем «по справедливости» важнее формальности.</li>
+                    <li class="chip"><i>📱</i> Любим западные гаджеты и сервисы, критикуем «их ценности».</li>
+                    <li class="chip"><i>💼</i> Уважаем труд, но подозреваем «слишком успешных».</li>
+                    <li class="chip"><i>🌍</i> «Победить Америку» и одновременно «выиграть грин‑карту» — формула раскола между коллективным и личным.</li>
+                </ul>
+            </section>
+
+            <section id="compare" data-reveal>
+                <h2>Кому это ещё знакомо</h2>
+                <table>
+                    <thead><tr><th>Страна</th><th>Двойственность</th><th>Короткая формула</th></tr></thead>
+                    <tbody>
+                    <tr><td>Китай</td><td>Конфуцианская иерархия ↔ рынок</td><td>Лояльность системе, частная западнизация</td></tr>
+                    <tr><td>Турция</td><td>Ислам ↔ секуляризм</td><td>Антизападная риторика, западные практики</td></tr>
+                    <tr><td>Иран</td><td>Революция ↔ модерн</td><td>Публичный конформизм, приватная свобода</td></tr>
+                    <tr><td>Польша/Венгрия</td><td>Нация ↔ ЕС</td><td>Консервативный дискурс, мобильность в ЕС</td></tr>
+                    </tbody>
+                </table>
+            </section>
+
+            <section id="faq" data-reveal>
+                <h2>FAQ для новичков</h2>
+                <details open>
+                    <summary>Это лицемерие?</summary>
+                    <p>Нет. Это адаптация. При противоречивых правилах рационально использовать оба кода.</p>
+                </details>
+                <details>
+                    <summary>Почему это не «пройдёт само»?</summary>
+                    <p>Пока среда подаёт смешанные сигналы, двойственность остаётся эффективной стратегией.</p>
+                </details>
+                <details>
+                    <summary>Значит, изменений не бывает?</summary>
+                    <p>Бывают. Когда сигналы институтов выравниваются, двойственность отступает. История это знает.</p>
+                </details>
+            </section>
+
+            <section id="read" data-reveal>
+                <h2>Что читать дальше</h2>
+                <p class="callout"><strong>Быстрый старт:</strong> Лотман «Культура и взрыв» (о переключателях культурных кодов) и Эткинд «Внутренняя колонизация» (о гибридной идентичности).</p>
+                <ol>
+                    <li>Бердяев Н. А. <em>Русская идея</em>; <em>Судьба России</em>.</li>
+                    <li>Чаадаев П. Я. <em>Философические письма</em>.</li>
+                    <li>Лотман Ю. М. <em>Семиосфера</em>; <em>Культура и взрыв</em>.</li>
+                    <li>Лосев А. Ф. <em>Диалектика мифа</em>.</li>
+                    <li>Соловьёв В. С. <em>Три речи в память Достоевского</em>.</li>
+                    <li>Горшкова Л. А. «Дуализм российского менталитета…» (статья).</li>
+                    <li>Коробков Ю. Д. <em>Mental bases of modern Russian society</em> (статья).</li>
+                    <li>Топоров В. Н. «О менталитете русского человека».</li>
+                    <li>Леонтьев А. Е. <em>Психология российского человека</em>.</li>
+                    <li>Эткинд А. <em>Внутренняя колонизация</em>.</li>
+                    <li>Eisenstadt S. N. <em>Multiple Modernities</em>.</li>
+                    <li>Kotkin S. <em>Magnetic Mountain</em>.</li>
+                    <li>Verdery K. <em>What Was Socialism, and What Comes Next?</em>.</li>
+                </ol>
+            </section>
+
+            <footer>Мини‑справочник без перегруза. Используйте как вводную перед глубинным чтением.</footer>
+        </main>
+    </div>
+</div>
+
+<script>
+    // Простое появление при прокрутке
+    const onScroll=()=>{
+        document.querySelectorAll('[data-reveal]').forEach(el=>{
+            const r=el.getBoundingClientRect();
+            if(r.top<window.innerHeight-80) el.style.animationPlayState='running';
+        })
+    };
+    window.addEventListener('scroll',onScroll,{passive:true});
+    window.addEventListener('load',onScroll);
+</script>
+</body>
+</html>
