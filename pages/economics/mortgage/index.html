@@ -1,0 +1,602 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8" />
+    <title>Ипотечный калькулятор (пример для Кипра)</title>
+    <style>
+        :root {
+            --bg: #0f172a;
+            --bg-card: #111827;
+            --accent: #38bdf8;
+            --accent-soft: rgba(56, 189, 248, 0.14);
+            --text: #e5e7eb;
+            --text-muted: #9ca3af;
+            --border: #1f2937;
+            --danger: #f97373;
+            --radius-lg: 14px;
+            --radius-sm: 8px;
+        }
+
+        * {
+            box-sizing: border-box;
+            font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+        }
+
+        body {
+            margin: 0;
+            padding: 24px;
+            background: radial-gradient(circle at top, #1e293b 0, #020617 55%);
+            color: var(--text);
+        }
+
+        h1 {
+            font-size: 24px;
+            margin-bottom: 8px;
+        }
+
+        h2 {
+            font-size: 20px;
+            margin-top: 24px;
+            margin-bottom: 8px;
+        }
+
+        p {
+            color: var(--text-muted);
+            margin: 4px 0 8px;
+            max-width: 800px;
+        }
+
+        .layout {
+            display: grid;
+            grid-template-columns: 2fr 1.2fr;
+            gap: 24px;
+            align-items: flex-start;
+        }
+
+        @media (max-width: 960px) {
+            .layout {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        .card {
+            background: radial-gradient(circle at top left, rgba(56, 189, 248, 0.12), transparent 55%);
+            border-radius: var(--radius-lg);
+            padding: 18px 18px 16px;
+            border: 1px solid var(--border);
+            box-shadow: 0 18px 45px rgba(0, 0, 0, 0.55);
+            backdrop-filter: blur(18px);
+        }
+
+        .card--solid {
+            background: var(--bg-card);
+        }
+
+        .badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            padding: 2px 10px;
+            border-radius: 999px;
+            border: 1px solid rgba(148, 163, 184, 0.2);
+            font-size: 11px;
+            color: var(--text-muted);
+            margin-bottom: 6px;
+            background: rgba(15, 23, 42, 0.85);
+        }
+
+        .badge-dot {
+            width: 6px;
+            height: 6px;
+            border-radius: 999px;
+            background: var(--accent);
+            box-shadow: 0 0 0 4px rgba(56, 189, 248, 0.25);
+        }
+
+        .table-wrapper {
+            max-height: 460px;
+            overflow: auto;
+            border-radius: var(--radius-lg);
+            border: 1px solid var(--border);
+            background: rgba(15, 23, 42, 0.96);
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 13px;
+            min-width: 640px;
+        }
+
+        thead {
+            position: sticky;
+            top: 0;
+            background: linear-gradient(to bottom, #020617, #020617);
+            z-index: 1;
+        }
+
+        th, td {
+            padding: 8px 12px;
+            text-align: right;
+            border-bottom: 1px solid rgba(31, 41, 55, 0.8);
+            white-space: nowrap;
+        }
+
+        th:first-child,
+        td:first-child {
+            text-align: left;
+        }
+
+        th {
+            font-weight: 500;
+            color: var(--text-muted);
+            font-size: 11px;
+            letter-spacing: 0.06em;
+            text-transform: uppercase;
+            background: #020617;
+        }
+
+        tbody tr:nth-child(even) {
+            background: rgba(15, 23, 42, 0.82);
+        }
+
+        tbody tr:hover {
+            background: rgba(30, 64, 175, 0.25);
+        }
+
+        .pill {
+            display: inline-flex;
+            padding: 2px 8px;
+            border-radius: 999px;
+            font-size: 11px;
+            background: rgba(15, 23, 42, 0.8);
+            border: 1px solid rgba(55, 65, 81, 0.9);
+            color: var(--accent);
+        }
+
+        .grid {
+            display: grid;
+            gap: 10px;
+            margin-top: 4px;
+        }
+
+        .grid-2 {
+            grid-template-columns: repeat(2, minmax(0, 1fr));
+        }
+
+        @media (max-width: 720px) {
+            .grid-2 {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        label {
+            font-size: 12px;
+            color: var(--text-muted);
+            margin-bottom: 2px;
+            display: flex;
+            justify-content: space-between;
+        }
+
+        .input {
+            width: 100%;
+            border-radius: var(--radius-sm);
+            border: 1px solid rgba(75, 85, 99, 0.9);
+            background: rgba(15, 23, 42, 0.9);
+            color: var(--text);
+            padding: 7px 10px;
+            font-size: 13px;
+            outline: none;
+            transition: border 0.15s ease, box-shadow 0.15s ease, background 0.15s ease;
+        }
+
+        .input:focus {
+            border-color: var(--accent);
+            box-shadow: 0 0 0 1px rgba(56, 189, 248, 0.5);
+            background: rgba(15, 23, 42, 1);
+        }
+
+        .input::-webkit-outer-spin-button,
+        .input::-webkit-inner-spin-button {
+            -webkit-appearance: none;
+            margin: 0;
+        }
+
+        .input[type=number] {
+            -moz-appearance: textfield;
+        }
+
+        .btn {
+            margin-top: 8px;
+            width: 100%;
+            border-radius: 999px;
+            border: none;
+            padding: 8px 12px;
+            font-size: 13px;
+            font-weight: 500;
+            cursor: pointer;
+            background: radial-gradient(circle at top left, #38bdf8, #1d4ed8);
+            color: #0b1120;
+            box-shadow: 0 10px 30px rgba(56, 189, 248, 0.5);
+            transition: transform 0.12s ease, box-shadow 0.12s ease, filter 0.12s ease;
+        }
+
+        .btn:hover {
+            transform: translateY(-1px);
+            filter: brightness(1.05);
+            box-shadow: 0 16px 40px rgba(56, 189, 248, 0.7);
+        }
+
+        .btn:active {
+            transform: translateY(0);
+            box-shadow: 0 8px 24px rgba(56, 189, 248, 0.5);
+        }
+
+        .result {
+            margin-top: 10px;
+            padding: 10px 10px 9px;
+            border-radius: var(--radius-sm);
+            border: 1px solid rgba(55, 65, 81, 0.9);
+            background: radial-gradient(circle at top left, rgba(56, 189, 248, 0.12), rgba(15, 23, 42, 0.96));
+            font-size: 13px;
+            display: grid;
+            grid-template-columns: 1.2fr 1.2fr;
+            gap: 8px 16px;
+        }
+
+        @media (max-width: 600px) {
+            .result {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        .result-item {
+            display: flex;
+            flex-direction: column;
+            gap: 1px;
+        }
+
+        .result-label {
+            font-size: 11px;
+            color: var(--text-muted);
+            text-transform: uppercase;
+            letter-spacing: 0.08em;
+        }
+
+        .result-value {
+            font-size: 15px;
+        }
+
+        .result-value strong {
+            font-weight: 600;
+        }
+
+        .result-note {
+            grid-column: 1 / -1;
+            font-size: 11px;
+            color: var(--text-muted);
+            margin-top: 2px;
+        }
+
+        .result-value--danger {
+            color: var(--danger);
+        }
+
+        .chips-row {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 6px;
+            margin-top: 6px;
+        }
+
+        .chip {
+            border-radius: 999px;
+            padding: 2px 8px;
+            font-size: 11px;
+            border: 1px solid rgba(148, 163, 184, 0.4);
+            color: var(--text-muted);
+            background: rgba(15, 23, 42, 0.92);
+        }
+
+        .hint {
+            font-size: 11px;
+            color: var(--text-muted);
+            margin-top: 6px;
+        }
+
+        .hint strong {
+            color: var(--accent);
+            font-weight: 500;
+        }
+    </style>
+</head>
+<body>
+
+<div class="layout">
+    <!-- Слева: таблица сценариев -->
+    <section>
+        <div class="badge">
+            <span class="badge-dot"></span>
+            Примеры платежей (ставка 4.5% годовых, взнос 30%)
+        </div>
+        <h1>Сценарии: 200–350 тыс. € и сроки 10 / 15 / 20 лет</h1>
+        <p>
+            В таблице ниже: кредит = <strong>70% от цены объекта</strong>, ставка <strong>4.5% годовых</strong>.
+            Платёж рассчитан как аннуитетный. Можно использовать блок справа как живой калькулятор и играть параметрами.
+        </p>
+
+        <div class="table-wrapper card--solid">
+            <table>
+                <thead>
+                <tr>
+                    <th>Цена объекта, €</th>
+                    <th>Сумма кредита, €</th>
+                    <th>Срок, лет</th>
+                    <th>Месячный платёж, €</th>
+                    <th>Всего выплат, €</th>
+                    <th>Переплата, €</th>
+                </tr>
+                </thead>
+                <tbody>
+                <!-- 200k -->
+                <tr>
+                    <td>200&nbsp;000</td>
+                    <td>140&nbsp;000</td>
+                    <td><span class="pill">10</span></td>
+                    <td>1&nbsp;450.94</td>
+                    <td>174&nbsp;112.53</td>
+                    <td>34&nbsp;112.53</td>
+                </tr>
+                <tr>
+                    <td>200&nbsp;000</td>
+                    <td>140&nbsp;000</td>
+                    <td><span class="pill">15</span></td>
+                    <td>1&nbsp;070.99</td>
+                    <td>192&nbsp;778.31</td>
+                    <td>52&nbsp;778.31</td>
+                </tr>
+                <tr>
+                    <td>200&nbsp;000</td>
+                    <td>140&nbsp;000</td>
+                    <td><span class="pill">20</span></td>
+                    <td>885.71</td>
+                    <td>212&nbsp;570.19</td>
+                    <td>72&nbsp;570.19</td>
+                </tr>
+
+                <!-- 250k -->
+                <tr>
+                    <td>250&nbsp;000</td>
+                    <td>175&nbsp;000</td>
+                    <td><span class="pill">10</span></td>
+                    <td>1&nbsp;813.67</td>
+                    <td>217&nbsp;640.66</td>
+                    <td>42&nbsp;640.66</td>
+                </tr>
+                <tr>
+                    <td>250&nbsp;000</td>
+                    <td>175&nbsp;000</td>
+                    <td><span class="pill">15</span></td>
+                    <td>1&nbsp;338.74</td>
+                    <td>240&nbsp;972.89</td>
+                    <td>65&nbsp;972.89</td>
+                </tr>
+                <tr>
+                    <td>250&nbsp;000</td>
+                    <td>175&nbsp;000</td>
+                    <td><span class="pill">20</span></td>
+                    <td>1&nbsp;107.14</td>
+                    <td>265&nbsp;712.74</td>
+                    <td>90&nbsp;712.74</td>
+                </tr>
+
+                <!-- 300k -->
+                <tr>
+                    <td>300&nbsp;000</td>
+                    <td>210&nbsp;000</td>
+                    <td><span class="pill">10</span></td>
+                    <td>2&nbsp;176.41</td>
+                    <td>261&nbsp;168.79</td>
+                    <td>51&nbsp;168.79</td>
+                </tr>
+                <tr>
+                    <td>300&nbsp;000</td>
+                    <td>210&nbsp;000</td>
+                    <td><span class="pill">15</span></td>
+                    <td>1&nbsp;606.49</td>
+                    <td>289&nbsp;167.46</td>
+                    <td>79&nbsp;167.46</td>
+                </tr>
+                <tr>
+                    <td>300&nbsp;000</td>
+                    <td>210&nbsp;000</td>
+                    <td><span class="pill">20</span></td>
+                    <td>1&nbsp;328.56</td>
+                    <td>318&nbsp;855.29</td>
+                    <td>108&nbsp;855.29</td>
+                </tr>
+
+                <!-- 350k -->
+                <tr>
+                    <td>350&nbsp;000</td>
+                    <td>245&nbsp;000</td>
+                    <td><span class="pill">10</span></td>
+                    <td>2&nbsp;539.14</td>
+                    <td>304&nbsp;696.92</td>
+                    <td>59&nbsp;696.92</td>
+                </tr>
+                <tr>
+                    <td>350&nbsp;000</td>
+                    <td>245&nbsp;000</td>
+                    <td><span class="pill">15</span></td>
+                    <td>1&nbsp;874.23</td>
+                    <td>337&nbsp;362.04</td>
+                    <td>92&nbsp;362.04</td>
+                </tr>
+                <tr>
+                    <td>350&nbsp;000</td>
+                    <td>245&nbsp;000</td>
+                    <td><span class="pill">20</span></td>
+                    <td>1&nbsp;549.99</td>
+                    <td>371&nbsp;997.83</td>
+                    <td>126&nbsp;997.83</td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+        <div class="hint">
+            В реальном предложении ставка и максимально доступный срок зависят от <strong>банка, программы, возраста заёмщика и класса энергии объекта</strong>.
+        </div>
+    </section>
+
+    <!-- Справа: живой калькулятор -->
+    <section>
+        <div class="card">
+            <div class="badge">
+                <span class="badge-dot"></span>
+                Живой ипотечный калькулятор
+            </div>
+            <h2>Рассчитать свой сценарий</h2>
+            <p>Можно менять цену, срок, ставку и размер первоначального взноса. Все суммы примерные.</p>
+
+            <div class="grid grid-2">
+                <div>
+                    <label for="price">
+                        Стоимость объекта, €
+                        <span>например 300&nbsp;000</span>
+                    </label>
+                    <input id="price" class="input" type="number" value="300000" min="0" step="1000">
+                </div>
+
+                <div>
+                    <label for="downPct">
+                        Первоначальный взнос, %
+                        <span>обычно 30–40%</span>
+                    </label>
+                    <input id="downPct" class="input" type="number" value="30" min="0" max="99" step="1">
+                </div>
+
+                <div>
+                    <label for="years">
+                        Срок кредита, лет
+                        <span>напр. 20</span>
+                    </label>
+                    <input id="years" class="input" type="number" value="20" min="1" max="30" step="1">
+                </div>
+
+                <div>
+                    <label for="rate">
+                        Ставка, % годовых
+                        <span>например 4.5</span>
+                    </label>
+                    <input id="rate" class="input" type="number" value="4.5" min="0" step="0.1">
+                </div>
+            </div>
+
+            <button class="btn" id="calcBtn">Рассчитать платёж</button>
+
+            <div class="result" id="resultBox" style="display:none;">
+                <div class="result-item">
+                    <span class="result-label">Сумма кредита</span>
+                    <span class="result-value" id="loanOut">—</span>
+                </div>
+                <div class="result-item">
+                    <span class="result-label">Месячный платёж</span>
+                    <span class="result-value" id="monthlyOut">—</span>
+                </div>
+
+                <div class="result-item">
+                    <span class="result-label">Всего выплат за срок</span>
+                    <span class="result-value" id="totalOut">—</span>
+                </div>
+                <div class="result-item">
+                    <span class="result-label">Переплата (проценты)</span>
+                    <span class="result-value result-value--danger" id="overOut">—</span>
+                </div>
+
+                <div class="result-note" id="noteOut">
+                    —
+                </div>
+            </div>
+
+            <div class="chips-row">
+                <span class="chip">Формула аннуитета</span>
+                <span class="chip">Помесячные выплаты</span>
+                <span class="chip">Оценка переплаты</span>
+            </div>
+        </div>
+    </section>
+</div>
+
+<script>
+    function formatMoney(value) {
+        if (!isFinite(value)) return "—";
+        return value.toLocaleString("ru-RU", {
+            minimumFractionDigits: 2,
+            maximumFractionDigits: 2
+        });
+    }
+
+    function calculate() {
+        const priceInput = document.getElementById("price");
+        const downPctInput = document.getElementById("downPct");
+        const yearsInput = document.getElementById("years");
+        const rateInput = document.getElementById("rate");
+
+        const price = parseFloat(priceInput.value.replace(",", ".")) || 0;
+        const downPct = parseFloat(downPctInput.value.replace(",", ".")) || 0;
+        const years = parseInt(yearsInput.value, 10) || 0;
+        const rateAnnual = parseFloat(rateInput.value.replace(",", ".")) || 0;
+
+        const resultBox = document.getElementById("resultBox");
+        const loanOut = document.getElementById("loanOut");
+        const monthlyOut = document.getElementById("monthlyOut");
+        const totalOut = document.getElementById("totalOut");
+        const overOut = document.getElementById("overOut");
+        const noteOut = document.getElementById("noteOut");
+
+        if (price <= 0 || years <= 0) {
+            resultBox.style.display = "none";
+            return;
+        }
+
+        const downAmount = price * (downPct / 100);
+        const loan = price - downAmount;
+
+        const n = years * 12;
+        const r = rateAnnual / 100 / 12;
+
+        let monthly;
+        if (r === 0) {
+            monthly = loan / n;
+        } else {
+            monthly = loan * r / (1 - Math.pow(1 + r, -n));
+        }
+
+        const total = monthly * n;
+        const over = total - loan;
+
+        loanOut.textContent = formatMoney(loan) + " €";
+        monthlyOut.innerHTML = "<strong>" + formatMoney(monthly) + " €</strong>";
+        totalOut.textContent = formatMoney(total) + " €";
+        overOut.textContent = formatMoney(over) + " €";
+
+        const pctOfIncome = ""; // оставлено для возможного расширения
+
+        noteOut.textContent =
+            "При цене " + formatMoney(price) + " € и взносе " + downPct.toFixed(0) +
+            "% вы берёте кредит примерно на " + formatMoney(loan) +
+            " €. Срок " + years + " лет, ставка " + rateAnnual.toFixed(2) +
+            "% годовых, аннуитетный платёж.";
+
+        resultBox.style.display = "grid";
+    }
+
+    document.getElementById("calcBtn").addEventListener("click", calculate);
+
+    // Авторасчёт при загрузке
+    window.addEventListener("DOMContentLoaded", calculate);
+</script>
+
+</body>
+</html>

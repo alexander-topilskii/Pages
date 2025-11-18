@@ -68,6 +68,12 @@
           "emoji": "📚",
           "desc": "Дает удобный порядок чтения для работ о будушем",
           "path": "pages/economics/future_of_work_reading/index.html"
+        },
+        {
+          "title": "Ипотека на кипре",
+          "emoji": "📚",
+          "desc": "Калькулятор",
+          "path": "pages/economics/mortgage/index.html"
         }
       ]
     }
