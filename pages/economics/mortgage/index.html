@@ -5,14 +5,14 @@
     <title>Ипотечный калькулятор (пример для Кипра)</title>
     <style>
         :root {
-            --bg: #0f172a;
-            --bg-card: #111827;
-            --accent: #38bdf8;
-            --accent-soft: rgba(56, 189, 248, 0.14);
-            --text: #e5e7eb;
-            --text-muted: #9ca3af;
-            --border: #1f2937;
-            --danger: #f97373;
+            --bg: #f3f4f6;
+            --bg-card: #ffffff;
+            --accent: #2563eb;
+            --accent-soft: rgba(37, 99, 235, 0.06);
+            --text: #0f172a;
+            --text-muted: #6b7280;
+            --border: #e5e7eb;
+            --danger: #b91c1c;
             --radius-lg: 14px;
             --radius-sm: 8px;
         }
@@ -25,17 +25,17 @@
         body {
             margin: 0;
             padding: 24px;
-            background: radial-gradient(circle at top, #1e293b 0, #020617 55%);
+            background: radial-gradient(circle at top, #e5e7eb 0, #f9fafb 55%);
             color: var(--text);
         }
 
         h1 {
-            font-size: 24px;
+            font-size: 28px;
             margin-bottom: 8px;
         }
 
         h2 {
-            font-size: 20px;
+            font-size: 24px;
             margin-top: 24px;
             margin-bottom: 8px;
         }
@@ -60,16 +60,18 @@
         }
 
         .card {
-            background: radial-gradient(circle at top left, rgba(56, 189, 248, 0.12), transparent 55%);
+            background: radial-gradient(circle at top left, var(--accent-soft), #ffffff);
             border-radius: var(--radius-lg);
             padding: 18px 18px 16px;
             border: 1px solid var(--border);
-            box-shadow: 0 18px 45px rgba(0, 0, 0, 0.55);
-            backdrop-filter: blur(18px);
+            box-shadow: 0 14px 35px rgba(15, 23, 42, 0.08);
         }
 
         .card--solid {
-            background: var(--bg-card);
+            border-radius: var(--radius-lg);
+            border: 1px solid var(--border);
+            background: #ffffff;
+            box-shadow: 0 10px 28px rgba(15, 23, 42, 0.04);
         }
 
         .badge {
@@ -78,11 +80,11 @@
             gap: 6px;
             padding: 2px 10px;
             border-radius: 999px;
-            border: 1px solid rgba(148, 163, 184, 0.2);
-            font-size: 11px;
+            border: 1px solid rgba(148, 163, 184, 0.5);
+            font-size: 13px;
             color: var(--text-muted);
             margin-bottom: 6px;
-            background: rgba(15, 23, 42, 0.85);
+            background: #ffffff;
         }
 
         .badge-dot {
@@ -90,7 +92,7 @@
             height: 6px;
             border-radius: 999px;
             background: var(--accent);
-            box-shadow: 0 0 0 4px rgba(56, 189, 248, 0.25);
+            box-shadow: 0 0 0 4px rgba(37, 99, 235, 0.25);
         }
 
         .table-wrapper {
@@ -98,27 +100,27 @@
             overflow: auto;
             border-radius: var(--radius-lg);
             border: 1px solid var(--border);
-            background: rgba(15, 23, 42, 0.96);
+            background: #ffffff;
         }
 
         table {
             width: 100%;
             border-collapse: collapse;
-            font-size: 13px;
-            min-width: 640px;
+            font-size: 15px;
+            min-width: 720px;
         }
 
         thead {
             position: sticky;
             top: 0;
-            background: linear-gradient(to bottom, #020617, #020617);
+            background: #f9fafb;
             z-index: 1;
         }
 
         th, td {
             padding: 8px 12px;
             text-align: right;
-            border-bottom: 1px solid rgba(31, 41, 55, 0.8);
+            border-bottom: 1px solid #e5e7eb;
             white-space: nowrap;
         }
 
@@ -130,28 +132,32 @@
         th {
             font-weight: 500;
             color: var(--text-muted);
-            font-size: 11px;
+            font-size: 13px;
             letter-spacing: 0.06em;
             text-transform: uppercase;
-            background: #020617;
+            background: #f9fafb;
         }
 
         tbody tr:nth-child(even) {
-            background: rgba(15, 23, 42, 0.82);
+            background: #f9fafb;
+        }
+
+        tbody tr:nth-child(odd) {
+            background: #ffffff;
         }
 
         tbody tr:hover {
-            background: rgba(30, 64, 175, 0.25);
+            background: #e0f2fe;
         }
 
         .pill {
             display: inline-flex;
             padding: 2px 8px;
             border-radius: 999px;
-            font-size: 11px;
-            background: rgba(15, 23, 42, 0.8);
-            border: 1px solid rgba(55, 65, 81, 0.9);
-            color: var(--accent);
+            font-size: 13px;
+            background: #eff6ff;
+            border: 1px solid #bfdbfe;
+            color: #1d4ed8;
         }
 
         .grid {
@@ -171,29 +177,30 @@
         }
 
         label {
-            font-size: 12px;
+            font-size: 14px;
             color: var(--text-muted);
             margin-bottom: 2px;
             display: flex;
             justify-content: space-between;
+            gap: 8px;
         }
 
         .input {
             width: 100%;
             border-radius: var(--radius-sm);
-            border: 1px solid rgba(75, 85, 99, 0.9);
-            background: rgba(15, 23, 42, 0.9);
+            border: 1px solid #d1d5db;
+            background: #ffffff;
             color: var(--text);
             padding: 7px 10px;
-            font-size: 13px;
+            font-size: 15px;
             outline: none;
             transition: border 0.15s ease, box-shadow 0.15s ease, background 0.15s ease;
         }
 
         .input:focus {
             border-color: var(--accent);
-            box-shadow: 0 0 0 1px rgba(56, 189, 248, 0.5);
-            background: rgba(15, 23, 42, 1);
+            box-shadow: 0 0 0 1px rgba(37, 99, 235, 0.4);
+            background: #ffffff;
         }
 
         .input::-webkit-outer-spin-button,
@@ -211,36 +218,36 @@
             width: 100%;
             border-radius: 999px;
             border: none;
-            padding: 8px 12px;
-            font-size: 13px;
-            font-weight: 500;
+            padding: 10px 14px;
+            font-size: 15px;
+            font-weight: 600;
             cursor: pointer;
-            background: radial-gradient(circle at top left, #38bdf8, #1d4ed8);
-            color: #0b1120;
-            box-shadow: 0 10px 30px rgba(56, 189, 248, 0.5);
+            background: linear-gradient(to right, #60a5fa, #2563eb);
+            color: #f9fafb;
+            box-shadow: 0 10px 30px rgba(37, 99, 235, 0.35);
             transition: transform 0.12s ease, box-shadow 0.12s ease, filter 0.12s ease;
         }
 
         .btn:hover {
             transform: translateY(-1px);
             filter: brightness(1.05);
-            box-shadow: 0 16px 40px rgba(56, 189, 248, 0.7);
+            box-shadow: 0 16px 40px rgba(37, 99, 235, 0.45);
         }
 
         .btn:active {
             transform: translateY(0);
-            box-shadow: 0 8px 24px rgba(56, 189, 248, 0.5);
+            box-shadow: 0 8px 24px rgba(37, 99, 235, 0.35);
         }
 
         .result {
             margin-top: 10px;
             padding: 10px 10px 9px;
             border-radius: var(--radius-sm);
-            border: 1px solid rgba(55, 65, 81, 0.9);
-            background: radial-gradient(circle at top left, rgba(56, 189, 248, 0.12), rgba(15, 23, 42, 0.96));
-            font-size: 13px;
+            border: 1px solid #d1d5db;
+            background: #f1f5f9;
+            font-size: 15px;
             display: grid;
-            grid-template-columns: 1.2fr 1.2fr;
+            grid-template-columns: 1.1fr 1.1fr;
             gap: 8px 16px;
         }
 
@@ -257,29 +264,29 @@
         }
 
         .result-label {
-            font-size: 11px;
+            font-size: 12px;
             color: var(--text-muted);
             text-transform: uppercase;
             letter-spacing: 0.08em;
         }
 
         .result-value {
-            font-size: 15px;
+            font-size: 17px;
         }
 
         .result-value strong {
             font-weight: 600;
         }
 
-        .result-note {
-            grid-column: 1 / -1;
-            font-size: 11px;
-            color: var(--text-muted);
-            margin-top: 2px;
-        }
-
         .result-value--danger {
             color: var(--danger);
+        }
+
+        .result-note {
+            grid-column: 1 / -1;
+            font-size: 13px;
+            color: var(--text-muted);
+            margin-top: 2px;
         }
 
         .chips-row {
@@ -292,14 +299,14 @@
         .chip {
             border-radius: 999px;
             padding: 2px 8px;
-            font-size: 11px;
-            border: 1px solid rgba(148, 163, 184, 0.4);
+            font-size: 13px;
+            border: 1px solid rgba(148, 163, 184, 0.8);
             color: var(--text-muted);
-            background: rgba(15, 23, 42, 0.92);
+            background: #ffffff;
         }
 
         .hint {
-            font-size: 11px;
+            font-size: 13px;
             color: var(--text-muted);
             margin-top: 6px;
         }
@@ -321,8 +328,8 @@
         </div>
         <h1>Сценарии: 200–350 тыс. € и сроки 10 / 15 / 20 лет</h1>
         <p>
-            В таблице ниже: кредит = <strong>70% от цены объекта</strong>, ставка <strong>4.5% годовых</strong>.
-            Платёж рассчитан как аннуитетный. Можно использовать блок справа как живой калькулятор и играть параметрами.
+            В таблице ниже: кредит = <strong>70% от цены объекта</strong>, первоначальный взнос <strong>30%</strong>,
+            ставка <strong>4.5% годовых</strong>. Платёж рассчитан как аннуитетный.
         </p>
 
         <div class="table-wrapper card--solid">
@@ -330,6 +337,7 @@
                 <thead>
                 <tr>
                     <th>Цена объекта, €</th>
+                    <th>Первоначальный взнос, € (30%)</th>
                     <th>Сумма кредита, €</th>
                     <th>Срок, лет</th>
                     <th>Месячный платёж, €</th>
@@ -341,6 +349,7 @@
                 <!-- 200k -->
                 <tr>
                     <td>200&nbsp;000</td>
+                    <td>60&nbsp;000</td>
                     <td>140&nbsp;000</td>
                     <td><span class="pill">10</span></td>
                     <td>1&nbsp;450.94</td>
@@ -349,6 +358,7 @@
                 </tr>
                 <tr>
                     <td>200&nbsp;000</td>
+                    <td>60&nbsp;000</td>
                     <td>140&nbsp;000</td>
                     <td><span class="pill">15</span></td>
                     <td>1&nbsp;070.99</td>
@@ -357,6 +367,7 @@
                 </tr>
                 <tr>
                     <td>200&nbsp;000</td>
+                    <td>60&nbsp;000</td>
                     <td>140&nbsp;000</td>
                     <td><span class="pill">20</span></td>
                     <td>885.71</td>
@@ -367,6 +378,7 @@
                 <!-- 250k -->
                 <tr>
                     <td>250&nbsp;000</td>
+                    <td>75&nbsp;000</td>
                     <td>175&nbsp;000</td>
                     <td><span class="pill">10</span></td>
                     <td>1&nbsp;813.67</td>
@@ -375,6 +387,7 @@
                 </tr>
                 <tr>
                     <td>250&nbsp;000</td>
+                    <td>75&nbsp;000</td>
                     <td>175&nbsp;000</td>
                     <td><span class="pill">15</span></td>
                     <td>1&nbsp;338.74</td>
@@ -383,6 +396,7 @@
                 </tr>
                 <tr>
                     <td>250&nbsp;000</td>
+                    <td>75&nbsp;000</td>
                     <td>175&nbsp;000</td>
                     <td><span class="pill">20</span></td>
                     <td>1&nbsp;107.14</td>
@@ -393,6 +407,7 @@
                 <!-- 300k -->
                 <tr>
                     <td>300&nbsp;000</td>
+                    <td>90&nbsp;000</td>
                     <td>210&nbsp;000</td>
                     <td><span class="pill">10</span></td>
                     <td>2&nbsp;176.41</td>
@@ -401,6 +416,7 @@
                 </tr>
                 <tr>
                     <td>300&nbsp;000</td>
+                    <td>90&nbsp;000</td>
                     <td>210&nbsp;000</td>
                     <td><span class="pill">15</span></td>
                     <td>1&nbsp;606.49</td>
@@ -409,6 +425,7 @@
                 </tr>
                 <tr>
                     <td>300&nbsp;000</td>
+                    <td>90&nbsp;000</td>
                     <td>210&nbsp;000</td>
                     <td><span class="pill">20</span></td>
                     <td>1&nbsp;328.56</td>
@@ -419,6 +436,7 @@
                 <!-- 350k -->
                 <tr>
                     <td>350&nbsp;000</td>
+                    <td>105&nbsp;000</td>
                     <td>245&nbsp;000</td>
                     <td><span class="pill">10</span></td>
                     <td>2&nbsp;539.14</td>
@@ -427,6 +445,7 @@
                 </tr>
                 <tr>
                     <td>350&nbsp;000</td>
+                    <td>105&nbsp;000</td>
                     <td>245&nbsp;000</td>
                     <td><span class="pill">15</span></td>
                     <td>1&nbsp;874.23</td>
@@ -435,6 +454,7 @@
                 </tr>
                 <tr>
                     <td>350&nbsp;000</td>
+                    <td>105&nbsp;000</td>
                     <td>245&nbsp;000</td>
                     <td><span class="pill">20</span></td>
                     <td>1&nbsp;549.99</td>
@@ -506,9 +526,14 @@
                 </div>
 
                 <div class="result-item">
+                    <span class="result-label">Первоначальный взнос</span>
+                    <span class="result-value" id="downOut">—</span>
+                </div>
+                <div class="result-item">
                     <span class="result-label">Всего выплат за срок</span>
                     <span class="result-value" id="totalOut">—</span>
                 </div>
+
                 <div class="result-item">
                     <span class="result-label">Переплата (проценты)</span>
                     <span class="result-value result-value--danger" id="overOut">—</span>
@@ -522,6 +547,7 @@
             <div class="chips-row">
                 <span class="chip">Формула аннуитета</span>
                 <span class="chip">Помесячные выплаты</span>
+                <span class="chip">Первоначальный взнос от %</span>
                 <span class="chip">Оценка переплаты</span>
             </div>
         </div>
@@ -543,10 +569,10 @@
         const yearsInput = document.getElementById("years");
         const rateInput = document.getElementById("rate");
 
-        const price = parseFloat(priceInput.value.replace(",", ".")) || 0;
-        const downPct = parseFloat(downPctInput.value.replace(",", ".")) || 0;
+        const price = parseFloat(String(priceInput.value).replace(",", ".")) || 0;
+        const downPct = parseFloat(String(downPctInput.value).replace(",", ".")) || 0;
         const years = parseInt(yearsInput.value, 10) || 0;
-        const rateAnnual = parseFloat(rateInput.value.replace(",", ".")) || 0;
+        const rateAnnual = parseFloat(String(rateInput.value).replace(",", ".")) || 0;
 
         const resultBox = document.getElementById("resultBox");
         const loanOut = document.getElementById("loanOut");
@@ -554,6 +580,7 @@
         const totalOut = document.getElementById("totalOut");
         const overOut = document.getElementById("overOut");
         const noteOut = document.getElementById("noteOut");
+        const downOut = document.getElementById("downOut");
 
         if (price <= 0 || years <= 0) {
             resultBox.style.display = "none";
@@ -576,16 +603,16 @@
         const total = monthly * n;
         const over = total - loan;
 
+        downOut.textContent = formatMoney(downAmount) + " €";
         loanOut.textContent = formatMoney(loan) + " €";
         monthlyOut.innerHTML = "<strong>" + formatMoney(monthly) + " €</strong>";
         totalOut.textContent = formatMoney(total) + " €";
         overOut.textContent = formatMoney(over) + " €";
 
-        const pctOfIncome = ""; // оставлено для возможного расширения
-
         noteOut.textContent =
             "При цене " + formatMoney(price) + " € и взносе " + downPct.toFixed(0) +
-            "% вы берёте кредит примерно на " + formatMoney(loan) +
+            "% первоначальный платёж составляет около " + formatMoney(downAmount) +
+            " €, кредит — примерно " + formatMoney(loan) +
             " €. Срок " + years + " лет, ставка " + rateAnnual.toFixed(2) +
             "% годовых, аннуитетный платёж.";
 
