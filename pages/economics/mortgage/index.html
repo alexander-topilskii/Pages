@@ -96,8 +96,6 @@
         }
 
         .table-wrapper {
-            max-height: 460px;
-            overflow: auto;
             border-radius: var(--radius-lg);
             border: 1px solid var(--border);
             background: #ffffff;
@@ -111,10 +109,7 @@
         }
 
         thead {
-            position: sticky;
-            top: 0;
             background: #f9fafb;
-            z-index: 1;
         }
 
         th, td {
@@ -136,6 +131,56 @@
             letter-spacing: 0.06em;
             text-transform: uppercase;
             background: #f9fafb;
+            cursor: pointer;
+            user-select: none;
+            position: relative;
+            padding-right: 24px;
+        }
+
+        th:hover {
+            background: #f1f5f9;
+        }
+
+        th::after {
+            content: "⇅";
+            position: absolute;
+            right: 8px;
+            opacity: 0.3;
+            font-size: 12px;
+        }
+
+        th.sorted-asc::after {
+            content: "↑";
+            opacity: 1;
+            color: var(--accent);
+        }
+
+        th.sorted-desc::after {
+            content: "↓";
+            opacity: 1;
+            color: var(--accent);
+        }
+
+        .reset-sort-btn {
+            margin-top: 12px;
+            padding: 6px 16px;
+            border-radius: 999px;
+            border: 1px solid var(--border);
+            background: #ffffff;
+            color: var(--text-muted);
+            font-size: 13px;
+            cursor: pointer;
+            transition: all 0.15s ease;
+        }
+
+        .reset-sort-btn:hover {
+            background: #f9fafb;
+            border-color: var(--accent);
+            color: var(--accent);
+        }
+
+        .reset-sort-btn:active {
+            transform: scale(0.98);
         }
 
         tbody tr:nth-child(even) {
@@ -464,6 +509,7 @@
                 </tbody>
             </table>
         </div>
+        <button class="reset-sort-btn" id="resetSortBtn">Сбросить сортировку</button>
         <div class="hint">
             В реальном предложении ставка и максимально доступный срок зависят от <strong>банка, программы, возраста заёмщика и класса энергии объекта</strong>.
         </div>
@@ -623,6 +669,108 @@
 
     // Авторасчёт при загрузке
     window.addEventListener("DOMContentLoaded", calculate);
+
+    // Сортировка таблицы
+    let currentSortColumn = -1;
+    let currentSortOrder = 'asc';
+    const originalRowsOrder = [];
+
+    function initTableSort() {
+        const table = document.querySelector('table');
+        const tbody = table.querySelector('tbody');
+        const headers = table.querySelectorAll('th');
+
+        // Сохраняем исходный порядок строк
+        Array.from(tbody.querySelectorAll('tr')).forEach(row => {
+            originalRowsOrder.push(row.cloneNode(true));
+        });
+
+        headers.forEach((header, index) => {
+            header.addEventListener('click', () => {
+                sortTable(index);
+            });
+        });
+
+        document.getElementById('resetSortBtn').addEventListener('click', resetSort);
+    }
+
+    function parseValue(text) {
+        // Удаляем все неразрывные пробелы, обычные пробелы и другие символы, оставляем только цифры и точку
+        const cleaned = text.replace(/\s|&nbsp;/g, '').replace(/[^\d.]/g, '');
+        const num = parseFloat(cleaned);
+        return isNaN(num) ? text : num;
+    }
+
+    function sortTable(columnIndex) {
+        const table = document.querySelector('table');
+        const tbody = table.querySelector('tbody');
+        const rows = Array.from(tbody.querySelectorAll('tr'));
+        const headers = table.querySelectorAll('th');
+
+        // Определяем порядок сортировки
+        if (currentSortColumn === columnIndex) {
+            currentSortOrder = currentSortOrder === 'asc' ? 'desc' : 'asc';
+        } else {
+            currentSortOrder = 'asc';
+        }
+        currentSortColumn = columnIndex;
+
+        // Убираем классы со всех заголовков
+        headers.forEach(h => {
+            h.classList.remove('sorted-asc', 'sorted-desc');
+        });
+
+        // Добавляем класс к текущему заголовку
+        headers[columnIndex].classList.add(`sorted-${currentSortOrder}`);
+
+        // Сортируем строки
+        rows.sort((a, b) => {
+            const aCell = a.cells[columnIndex];
+            const bCell = b.cells[columnIndex];
+
+            const aText = aCell.textContent.trim();
+            const bText = bCell.textContent.trim();
+
+            const aValue = parseValue(aText);
+            const bValue = parseValue(bText);
+
+            let comparison = 0;
+            if (typeof aValue === 'number' && typeof bValue === 'number') {
+                comparison = aValue - bValue;
+            } else {
+                comparison = String(aValue).localeCompare(String(bValue), 'ru');
+            }
+
+            return currentSortOrder === 'asc' ? comparison : -comparison;
+        });
+
+        // Очищаем tbody и добавляем отсортированные строки
+        tbody.innerHTML = '';
+        rows.forEach(row => tbody.appendChild(row));
+    }
+
+    function resetSort() {
+        const table = document.querySelector('table');
+        const tbody = table.querySelector('tbody');
+        const headers = table.querySelectorAll('th');
+
+        // Убираем классы сортировки
+        headers.forEach(h => {
+            h.classList.remove('sorted-asc', 'sorted-desc');
+        });
+
+        // Восстанавливаем исходный порядок
+        tbody.innerHTML = '';
+        originalRowsOrder.forEach(row => {
+            tbody.appendChild(row.cloneNode(true));
+        });
+
+        currentSortColumn = -1;
+        currentSortOrder = 'asc';
+    }
+
+    // Инициализация сортировки при загрузке
+    window.addEventListener('DOMContentLoaded', initTableSort);
 </script>
 
 </body>
