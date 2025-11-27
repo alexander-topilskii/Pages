@@ -1,0 +1,343 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8" />
+    <title>Калькулятор чистого дохода (Buffer / Кипр)</title>
+    <style>
+        :root {
+          --bg: #f5f5f7;
+          --card: #ffffff;
+          --accent: #2563eb;
+          --accent-soft: rgba(37, 99, 235, 0.08);
+          --text: #111827;
+          --muted: #6b7280;
+          --border: #e5e7eb;
+          --radius: 12px;
+        }
+
+        * {
+          box-sizing: border-box;
+        }
+
+        body {
+          margin: 0;
+          padding: 24px;
+          font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+          background: var(--bg);
+          color: var(--text);
+        }
+
+        h1, h2 {
+          margin: 0 0 12px;
+          font-weight: 600;
+        }
+
+        p {
+          margin: 0 0 12px;
+          color: var(--muted);
+        }
+
+        .container {
+          max-width: 980px;
+          margin: 0 auto;
+          display: flex;
+          flex-direction: column;
+          gap: 24px;
+        }
+
+        .card {
+          background: var(--card);
+          border-radius: var(--radius);
+          padding: 20px 24px;
+          box-shadow: 0 12px 24px rgba(15, 23, 42, 0.06);
+          border: 1px solid var(--border);
+        }
+
+        .card-header {
+          margin-bottom: 12px;
+        }
+
+        .grid {
+          display: grid;
+          grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+          gap: 16px;
+        }
+
+        label {
+          display: block;
+          font-size: 14px;
+          color: var(--muted);
+          margin-bottom: 4px;
+        }
+
+        input[type="number"] {
+          width: 100%;
+          padding: 8px 10px;
+          border-radius: 8px;
+          border: 1px solid var(--border);
+          font-size: 14px;
+        }
+
+        input[type="number"]:focus {
+          outline: none;
+          border-color: var(--accent);
+          box-shadow: 0 0 0 1px var(--accent-soft);
+        }
+
+        .checkbox-row {
+          display: flex;
+          flex-wrap: wrap;
+          gap: 12px 24px;
+          margin-top: 8px;
+        }
+
+        .checkbox-row label {
+          display: inline-flex;
+          align-items: center;
+          gap: 6px;
+          cursor: pointer;
+          color: var(--muted);
+          font-size: 14px;
+          margin-bottom: 0;
+        }
+
+        button {
+          padding: 9px 18px;
+          border-radius: 999px;
+          border: none;
+          background: var(--accent);
+          color: #fff;
+          font-size: 14px;
+          font-weight: 500;
+          cursor: pointer;
+          margin-top: 10px;
+        }
+
+        button:hover {
+          background: #1d4ed8;
+        }
+
+        table {
+          width: 100%;
+          border-collapse: collapse;
+          font-size: 14px;
+          margin-top: 6px;
+        }
+
+        th, td {
+          padding: 8px 10px;
+          border-bottom: 1px solid var(--border);
+          text-align: right;
+        }
+
+        th:first-child,
+        td:first-child {
+          text-align: left;
+        }
+
+        thead {
+          background: var(--accent-soft);
+        }
+
+        .tag {
+          display: inline-flex;
+          align-items: center;
+          padding: 2px 8px;
+          border-radius: 999px;
+          font-size: 11px;
+          text-transform: uppercase;
+          letter-spacing: 0.06em;
+          background: var(--accent-soft);
+          color: var(--accent);
+          margin-left: 6px;
+        }
+
+        .result-grid {
+          display: grid;
+          grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+          gap: 8px;
+          margin-top: 8px;
+        }
+
+        .result-box {
+          padding: 8px 10px;
+          border-radius: 10px;
+          background: #f9fafb;
+          border: 1px solid var(--border);
+          font-size: 13px;
+        }
+
+        .result-label {
+          color: var(--muted);
+          margin-bottom: 2px;
+        }
+
+        .result-value {
+          font-weight: 600;
+        }
+    </style>
+</head>
+<body>
+<div class="container">
+    <section class="card">
+        <div class="card-header">
+            <h1>Чистый доход Android-разработчика (Кипр)</h1>
+            <p>
+                Оценка на основе брутто-зарплаты в долларах США, пересчёт в евро, налоговые
+                ставки Кипра и 50% налоговая льгота для высокооплачиваемой занятости.
+            </p>
+        </div>
+
+        <h2>Готовые сценарии: $120k / $140k / $160k</h2>
+        <p>Курс: <strong>$1 = €0.90</strong>, соцвзносы: <strong>7%</strong> от брутто в евро.</p>
+
+        <table>
+            <thead>
+            <tr>
+                <th>Брутто, $/год</th>
+                <th>Брутто, €/год</th>
+                <th>Чистыми без льготы, €/год</th>
+                <th>Чистыми с 50% льготой, €/год</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr>
+                <td>120 000</td>
+                <td>108 000</td>
+                <td>72 755</td>
+                <td>91 355</td>
+            </tr>
+            <tr>
+                <td>140 000</td>
+                <td>126 000</td>
+                <td>83 195</td>
+                <td>105 245</td>
+            </tr>
+            <tr>
+                <td>160 000</td>
+                <td>144 000</td>
+                <td>93 635</td>
+                <td>118 835</td>
+            </tr>
+            </tbody>
+        </table>
+    </section>
+
+    <section class="card">
+        <div class="card-header">
+            <h2>Калькулятор <span class="tag">β</span></h2>
+            <p>Попробуй свои цифры: брутто в $, курс, соцвзносы, 50% льгота.</p>
+        </div>
+
+        <div class="grid">
+            <div>
+                <label for="grossUsd">Годовой брутто-доход, $</label>
+                <input id="grossUsd" type="number" value="140000" min="0" step="1000" />
+
+                <label for="usdToEur" style="margin-top:10px;">Курс $→€</label>
+                <input id="usdToEur" type="number" value="0.9" min="0" step="0.01" />
+
+                <label for="socialRate" style="margin-top:10px;">Соцвзносы, % от брутто в евро</label>
+                <input id="socialRate" type="number" value="7" min="0" max="30" step="0.1" />
+
+                <div class="checkbox-row">
+                    <label>
+                        <input id="useExemption" type="checkbox" checked />
+                        Применять 50% налоговую льготу
+                    </label>
+                    <label>
+                        <input id="includeSocial" type="checkbox" checked />
+                        Учитывать соцвзносы
+                    </label>
+                </div>
+
+                <button type="button" onclick="recalculate()">Рассчитать</button>
+            </div>
+
+            <div>
+                <div class="result-grid">
+                    <div class="result-box">
+                        <div class="result-label">Брутто, €/год</div>
+                        <div class="result-value" id="outGrossEur">—</div>
+                    </div>
+                    <div class="result-box">
+                        <div class="result-label">Соцвзносы, €/год</div>
+                        <div class="result-value" id="outSocial">—</div>
+                    </div>
+                    <div class="result-box">
+                        <div class="result-label">Подоходный налог, €/год</div>
+                        <div class="result-value" id="outTax">—</div>
+                    </div>
+                    <div class="result-box">
+                        <div class="result-label">Чистыми, €/год</div>
+                        <div class="result-value" id="outNetYear">—</div>
+                    </div>
+                    <div class="result-box">
+                        <div class="result-label">Чистыми, €/мес</div>
+                        <div class="result-value" id="outNetMonth">—</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+</div>
+
+<script>
+    function cyprusTax(income) {
+      // income в евро
+      const brackets = [
+        { limit: 19500, rate: 0.0 },
+        { limit: 28000, rate: 0.20 },
+        { limit: 36300, rate: 0.25 },
+        { limit: 60000, rate: 0.30 },
+        { limit: Infinity, rate: 0.35 }
+      ];
+      let tax = 0;
+      let prev = 0;
+
+      for (const { limit, rate } of brackets) {
+        if (income > prev) {
+          const taxable = Math.min(income, limit) - prev;
+          tax += taxable * rate;
+          prev = limit;
+        } else {
+          break;
+        }
+      }
+
+      return tax;
+    }
+
+    function formatEuro(value) {
+      return value.toLocaleString("ru-RU", {
+        minimumFractionDigits: 0,
+        maximumFractionDigits: 0
+      });
+    }
+
+    function recalculate() {
+      const grossUsd = Number(document.getElementById("grossUsd").value) || 0;
+      const usdToEur = Number(document.getElementById("usdToEur").value) || 0;
+      const socialRate = Number(document.getElementById("socialRate").value) || 0;
+      const useExemption = document.getElementById("useExemption").checked;
+      const includeSocial = document.getElementById("includeSocial").checked;
+
+      const grossEur = grossUsd * usdToEur;
+      const social = includeSocial ? grossEur * (socialRate / 100) : 0;
+      const taxableBase = grossEur * (useExemption ? 0.5 : 1.0);
+      const tax = cyprusTax(taxableBase);
+      const net = grossEur - social - tax;
+      const netMonth = net / 12;
+
+      document.getElementById("outGrossEur").textContent = formatEuro(grossEur);
+      document.getElementById("outSocial").textContent = formatEuro(social);
+      document.getElementById("outTax").textContent = formatEuro(tax);
+      document.getElementById("outNetYear").textContent = formatEuro(net);
+      document.getElementById("outNetMonth").textContent = formatEuro(netMonth);
+    }
+
+    // первый расчёт при загрузке
+    recalculate();
+</script>
+</body>
+</html>

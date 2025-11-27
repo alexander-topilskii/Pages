@@ -74,6 +74,18 @@
           "emoji": "📚",
           "desc": "Калькулятор",
           "path": "pages/economics/mortgage/index.html"
+        },
+        {
+          "title": "Зарплаты",
+          "emoji": "📚",
+          "desc": "Калькулятор",
+          "path": "pages/economics/salaries/index.html"
+        },
+        {
+          "title": "Налоги",
+          "emoji": "📚",
+          "desc": "Калькулятор",
+          "path": "pages/economics/taxes_cy/index.html"
         }
       ]
     }
