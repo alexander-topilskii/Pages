@@ -7,10 +7,12 @@ const els = {
   backdrop: document.getElementById('backdrop'),
   welcome: document.getElementById('welcome'),
   viewer: document.getElementById('viewer'),
-  backBtn: document.getElementById('backBtn')
+  backBtn: document.getElementById('backBtn'),
+  topbar: document.querySelector('.topbar')
 };
 
-const state = { data: null, expanded: new Set(), filter: '' };
+const params = new URLSearchParams(location.search);
+const state = { data: null, expanded: new Set(), filter: '', solo: params.get('solo') === '1', shareUrl: '' };
 const initialHistoryLength = history.length;
 const DATA_URL = 'https://raw.githubusercontent.com/alexander-topilskii/Pages/main/data/site.json';
 
@@ -104,13 +106,23 @@ function highlight(text){ if(!state.filter) return escapeHtml(text); const re = 
 // --- Page viewer
 function wireViewer(){
   // `backBtn` might not exist in standalone page views
-  els.backBtn?.addEventListener('click', () => history.back());
+  els.backBtn?.addEventListener('click', onBackToHub);
   window.addEventListener('hashchange', tryOpenFromHash);
   tryOpenFromHash();
 }
 
 function onOpenPage(e){
   const url = this.getAttribute('data-url');
+  state.shareUrl = buildSoloUrl(url);
+  if(state.solo){
+    e.preventDefault();
+    const target = buildSoloUrl(url);
+    if(location.href !== target){
+      history.replaceState(null, '', target);
+    }
+    openPage(url, true);
+    return;
+  }
   if(!deviceHasWide()) return; // allow default navigation on mobile
   e.preventDefault();
   toggleSidebar(false);
@@ -123,11 +135,12 @@ function onOpenPage(e){
 
 function deviceHasWide(){ return window.matchMedia('(min-width: 1025px)').matches; }
 
-function openPage(url){
+function openPage(url, forceSolo){
   els.viewer.src = url;
   els.viewer.classList.add('active');
   els.grid.style.display = 'none';
   els.welcome.style.display = 'none';
+  if(forceSolo || state.solo) applySoloLayout(true);
 }
 
 function closePage(){
@@ -135,13 +148,21 @@ function closePage(){
   els.viewer.classList.remove('active');
   els.grid.style.display = '';
   els.welcome.style.display = '';
+  if(state.solo) applySoloLayout(false);
 }
 
 function tryOpenFromHash(){
   const h = decodeURIComponent(location.hash.replace(/^#/, ''));
   if(h){
-    openPage(h);
-    toggleSidebar(false);
+    if(state.solo){
+      state.shareUrl = buildSoloUrl(h);
+    }
+    if(state.solo){
+      openPage(h, true);
+    }else{
+      openPage(h);
+      toggleSidebar(false);
+    }
   }else{
     closePage();
   }
@@ -151,3 +172,30 @@ function tryOpenFromHash(){
 function escapeHtml(s){ return String(s).replace(/[&<>\"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','\"':'&quot;','\\':'&#39;'}[c])); }
 function escapeAttr(s){ return escapeHtml(s).replace(/\"/g, '&quot;'); }
 function escapeReg(s){ return s.replace(/[.*+?^${}()|[\]\\]/g, '\\$&'); }
+function buildSoloUrl(url){
+  const next = new URL(location.href);
+  next.searchParams.set('solo', '1');
+  next.hash = encodeURIComponent(url);
+  return next.toString();
+}
+function applySoloLayout(on){
+  document.body.classList.toggle('solo-mode', on);
+  els.backBtn.style.display = on ? 'inline-flex' : 'none';
+  if(!on){
+    els.sidebar.classList.remove('open');
+    els.backdrop.classList.remove('show');
+  }
+}
+function onBackToHub(){
+  if(state.solo){
+    const url = new URL(location.href);
+    url.searchParams.delete('solo');
+    url.hash = '';
+    state.solo = false;
+    applySoloLayout(false);
+    history.pushState(null, '', url.pathname + url.search + url.hash);
+    closePage();
+    return;
+  }
+  history.back();
+}
