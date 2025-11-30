@@ -1,0 +1,893 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Кипр: Планировщик Жизни</title>
+    <style>
+        :root {
+            --primary: #2563eb;
+            --success: #16a34a;
+            --bg: #f1f5f9;
+            --card-bg: #ffffff;
+            --text: #0f172a;
+            --border: #e2e8f0;
+            --accent: #f59e0b;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+            background-color: var(--bg);
+            color: var(--text);
+            margin: 0;
+            padding: 20px;
+            line-height: 1.5;
+        }
+
+        .container { max-width: 1280px; margin: 0 auto; }
+
+        h1 { text-align: center; color: var(--primary); margin-bottom: 30px; }
+
+        .grid-main {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+        }
+
+        @media (max-width: 900px) {
+            .grid-main { grid-template-columns: 1fr; }
+        }
+
+        .card {
+            background: var(--card-bg);
+            padding: 20px;
+            border-radius: 12px;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+            border: 1px solid var(--border);
+            display: flex;
+            flex-direction: column;
+        }
+
+        .card-header {
+            border-bottom: 2px solid var(--bg);
+            padding-bottom: 10px;
+            margin-bottom: 15px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        /* Input List Styles */
+        .timeline-container {
+            flex-grow: 1;
+            position: relative;
+            padding-left: 20px;
+            border-left: 2px solid #cbd5e1;
+            margin-left: 10px;
+            max-height: 500px;
+            overflow-y: auto;
+        }
+
+        .event-node {
+            position: relative;
+            background: #f8fafc;
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            padding: 15px;
+            margin-bottom: 20px;
+        }
+
+        .event-node::before {
+            content: '';
+            position: absolute;
+            left: -26px;
+            top: 20px;
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            background: var(--primary);
+            border: 2px solid white;
+        }
+
+        .event-node.active-now {
+            border-color: var(--success);
+            background: #f0fdf4;
+            box-shadow: 0 0 0 2px rgba(22, 163, 74, 0.1);
+        }
+
+        .event-node.active-now::before { background: var(--success); }
+
+        .form-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 10px;
+            margin-bottom: 10px;
+        }
+
+        label { display: block; font-size: 0.75em; font-weight: 700; color: #64748b; margin-bottom: 3px; text-transform: uppercase; }
+
+        select, input {
+            width: 100%;
+            padding: 8px;
+            border: 1px solid #cbd5e1;
+            border-radius: 6px;
+            font-size: 0.9em;
+            box-sizing: border-box;
+        }
+
+        .btn {
+            background: var(--primary);
+            color: white;
+            border: none;
+            padding: 8px 16px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 0.9em;
+            transition: 0.2s;
+        }
+        .btn:hover { opacity: 0.9; }
+        .btn-danger { background: #ef4444; font-size: 0.8em; padding: 4px 8px; }
+        .btn-add { width: 100%; background: #e2e8f0; color: #334155; border: 2px dashed #94a3b8; }
+        .btn-add:hover { background: #cbd5e1; }
+
+        .checkbox-wrapper {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 0.85em;
+            background: #e2e8f0;
+            padding: 5px 10px;
+            border-radius: 4px;
+        }
+
+        /* --- New Visualization Styles --- */
+        .viz-section {
+            margin-top: 30px;
+            background: #fff;
+            padding: 20px;
+            border-radius: 12px;
+            border: 1px solid var(--border);
+            overflow-x: auto;
+        }
+
+        .viz-chart {
+            position: relative;
+            min-height: 200px;
+            display: grid;
+            grid-template-columns: 50px 1fr 1fr; /* Axis, P1, P2 */
+            gap: 10px;
+            border-left: 1px solid #ccc;
+            padding-top: 30px; /* Space for headers */
+        }
+
+        .viz-header {
+            position: absolute;
+            top: 0;
+            font-weight: bold;
+            text-align: center;
+            width: 100%;
+            padding-bottom: 5px;
+            border-bottom: 1px solid #eee;
+        }
+
+        .viz-column {
+            position: relative;
+            background: #f8fafc;
+            border-radius: 4px;
+        }
+
+        .viz-axis {
+            position: relative;
+            border-right: 1px solid #eee;
+        }
+
+        .viz-year-marker {
+            position: absolute;
+            width: 100%;
+            border-top: 1px dashed #e2e8f0;
+            font-size: 0.75em;
+            color: #94a3b8;
+            padding-left: 5px;
+        }
+
+        .viz-block {
+            position: absolute;
+            left: 2px;
+            right: 2px;
+            border-radius: 4px;
+            padding: 5px;
+            font-size: 0.8em;
+            color: white;
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            text-align: center;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+            transition: 0.2s;
+        }
+        .viz-block:hover {
+            z-index: 10;
+            transform: scale(1.02);
+            box-shadow: 0 4px 6px rgba(0,0,0,0.2);
+        }
+
+        /* Results Section */
+        .dashboard {
+            margin-top: 30px;
+            background: #1e293b;
+            color: white;
+            padding: 25px;
+            border-radius: 16px;
+        }
+
+        .dash-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 40px;
+        }
+        @media (max-width: 768px) { .dash-grid { grid-template-columns: 1fr; } }
+
+        .stat-box {
+            background: rgba(255,255,255,0.05);
+            padding: 15px;
+            border-radius: 8px;
+            margin-bottom: 15px;
+        }
+
+        .big-val { font-size: 1.8em; font-weight: bold; color: #4ade80; }
+        .sub-val { font-size: 0.9em; color: #94a3b8; }
+
+        .alert {
+            padding: 10px;
+            border-radius: 6px;
+            margin-top: 10px;
+            font-size: 0.9em;
+        }
+        .alert-success { background: #dcfce7; color: #166534; }
+        .alert-warning { background: #fef3c7; color: #92400e; }
+        .alert-info { background: #e0f2fe; color: #075985; }
+
+        .total-banner {
+            text-align: center;
+            border-top: 1px solid #334155;
+            padding-top: 20px;
+            margin-top: 20px;
+        }
+
+        /* Breakdown Table Styles */
+        .breakdown-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+            color: #e2e8f0;
+            font-size: 0.9em;
+        }
+        .breakdown-table th, .breakdown-table td {
+            padding: 12px;
+            border-bottom: 1px solid #334155;
+            text-align: left;
+        }
+        .breakdown-table th {
+            color: #94a3b8;
+            font-weight: 600;
+            text-transform: uppercase;
+            font-size: 0.75em;
+        }
+        .breakdown-table tr:hover {
+            background: rgba(255,255,255,0.05);
+        }
+        .period-active {
+            background: rgba(34, 197, 94, 0.1) !important;
+            border-left: 3px solid #22c55e;
+        }
+        .money-cell {
+            font-family: monospace;
+            font-size: 1.1em;
+        }
+        .net-positive { color: #4ade80; }
+        .tax-negative { color: #f87171; font-size:0.85em; }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <h1>🇨🇾 Кипр: Стратегия Жизни</h1>
+    <p style="text-align:center; color:#64748b; margin-bottom:30px;">
+        Добавляйте этапы в формы ниже. Визуальная хронология обновляется автоматически.
+    </p>
+
+    <!-- Inputs -->
+    <div class="grid-main">
+        <!-- Person 1 -->
+        <div class="card">
+            <div class="card-header">
+                <h2>Супруг 1 (Основной)</h2>
+                <div>
+                    <label>Дата рождения</label>
+                    <input type="date" id="p1_dob" value="1990-01-01" onchange="recalc()">
+                </div>
+            </div>
+            <div class="timeline-container" id="p1_timeline">
+                <!-- Inputs rendered here -->
+            </div>
+            <button class="btn btn-add" onclick="addEvent('p1')">+ Добавить этап</button>
+        </div>
+
+        <!-- Person 2 -->
+        <div class="card">
+            <div class="card-header">
+                <h2>Супруг 2</h2>
+                <div>
+                    <label>Дата рождения</label>
+                    <input type="date" id="p2_dob" value="1992-05-15" onchange="recalc()">
+                </div>
+            </div>
+            <div class="timeline-container" id="p2_timeline">
+                <!-- Inputs rendered here -->
+            </div>
+            <button class="btn btn-add" onclick="addEvent('p2')">+ Добавить этап</button>
+        </div>
+    </div>
+
+    <!-- Visualization -->
+    <div class="viz-section">
+        <h3 style="margin-top:0; color:#334155; text-align:center;">Визуальная хронология</h3>
+        <div class="viz-chart" id="visual_timeline">
+            <!-- Visuals rendered via JS -->
+            <div class="viz-axis" id="viz_axis"></div>
+            <div class="viz-column" id="viz_p1">
+                <div class="viz-header">Супруг 1</div>
+            </div>
+            <div class="viz-column" id="viz_p2">
+                <div class="viz-header">Супруг 2</div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Dashboard -->
+    <div class="dashboard">
+        <h2 style="margin-top:0; border-bottom:1px solid #475569; padding-bottom:15px;">📊 Итоги на сегодня (<span id="current_date_display"></span>)</h2>
+
+        <div class="dash-grid">
+            <!-- P1 Stats -->
+            <div>
+                <h3>Супруг 1</h3>
+                <div class="stat-box">
+                    <div class="sub-val">Текущий доход (Net / месяц)</div>
+                    <div class="big-val" id="p1_net">€0</div>
+                    <div class="sub-val" id="p1_breakdown"></div>
+                </div>
+
+                <div class="stat-box">
+                    <div class="sub-val">Гражданство</div>
+                    <div id="p1_cit_status" class="alert alert-info">Расчет...</div>
+                </div>
+
+                <div class="stat-box">
+                    <div class="sub-val">Пенсия (Прогноз к 65 годам)</div>
+                    <div class="big-val" id="p1_pension">€0</div>
+                    <div class="sub-val">Накоплено стажа на сегодня: <span id="p1_years_worked">0</span> лет</div>
+                </div>
+            </div>
+
+            <!-- P2 Stats -->
+            <div>
+                <h3>Супруг 2</h3>
+                <div class="stat-box">
+                    <div class="sub-val">Текущий доход (Net / месяц)</div>
+                    <div class="big-val" id="p2_net">€0</div>
+                    <div class="sub-val" id="p2_breakdown"></div>
+                </div>
+
+                <div class="stat-box">
+                    <div class="sub-val">Гражданство</div>
+                    <div id="p2_cit_status" class="alert alert-info">Расчет...</div>
+                </div>
+
+                <div class="stat-box">
+                    <div class="sub-val">Пенсия (Прогноз к 65 годам)</div>
+                    <div class="big-val" id="p2_pension">€0</div>
+                    <div class="sub-val">Накоплено стажа на сегодня: <span id="p2_years_worked">0</span> лет</div>
+                </div>
+            </div>
+        </div>
+
+        <div class="total-banner">
+            <div class="sub-val">Общий семейный бюджет "на руки" (сейчас)</div>
+            <div style="font-size: 3em; font-weight: bold; color: #fff;" id="family_total">€0</div>
+        </div>
+
+        <!-- Breakdown Table -->
+        <div style="margin-top:40px; border-top:1px solid #475569; padding-top:20px;">
+            <h3>📅 История и Прогноз Бюджета (По периодам)</h3>
+            <div style="overflow-x:auto;">
+                <table class="breakdown-table" id="period_table">
+                    <thead>
+                    <tr>
+                        <th>Период</th>
+                        <th>Супруг 1 (Net / Налоги)</th>
+                        <th>Супруг 2 (Net / Налоги)</th>
+                        <th>Семейный Бюджет (в мес)</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <!-- JS Render -->
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    // --- Configuration ---
+    const VISA_TYPES = {
+        bcs: { label: "BCS / Foreign Interest", allow_work: true, si: 0.088, gesy: 0.0265, color: "#2563eb", short: "BCS" },
+        local: { label: "Local Company", allow_work: true, si: 0.088, gesy: 0.0265, color: "#0891b2", short: "Local" },
+        nomad: { label: "Digital Nomad", allow_work: true, si: 0.166, gesy: 0.04, color: "#7c3aed", short: "Nomad" },
+        visitor_remote: { label: "Visitor (Remote Income)", allow_work: false, si: 0, gesy: 0.0265, color: "#ea580c", short: "Vis(Rem)" },
+        dependent_bcs: { label: "Dependent (BCS)", allow_work: true, si: 0.088, gesy: 0.0265, color: "#3b82f6", short: "Dep(BCS)" },
+        dependent_nomad: { label: "Dependent (Nomad)", allow_work: false, si: 0, gesy: 0, color: "#a855f7", short: "Dep(Nom)" },
+        unemployed: { label: "Безработный / Visitor", allow_work: false, si: 0, gesy: 0, color: "#94a3b8", short: "Unemployed" },
+        citizen: { label: "🇨🇾 ГРАЖДАНИН", allow_work: true, si: 0.088, gesy: 0.0265, color: "#16a34a", short: "Citizen" }
+    };
+
+    const TAX_BRACKETS_2024 = [
+        { limit: 19500, rate: 0 },
+        { limit: 28000, rate: 0.20 },
+        { limit: 36300, rate: 0.25 },
+        { limit: 60000, rate: 0.30 },
+        { limit: Infinity, rate: 0.35 }
+    ];
+
+    const SI_CAP_MONTHLY = 5239;
+    const BASIC_PENSION = 484;
+
+    // --- State ---
+    let state = {
+        p1: [
+            { id: 1, start: "2023-01-01", type: "bcs", salary: 3500, tax50: false }
+        ],
+        p2: [
+            { id: 2, start: "2023-06-01", type: "unemployed", salary: 0, tax50: false },
+            { id: 3, start: "2024-01-01", type: "dependent_bcs", salary: 1500, tax50: false }
+        ]
+    };
+
+    // --- Timeline Actions ---
+    function addEvent(person) {
+        const lastEvent = state[person][state[person].length - 1];
+        let newDate = new Date();
+        if (lastEvent) {
+            let d = new Date(lastEvent.start);
+            d.setFullYear(d.getFullYear() + 1);
+            newDate = d;
+        }
+
+        state[person].push({
+            id: Date.now(),
+            start: newDate.toISOString().split('T')[0],
+            type: "bcs",
+            salary: 4000,
+            tax50: false
+        });
+
+        sortEvents(person);
+        renderInputLists(person);
+        recalc();
+    }
+
+    function removeEvent(person, index) {
+        if (state[person].length <= 1) {
+            alert("Должен остаться хотя бы один этап!");
+            return;
+        }
+        state[person].splice(index, 1);
+        renderInputLists(person);
+        recalc();
+    }
+
+    function updateEventField(person, index, field, value) {
+        if (field === 'salary') value = parseFloat(value);
+        if (field === 'tax50') value = (value === 'true' || value === true);
+
+        state[person][index][field] = value;
+
+        if (field === 'start') {
+            sortEvents(person);
+            renderInputLists(person);
+        }
+        recalc();
+    }
+
+    function sortEvents(person) {
+        state[person].sort((a, b) => new Date(a.start) - new Date(b.start));
+    }
+
+    function renderInputLists(person) {
+        const container = document.getElementById(person + '_timeline');
+        container.innerHTML = '';
+        const today = new Date();
+
+        state[person].forEach((evt, index) => {
+            const isLast = index === state[person].length - 1;
+            const eventDate = new Date(evt.start);
+            let isActive = false;
+            let nextDate = isLast ? new Date(9999,11,31) : new Date(state[person][index+1].start);
+            if (today >= eventDate && today < nextDate) isActive = true;
+
+            const div = document.createElement('div');
+            div.className = `event-node ${isActive ? 'active-now' : ''}`;
+
+            let typeOptions = '';
+            for (let [key, val] of Object.entries(VISA_TYPES)) {
+                typeOptions += `<option value="${key}" ${evt.type === key ? 'selected' : ''}>${val.label}</option>`;
+            }
+
+            const isUnemployed = evt.type === 'unemployed';
+            const salaryDisabled = isUnemployed ? 'disabled' : '';
+            const salaryVal = isUnemployed ? 0 : evt.salary;
+
+            div.innerHTML = `
+                <div style="display:flex; justify-content:space-between; margin-bottom:10px;">
+                    <strong style="color:var(--primary); font-size:0.9em;">${evt.start.split('-')[0]} - ...</strong>
+                    <button class="btn btn-danger" onclick="removeEvent('${person}', ${index})">×</button>
+                </div>
+                <div class="form-row">
+                    <div>
+                        <label>Начало</label>
+                        <input type="date" value="${evt.start}" onchange="updateEventField('${person}', ${index}, 'start', this.value)">
+                    </div>
+                    <div>
+                        <label>Статус</label>
+                        <select onchange="updateEventField('${person}', ${index}, 'type', this.value)">${typeOptions}</select>
+                    </div>
+                </div>
+                <div class="form-row">
+                    <div>
+                        <label>Зарплата (Gross)</label>
+                        <input type="number" value="${salaryVal}" ${salaryDisabled} oninput="updateEventField('${person}', ${index}, 'salary', this.value)">
+                    </div>
+                    <div style="display:flex; align-items:flex-end;">
+                        <div class="checkbox-wrapper">
+                            <input type="checkbox" id="tax_${person}_${index}" ${evt.tax50 ? 'checked' : ''} onchange="updateEventField('${person}', ${index}, 'tax50', this.checked)">
+                            <label for="tax_${person}_${index}" style="margin:0; cursor:pointer;">50% tax cut</label>
+                        </div>
+                    </div>
+                </div>
+            `;
+            container.appendChild(div);
+        });
+    }
+
+    // --- Visualization Engine ---
+    function renderVisualTimeline() {
+        const allEvents = [...state.p1, ...state.p2];
+        const dates = allEvents.map(e => new Date(e.start));
+        dates.push(new Date());
+        const minDate = new Date(Math.min(...dates.map(d=>d.getTime())));
+
+        const maxDate = new Date();
+        maxDate.setFullYear(maxDate.getFullYear() + 5);
+
+        const startYear = minDate.getFullYear();
+        const endYear = maxDate.getFullYear();
+        const totalYears = endYear - startYear + 1;
+
+        const yearHeight = 60;
+        const totalHeight = totalYears * yearHeight;
+
+        const viz = document.getElementById('visual_timeline');
+        viz.style.height = (totalHeight + 50) + 'px';
+
+        const axis = document.getElementById('viz_axis');
+        axis.innerHTML = '';
+        for(let y = startYear; y <= endYear; y++) {
+            const marker = document.createElement('div');
+            marker.className = 'viz-year-marker';
+            marker.innerText = y;
+            marker.style.top = ((y - startYear) * yearHeight) + 'px';
+            axis.appendChild(marker);
+        }
+
+        ['p1', 'p2'].forEach(person => {
+            const col = document.getElementById('viz_' + person);
+            const header = col.querySelector('.viz-header');
+            col.innerHTML = '';
+            col.appendChild(header);
+
+            const events = state[person];
+
+            for(let i=0; i<events.length; i++) {
+                const evt = events[i];
+                const typeInfo = VISA_TYPES[evt.type];
+
+                const startDate = new Date(evt.start);
+                const nextEvt = events[i+1];
+                let endDate;
+                if (nextEvt) {
+                    endDate = new Date(nextEvt.start);
+                } else {
+                    endDate = new Date(maxDate);
+                }
+
+                const startOffsetYears = (startDate.getTime() - new Date(startYear, 0, 1).getTime()) / (1000 * 60 * 60 * 24 * 365.25);
+                const durationYears = (endDate.getTime() - startDate.getTime()) / (1000 * 60 * 60 * 24 * 365.25);
+
+                const topPx = Math.max(0, startOffsetYears * yearHeight);
+                const heightPx = Math.max(5, durationYears * yearHeight);
+
+                const block = document.createElement('div');
+                block.className = 'viz-block';
+                block.style.top = topPx + 'px';
+                block.style.height = heightPx + 'px';
+                block.style.backgroundColor = typeInfo.color;
+
+                block.innerHTML = `
+                    <div style="font-weight:bold;">${typeInfo.short}</div>
+                    <div style="font-size:0.8em; opacity:0.9;">€${evt.salary}</div>
+                `;
+                block.title = `${typeInfo.label}\nC ${startDate.toLocaleDateString()}\nЗП: €${evt.salary}`;
+
+                col.appendChild(block);
+            }
+        });
+    }
+
+    // --- Calculation Engine ---
+    function recalc() {
+        const today = new Date();
+        document.getElementById('current_date_display').innerText = today.toLocaleDateString('ru-RU');
+        let familyTotal = 0;
+
+        renderVisualTimeline();
+        renderHistoryTable();
+
+        ['p1', 'p2'].forEach(p => {
+            const history = state[p];
+            const dob = new Date(document.getElementById(p + '_dob').value);
+
+            let currentPhase = getActivePhase(history, today);
+
+            const financials = calculateMonthlyNet(currentPhase);
+            document.getElementById(`${p}_net`).innerText = `€${financials.net.toFixed(0)}`;
+            document.getElementById(`${p}_breakdown`).innerText = `Gross: ${currentPhase.salary} | Tax: ${financials.tax.toFixed(0)} | Soc: ${financials.si.toFixed(0)}`;
+            familyTotal += financials.net;
+
+            const citCalc = calculateCitizenship(history, today);
+            const citEl = document.getElementById(`${p}_cit_status`);
+            if (citCalc.isCitizen) {
+                citEl.className = 'alert alert-success';
+                citEl.innerHTML = `✅ <b>Уже гражданин!</b><br>Получено: ${citCalc.date.getFullYear()}`;
+            } else {
+                citEl.className = 'alert alert-info';
+                citEl.innerHTML = `⏳ <b>Прогноз:</b> ${citCalc.date.getFullYear()}<br>Стаж: ${citCalc.yearsAccumulated.toFixed(1)} / 7.0`;
+            }
+
+            const pension = calculatePension(history, dob, today);
+            document.getElementById(`${p}_pension`).innerText = `€${pension.amount.toFixed(0)}`;
+            document.getElementById(`${p}_years_worked`).innerText = pension.yearsWorked.toFixed(1);
+        });
+
+        document.getElementById('family_total').innerText = `€${familyTotal.toFixed(0)}`;
+    }
+
+    function getActivePhase(history, date) {
+        // Find the event that started before or on date, and is the latest of such events
+        let active = null;
+        for (let h of history) {
+            if (new Date(h.start) <= date) active = h;
+            else break; // Since sorted
+        }
+        // If date is before first event, return dummy empty phase
+        if (!active) {
+            return { type: 'unemployed', salary: 0, tax50: false, start: history[0].start };
+        }
+        return active;
+    }
+
+    function calculateMonthlyNet(phase) {
+        const rules = VISA_TYPES[phase.type];
+        if (!rules) return { net:0, tax:0, si:0, gesy:0 }; // safety
+        const gross = phase.salary;
+
+        let siBase = Math.min(gross, SI_CAP_MONTHLY);
+        let si = siBase * rules.si;
+        let gesy = gross * rules.gesy;
+
+        let annualGross = gross * 12;
+        let annualSI = si * 12;
+        let annualGeSY = gesy * 12;
+        let taxable = annualGross - annualSI - annualGeSY;
+
+        if (phase.tax50 && annualGross > 55000) {
+            taxable -= (annualGross * 0.5);
+        }
+        if (taxable < 0) taxable = 0;
+
+        let annualTax = 0;
+        let prevLim = 0;
+        for (let b of TAX_BRACKETS_2024) {
+            if (taxable > prevLim) {
+                let chunk = Math.min(taxable, b.limit) - prevLim;
+                annualTax += chunk * b.rate;
+                prevLim = b.limit;
+            } else break;
+        }
+
+        return {
+            net: gross - si - gesy - (annualTax / 12),
+            tax: annualTax / 12,
+            si: si,
+            gesy: gesy
+        };
+    }
+
+    // --- New Function: History Table ---
+    function renderHistoryTable() {
+        const tbody = document.querySelector('#period_table tbody');
+        tbody.innerHTML = '';
+        const today = new Date();
+
+        // 1. Collect all unique dates
+        let dates = new Set();
+        state.p1.forEach(e => dates.add(e.start));
+        state.p2.forEach(e => dates.add(e.start));
+        dates.add(today.toISOString().split('T')[0]); // Add today as split point
+
+        // Sort
+        let sortedDates = Array.from(dates).sort((a,b) => new Date(a) - new Date(b));
+
+        // 2. Iterate intervals (Reverse order for newest first)
+        for (let i = sortedDates.length - 1; i > 0; i--) {
+            let endDateStr = sortedDates[i];
+            let startDateStr = sortedDates[i-1];
+            let start = new Date(startDateStr);
+            let end = new Date(endDateStr);
+
+            // Skip if start >= end (sanity)
+            if (start >= end) continue;
+
+            // Get status for this period
+            // Use date slightly after start to catch the phase correctly
+            let checkDate = new Date(start);
+            checkDate.setDate(checkDate.getDate() + 1);
+
+            let p1Phase = getActivePhase(state.p1, checkDate);
+            let p2Phase = getActivePhase(state.p2, checkDate);
+
+            // Calc Stats
+            let p1Stats = calculateMonthlyNet(p1Phase);
+            let p2Stats = calculateMonthlyNet(p2Phase);
+            let familyNet = p1Stats.net + p2Stats.net;
+
+            // Determine row style
+            let isActive = (start <= today && end >= today);
+            // Or roughly "Now" falls in this bucket. Actually "Today" is a split point, so one bucket will end at Today, one will start at Today.
+            // The bucket ending at Today is the "Past immediate". The bucket starting Today is "Future".
+            // Let's mark the bucket that *contains* now or starts now.
+
+            let row = document.createElement('tr');
+            if (startDateStr === today.toISOString().split('T')[0]) {
+                 row.classList.add('period-active'); // Future starting today
+            }
+
+            // Format Date
+            const dateOpts = { month: 'short', year: 'numeric' };
+            const periodLabel = `${start.toLocaleDateString('ru-RU', dateOpts)} — ${end.toLocaleDateString('ru-RU', dateOpts)}`;
+
+            // Cell Contents
+            const p1Cell = `
+                <div class="money-cell net-positive">€${p1Stats.net.toFixed(0)}</div>
+                <div class="tax-negative">Налог+Соц: €${(p1Stats.tax + p1Stats.si + p1Stats.gesy).toFixed(0)}</div>
+                <div style="font-size:0.8em; color:#94a3b8;">${VISA_TYPES[p1Phase.type].short}</div>
+            `;
+            const p2Cell = `
+                <div class="money-cell net-positive">€${p2Stats.net.toFixed(0)}</div>
+                <div class="tax-negative">Налог+Соц: €${(p2Stats.tax + p2Stats.si + p2Stats.gesy).toFixed(0)}</div>
+                <div style="font-size:0.8em; color:#94a3b8;">${VISA_TYPES[p2Phase.type].short}</div>
+            `;
+
+            row.innerHTML = `
+                <td>${periodLabel}</td>
+                <td>${p1Cell}</td>
+                <td>${p2Cell}</td>
+                <td>
+                    <div class="money-cell" style="font-size:1.4em; color:#f59e0b;">€${familyNet.toFixed(0)}</div>
+                </td>
+            `;
+            tbody.appendChild(row);
+        }
+    }
+
+    function calculateCitizenship(history, today) {
+        let accumulatedPoints = 0;
+        let isCitizen = false;
+
+        for (let i = 0; i < history.length; i++) {
+            let evt = history[i];
+            let start = new Date(evt.start);
+            let end = (i === history.length - 1) ? today : new Date(history[i+1].start);
+
+            if (start > today) break;
+            if (end > today) end = today;
+
+            if (evt.type === 'citizen') {
+                return { isCitizen: true, date: start, yearsAccumulated: 7 };
+            }
+
+            let durationYears = (end - start) / (1000 * 60 * 60 * 24 * 365.25);
+            if (durationYears < 0) durationYears = 0;
+
+            let factor = 1.0;
+            if (evt.type === 'bcs' || evt.type === 'dependent_bcs') factor = 1.4;
+
+            accumulatedPoints += durationYears * factor;
+        }
+
+        let pointsNeeded = 7 - accumulatedPoints;
+        if (pointsNeeded <= 0) return { isCitizen: false, date: today, yearsAccumulated: 7 };
+
+        let activePhase = getActivePhase(history, today);
+        if (new Date(activePhase.start) > today) activePhase = history[0];
+
+        let futureFactor = 1.0;
+        if (activePhase.type === 'bcs' || activePhase.type === 'dependent_bcs') futureFactor = 1.4;
+
+        let yearsNeeded = pointsNeeded / futureFactor;
+        let projectedDate = new Date(today);
+        projectedDate.setFullYear(today.getFullYear() + Math.ceil(yearsNeeded));
+
+        return { isCitizen: false, date: projectedDate, yearsAccumulated: accumulatedPoints };
+    }
+
+    function calculatePension(history, dob, today) {
+        let totalInsurableEarnings = 0;
+        let yearsWorked = 0;
+
+        for (let i = 0; i < history.length; i++) {
+            let evt = history[i];
+            let start = new Date(evt.start);
+            let end = (i === history.length - 1) ? today : new Date(history[i+1].start);
+            if (end > today) end = today;
+
+            let duration = (end - start) / (1000 * 60 * 60 * 24 * 365.25);
+            if (duration < 0) duration = 0;
+
+            if (VISA_TYPES[evt.type].si > 0) {
+                let mSalary = Math.min(evt.salary, SI_CAP_MONTHLY);
+                totalInsurableEarnings += (mSalary * 12 * duration);
+                yearsWorked += duration;
+            }
+        }
+
+        let retireDate = new Date(dob);
+        retireDate.setFullYear(dob.getFullYear() + 65);
+        let activePhase = getActivePhase(history, today);
+
+        let futureYears = (retireDate - today) / (1000 * 60 * 60 * 24 * 365.25);
+        if (futureYears < 0) futureYears = 0;
+
+        if (VISA_TYPES[activePhase.type].si > 0) {
+             let mSalary = Math.min(activePhase.salary, SI_CAP_MONTHLY);
+             totalInsurableEarnings += (mSalary * 12 * futureYears);
+             yearsWorked += futureYears;
+        }
+
+        let supplementary = (totalInsurableEarnings * 0.015) / 12;
+        let totalPension = BASIC_PENSION + supplementary;
+
+        return { amount: totalPension, yearsWorked: yearsWorked };
+    }
+
+    // --- Init ---
+    window.onload = function() {
+        renderInputLists('p1');
+        renderInputLists('p2');
+        recalc();
+    }
+</script>
+
+</body>
+</html>
