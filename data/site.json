@@ -80,6 +80,12 @@
           "emoji": "📚",
           "desc": "Калькулятор",
           "path": "pages/economics/salaries/index.html"
+        },,
+        {
+          "title": "Зарплаты 2",
+          "emoji": "📚",
+          "desc": "Калькулятор",
+          "path": "pages/economics/taxes_cy/index.html"
         },
         {
           "title": "Налоги",
