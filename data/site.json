@@ -57,7 +57,27 @@
           "emoji": "🛁",
           "desc": "Непреднамеренные последствия систем и логика институтов",
           "path": "pages/economics/emergence/index.html"
-        }, {
+        },
+        {
+          "title": "Стоимость недвиги на кипре",
+          "emoji": "🏦",
+          "desc": "оценивает стоимость недвиги",
+          "path": "pages/economics/houses/index.html"
+        },
+        {
+          "title": "Оценивает съем/ипотеку",
+          "emoji": "🏠",
+          "desc": "оценивает съем/ипотеку",
+          "path": "pages/economics/mortgage_2/index.html"
+        },
+
+        {
+          "title": "Ипотека на кипре old",
+          "emoji": "📚",
+          "desc": "Калькулятор",
+          "path": "pages/economics/mortgage/index.html"
+        },
+        {
           "title": "Мир благополучия",
           "emoji": "🦄",
           "desc": "Сравнение теорий",
@@ -68,12 +88,6 @@
           "emoji": "📚",
           "desc": "Дает удобный порядок чтения для работ о будушем",
           "path": "pages/economics/future_of_work_reading/index.html"
-        },
-        {
-          "title": "Ипотека на кипре",
-          "emoji": "📚",
-          "desc": "Калькулятор",
-          "path": "pages/economics/mortgage/index.html"
         },
         {
           "title": "Зарплаты",
