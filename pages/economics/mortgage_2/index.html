@@ -348,7 +348,7 @@
         let breakEven = null;
         if (first){
             for (const s of scenarios){
-                if (s.waste - first.waste >= 0){ breakEven = s; break; }
+                if (s.t > first.t && s.waste >= first.waste){ breakEven = s; break; }
             }
         }
 
