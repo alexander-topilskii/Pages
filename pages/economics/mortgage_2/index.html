@@ -97,6 +97,23 @@
                     <label>Макс срок ипотеки (лет)</label>
                     <input id="maxYears" type="number" min="1" step="1" value="25" />
                 </div>
+                <div class="note" style="margin-top:12px">
+                    <div><b>Калькулятор платежа</b></div>
+                    <div>Если меняете срок/ставку/сумму — платеж пересчитывается; если меняете платеж — пересчитывается срок.</div>
+                </div>
+                <div class="row" style="margin-top:12px">
+                    <label>Сумма кредита (для платежа)</label>
+                    <input id="loanCalc" type="number" min="0" step="100" value="0" />
+                </div>
+                <div class="row">
+                    <label>Срок для платежа (лет)</label>
+                    <input id="termCalc" type="number" min="1" step="0.1" value="25" />
+                </div>
+                <div class="row">
+                    <label>Платёж/мес (для суммы)</label>
+                    <input id="payCalc" type="number" min="0" step="1" value="0" />
+                </div>
+                <div id="recalcNote" class="small warn" style="margin-top:-6px;margin-bottom:8px;display:none"></div>
                 <div class="row">
                     <label>Аренда в месяц</label>
                     <input id="rent" type="number" min="0" step="10" value="1000" />
@@ -175,6 +192,25 @@
 
 <script>
     const $ = (id) => document.getElementById(id);
+    let loanTouched = false;
+    let termCalcTouched = false;
+    let payCalcTouched = false;
+    let lastEdited = 'term';
+    let noteTimer = null;
+
+    function showRecalcNote(message){
+        const el = $('recalcNote');
+        if (!el) return;
+        if (!message){
+            el.style.display = 'none';
+            el.textContent = '';
+            return;
+        }
+        el.textContent = message;
+        el.style.display = 'block';
+        if (noteTimer) clearTimeout(noteTimer);
+        noteTimer = setTimeout(()=>{ el.style.display = 'none'; }, 3000);
+    }
 
     function fmtMoney(x){
         if (!isFinite(x)) return '—';
@@ -242,6 +278,50 @@
         if (loan <= 0 || months <= 0) return 0;
         const pay = pmt(rMonth, months, -loan);
         return pay*months - loan;
+    }
+
+    function paymentForLoan(loan, apr, years){
+        if (!(loan > 0) || !(years > 0)) return 0;
+        const months = Math.max(1, Math.round(years * 12));
+        const rMonth = apr / 12;
+        const pay = pmt(rMonth, months, -loan);
+        return isFinite(pay) ? pay : 0;
+    }
+
+    function yearsForPayment(loan, apr, pay){
+        if (!(loan > 0) || !(pay > 0)) return NaN;
+        const rMonth = apr / 12;
+        let months = NaN;
+        if (Math.abs(rMonth) < 1e-12){
+            months = loan / pay;
+        } else {
+            if (pay <= rMonth * loan) return NaN;
+            months = Math.log(pay / (pay - rMonth * loan)) / Math.log(1 + rMonth);
+        }
+        if (!isFinite(months) || months <= 0) return NaN;
+        return months / 12;
+    }
+
+    function recomputePayCalc(reason){
+        const loan = +$('loanCalc').value || 0;
+        const apr = (+$('apr').value || 0) / 100;
+        const years = +$('termCalc').value || 0;
+        const pay = paymentForLoan(loan, apr, years);
+        $('payCalc').value = String(Math.max(0, Math.round(pay)));
+        if (reason) showRecalcNote(`Платёж пересчитан из-за изменения: ${reason}.`);
+    }
+
+    function recomputeTermCalc(reason){
+        const loan = +$('loanCalc').value || 0;
+        const apr = (+$('apr').value || 0) / 100;
+        const pay = +$('payCalc').value || 0;
+        const years = yearsForPayment(loan, apr, pay);
+        if (!isFinite(years)){
+            showRecalcNote('Невозможно пересчитать срок: платёж слишком мал.');
+            return;
+        }
+        $('termCalc').value = String(Math.round(years * 10) / 10);
+        if (reason) showRecalcNote(`Срок пересчитан из-за изменения: ${reason}.`);
     }
 
     function calc(){
@@ -435,6 +515,14 @@
         $('dpPct').value = '0.3';
         $('apr').value = '4.5';
         $('maxYears').value = '25';
+        const s0 = +$('s0').value || 0;
+        const price0 = +$('price').value || 0;
+        const loan0 = Math.max(0, price0 - Math.min(s0, price0));
+        $('loanCalc').value = String(Math.round(loan0));
+        $('termCalc').value = $('maxYears').value;
+        const apr = (+$('apr').value || 0) / 100;
+        const termYears = +$('termCalc').value || 0;
+        $('payCalc').value = String(Math.round(paymentForLoan(loan0, apr, termYears)));
         $('rent').value = '1000';
         $('rentGrow').value = '100';
         $('payCap').value = '0';
@@ -444,6 +532,11 @@
         const mm = String(now.getMonth()+1).padStart(2,'0');
         const dd = String(now.getDate()).padStart(2,'0');
         $('startDate').value = `${yyyy}-${mm}-${dd}`;
+        loanTouched = false;
+        termCalcTouched = false;
+        payCalcTouched = false;
+        lastEdited = 'term';
+        showRecalcNote('');
         calc();
     }
 
@@ -459,9 +552,46 @@
         $('resetBtn').addEventListener('click', reset);
 
         // пересчёт по Enter
-        for (const id of ['startDate','s0','save','price','homeGrow','dpPct','apr','maxYears','rent','rentGrow','payCap','horizonYears']){
+        for (const id of ['startDate','s0','save','price','homeGrow','dpPct','apr','maxYears','loanCalc','termCalc','payCalc','rent','rentGrow','payCap','horizonYears']){
             $(id).addEventListener('keydown', (e)=>{ if (e.key==='Enter') calc(); });
         }
+
+        // калькулятор платежа
+        $('loanCalc').addEventListener('input', ()=>{
+            loanTouched = true;
+            lastEdited = 'loan';
+            recomputePayCalc('суммы кредита');
+        });
+        $('termCalc').addEventListener('input', ()=>{
+            termCalcTouched = true;
+            lastEdited = 'term';
+            recomputePayCalc('срока');
+        });
+        $('payCalc').addEventListener('input', ()=>{
+            payCalcTouched = true;
+            lastEdited = 'pay';
+            recomputeTermCalc('платежа');
+        });
+        $('apr').addEventListener('input', ()=>{
+            if (lastEdited === 'pay') recomputeTermCalc('ставки');
+            else recomputePayCalc('ставки');
+        });
+        $('maxYears').addEventListener('input', ()=>{
+            if (!termCalcTouched){
+                $('termCalc').value = $('maxYears').value;
+                recomputePayCalc('срока');
+            }
+        });
+        const recomputeLoanAuto = ()=>{
+            if (loanTouched) return;
+            const s0 = +$('s0').value || 0;
+            const price0 = +$('price').value || 0;
+            const loan0 = Math.max(0, price0 - Math.min(s0, price0));
+            $('loanCalc').value = String(Math.round(loan0));
+            recomputePayCalc('суммы кредита');
+        };
+        $('s0').addEventListener('input', recomputeLoanAuto);
+        $('price').addEventListener('input', recomputeLoanAuto);
 
         // авто-обновление лимита платежа, если пользователь не трогал
         let payTouched = false;
