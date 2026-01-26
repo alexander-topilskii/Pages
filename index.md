@@ -21,6 +21,7 @@ https://alexander-topilskii.github.io/Pages/
 - [Houses](pages/economics/houses/) — заметка про жильё.
 - [Mortgage](pages/economics/mortgage/) — простой калькулятор ипотеки.
 - [Mortgage 2](pages/economics/mortgage_2/) — расширенный калькулятор «аренда vs ипотека».
+- [Mortgage Play](pages/economics/mortgage_play/) — интерактивная версия с «игрой» по сроку и взносу.
 - [Salaries](pages/economics/salaries/) — визуализация/заметки по зарплатам.
 - [Salaries G](pages/economics/salaries_g/) — графики и сравнения.
 - [Taxes CY](pages/economics/taxes_cy/) — справка по налогам Кипра.

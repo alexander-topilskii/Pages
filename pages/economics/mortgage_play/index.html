@@ -1,0 +1,451 @@
+<!doctype html>
+<html lang="ru">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Ипотека vs аренда — интерактивный калькулятор</title>
+    <style>
+        :root{
+            --bg:#0b0d12;--card:#121826;--muted:#9aa4b2;--text:#e8eef7;--line:#22304a;
+            --accent:#7aa2ff;--good:#35d07f;--bad:#ff5a6f;--warn:#ffd166;
+            --mono: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
+            --sans: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Ubuntu, Cantarell, Noto Sans, Arial, "Apple Color Emoji", "Segoe UI Emoji";
+        }
+        *{box-sizing:border-box}
+        body{margin:0;font-family:var(--sans);background:linear-gradient(180deg,#070910 0%, #0b0d12 55%, #070910 100%);color:var(--text)}
+        .wrap{max-width:1150px;margin:0 auto;padding:18px}
+        h1{margin:0 0 8px;font-size:20px}
+        .sub{color:var(--muted);margin:0 0 18px;font-size:13px;line-height:1.4}
+        .grid{display:grid;grid-template-columns:380px 1fr;gap:14px}
+        @media (max-width: 980px){.grid{grid-template-columns:1fr}}
+        .card{background:rgba(18,24,38,.92);border:1px solid rgba(34,48,74,.9);border-radius:14px;box-shadow:0 10px 40px rgba(0,0,0,.25)}
+        .card .hd{padding:14px 14px 0}
+        .card .bd{padding:14px}
+        .row{display:grid;grid-template-columns:1fr 160px;gap:10px;align-items:center;margin:10px 0}
+        .row label{color:var(--muted);font-size:12px}
+        input, select{width:100%;padding:10px 10px;border-radius:10px;border:1px solid var(--line);background:#0e1422;color:var(--text);outline:none}
+        input:focus,select:focus{border-color:rgba(122,162,255,.9);box-shadow:0 0 0 3px rgba(122,162,255,.15)}
+        input[type="range"]{padding:0;height:26px}
+        .hint{color:var(--muted);font-size:12px;line-height:1.45;margin-top:10px}
+        .pill{display:inline-flex;align-items:center;gap:8px;padding:8px 10px;border-radius:999px;border:1px solid var(--line);background:#0e1422;color:var(--muted);font-size:12px}
+        .kpi{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+        @media (max-width: 520px){.kpi{grid-template-columns:1fr}}
+        .k{padding:12px;border-radius:12px;border:1px solid var(--line);background:#0e1422}
+        .k .t{color:var(--muted);font-size:12px}
+        .k .v{margin-top:6px;font-size:15px;font-family:var(--mono)}
+        .ok{color:var(--good)}
+        .no{color:var(--bad)}
+        .warn{color:var(--warn)}
+        .note{border-left:3px solid rgba(122,162,255,.8);padding:10px 12px;background:rgba(122,162,255,.08);border-radius:12px;color:var(--muted);font-size:12px;line-height:1.45}
+        code{font-family:var(--mono);font-size:12px;color:#cfe0ff}
+        .btns{display:flex;gap:10px;flex-wrap:wrap;margin-top:12px}
+        button{padding:10px 12px;border-radius:10px;border:1px solid var(--line);background:#0e1422;color:var(--text);cursor:pointer}
+        button:hover{border-color:rgba(122,162,255,.9)}
+    </style>
+</head>
+<body>
+<div class="wrap">
+    <h1>Ипотека vs аренда — интерактивный калькулятор</h1>
+    <p class="sub">
+        Считает (1) когда ипотека становится возможной, (2) когда покупка выгоднее аренды,
+        и (3) как срок ипотеки и размер взноса влияют на платёж и время накопления.
+    </p>
+
+    <div class="grid">
+        <div class="card">
+            <div class="hd"><div class="pill">Вводные параметры</div></div>
+            <div class="bd">
+                <div class="row">
+                    <label>Дата старта расчёта</label>
+                    <input id="startDate" type="date" />
+                </div>
+                <div class="row">
+                    <label>Накопления сейчас</label>
+                    <input id="s0" type="number" min="0" step="100" value="0" />
+                </div>
+                <div class="row">
+                    <label>Откладываю в месяц</label>
+                    <input id="save" type="number" min="0" step="50" value="2000" />
+                </div>
+                <div class="row">
+                    <label>Цена квартиры</label>
+                    <input id="price" type="number" min="0" step="1000" value="250000" />
+                </div>
+                <div class="row">
+                    <label>Подорожание квартиры</label>
+                    <input id="homeGrow" type="number" min="0" step="0.1" value="1" />
+                </div>
+                <div class="hint" style="margin-top:-6px;margin-bottom:8px">% каждые 6 месяцев (ступенчато)</div>
+                <div class="row">
+                    <label>Минимальный взнос (требование)</label>
+                    <select id="dpPct">
+                        <option value="0.1">10%</option>
+                        <option value="0.2">20%</option>
+                        <option value="0.3" selected>30%</option>
+                        <option value="0.4">40%</option>
+                        <option value="0.5">50%</option>
+                    </select>
+                </div>
+                <div class="row">
+                    <label>Ставка банка (годовых)</label>
+                    <input id="apr" type="number" min="0" step="0.01" value="4.5" />
+                </div>
+                <div class="row">
+                    <label>Макс срок ипотеки (лет)</label>
+                    <input id="maxYears" type="number" min="1" step="1" value="25" />
+                </div>
+                <div class="row">
+                    <label>Аренда в месяц</label>
+                    <input id="rent" type="number" min="0" step="10" value="1000" />
+                </div>
+                <div class="row">
+                    <label>Подорожание аренды</label>
+                    <input id="rentGrow" type="number" min="0" step="10" value="100" />
+                </div>
+                <div class="hint" style="margin-top:-6px;margin-bottom:8px">+€ в год (ступенчато: раз в 12 месяцев)</div>
+                <div class="note" style="margin-top:12px">
+                    <div><b>Лимит платёжеспособности</b></div>
+                    <div>По умолчанию максимум = <code>аренда + откладываю в месяц</code>. Можно изменить вручную.</div>
+                </div>
+                <div class="row" style="margin-top:12px">
+                    <label>Макс платёж/мес (лимит)</label>
+                    <input id="payCap" type="number" min="0" step="10" value="0" />
+                </div>
+                <div class="row">
+                    <label>Горизонт моделирования (лет)</label>
+                    <input id="horizonYears" type="number" min="1" step="1" value="40" />
+                </div>
+                <div class="btns">
+                    <button id="calcBtn">Посчитать</button>
+                    <button id="resetBtn">Сбросить</button>
+                </div>
+            </div>
+        </div>
+
+        <div class="card">
+            <div class="hd"><div class="pill">Результаты</div></div>
+            <div class="bd">
+                <div class="kpi" id="kpi"></div>
+            </div>
+        </div>
+    </div>
+
+    <div style="height:12px"></div>
+
+    <div class="grid">
+        <div class="card">
+            <div class="hd"><div class="pill">Поиграть со сроком и взносом</div></div>
+            <div class="bd">
+                <div class="row">
+                    <label>Целевой взнос (%)</label>
+                    <input id="dpPlayPct" type="range" min="5" max="70" step="1" value="30" />
+                </div>
+                <div class="row">
+                    <label>Взнос (%)</label>
+                    <input id="dpPlayPctNum" type="number" min="5" max="70" step="1" value="30" />
+                </div>
+                <div class="row">
+                    <label>Срок ипотеки (лет)</label>
+                    <input id="termPlay" type="range" min="5" max="35" step="1" value="25" />
+                </div>
+                <div class="row">
+                    <label>Срок (лет)</label>
+                    <input id="termPlayNum" type="number" min="5" max="35" step="0.5" value="25" />
+                </div>
+                <div class="note" style="margin-top:10px">
+                    <div>Здесь мы считаем: когда накопится выбранный взнос, какой будет цена жилья, размер кредита и платёж при выбранном сроке.</div>
+                </div>
+            </div>
+        </div>
+
+        <div class="card">
+            <div class="hd"><div class="pill">Итог для выбранного взноса</div></div>
+            <div class="bd">
+                <div class="kpi" id="playKpi"></div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    const $ = (id) => document.getElementById(id);
+
+    function fmtMoney(x){
+        if (!isFinite(x)) return '—';
+        const sign = x < 0 ? '-' : '';
+        const v = Math.abs(x);
+        return sign + v.toLocaleString('en-US', {maximumFractionDigits: 0});
+    }
+
+    function addMonths(d, m){
+        const x = new Date(d.getTime());
+        const day = x.getDate();
+        x.setMonth(x.getMonth() + m);
+        if (x.getDate() !== day) x.setDate(0);
+        return x;
+    }
+
+    function fmtMonth(d){
+        return d.toLocaleDateString('en-GB', {year:'numeric', month:'long'});
+    }
+
+    function pmt(rate, nper, pv){
+        if (nper <= 0) return NaN;
+        if (Math.abs(rate) < 1e-12) return -(pv / nper);
+        const r = rate;
+        const v = Math.pow(1+r, nper);
+        return -(pv * r * v) / (v - 1);
+    }
+
+    function chooseTermMonths(loan, rMonth, maxMonths, payCap){
+        const out = { months: maxMonths, payment: NaN, ok: true };
+        if (loan <= 0){
+            out.months = 0; out.payment = 0; out.ok = true;
+            return out;
+        }
+        if (!(payCap > 0)){
+            out.months = maxMonths;
+            out.payment = pmt(rMonth, maxMonths, -loan);
+            out.ok = true;
+            return out;
+        }
+        let best = null;
+        for (let m=1; m<=maxMonths; m++){
+            const pay = pmt(rMonth, m, -loan);
+            if (pay <= payCap){ best = {months:m, payment:pay}; break; }
+        }
+        if (best){
+            out.months = best.months;
+            out.payment = best.payment;
+            out.ok = true;
+        } else {
+            out.months = maxMonths;
+            out.payment = pmt(rMonth, maxMonths, -loan);
+            out.ok = false;
+        }
+        return out;
+    }
+
+    function interestTotal(loan, rMonth, months){
+        if (loan <= 0 || months <= 0) return 0;
+        const pay = pmt(rMonth, months, -loan);
+        return pay*months - loan;
+    }
+
+    function calc(){
+        const start = $('startDate').value ? new Date($('startDate').value + 'T00:00:00') : new Date();
+        const s0 = +$('s0').value || 0;
+        const save = +$('save').value || 0;
+        const price0 = +$('price').value || 0;
+        const homeGrowSemi = (+$('homeGrow').value || 0) / 100;
+        const dpPct = +$('dpPct').value || 0;
+        const apr = (+$('apr').value || 0) / 100;
+        const maxYears = Math.max(1, Math.floor(+$('maxYears').value || 25));
+        const rent0 = +$('rent').value || 0;
+        const rentGrowYear = +$('rentGrow').value || 0;
+        const horizonYears = Math.max(1, Math.floor(+$('horizonYears').value || 40));
+
+        function priceAt(tMonths){
+            const k = Math.floor(tMonths / 6);
+            return price0 * Math.pow(1 + homeGrowSemi, k);
+        }
+        function dpMinAt(tMonths){
+            return priceAt(tMonths) * dpPct;
+        }
+        function rentAtMonth(m){
+            return rent0 + rentGrowYear * Math.floor(m / 12);
+        }
+        function rentPaidUpTo(tMonths){
+            const t = Math.max(0, Math.floor(tMonths));
+            const y = Math.floor(t / 12);
+            const rem = t - 12 * y;
+            const sumFloor = 12 * (y * (y - 1) / 2) + y * rem;
+            return rent0 * t + rentGrowYear * sumFloor;
+        }
+
+        const autoCap = rent0 + save;
+        if ((+$('payCap').value || 0) <= 0) $('payCap').value = String(Math.max(0, Math.round(autoCap)));
+        const payCap = +$('payCap').value || 0;
+
+        const rMonth = apr/12;
+        const maxMonths = maxYears*12;
+        const horizonMonths = horizonYears*12;
+
+        let tEligible = null;
+        for (let t=0; t<=horizonMonths; t++){
+            const st = s0 + save*t;
+            if (st >= dpMinAt(t)){ tEligible = t; break; }
+        }
+
+        const scenarios = [];
+        if (tEligible !== null){
+            for (let t=tEligible; t<=horizonMonths; t++){
+                const st = s0 + save*t;
+                const priceT = priceAt(t);
+                const cash = Math.min(st, priceT);
+                const loan = Math.max(0, priceT - cash);
+                const term = chooseTermMonths(loan, rMonth, maxMonths, payCap);
+                const interest = interestTotal(loan, rMonth, term.months);
+                const rentPaid = rentPaidUpTo(t);
+                const waste = interest + rentPaid;
+                scenarios.push({t, date: addMonths(start, t), price: priceT, loan, termMonths: term.months, payment: term.payment, termOk: term.ok, interest, rentPaid, waste});
+            }
+        }
+
+        let best = null;
+        for (const s of scenarios){
+            if (!best || s.waste < best.waste) best = s;
+        }
+        const first = scenarios.length ? scenarios[0] : null;
+
+        let breakEven = null;
+        if (first){
+            for (const s of scenarios){
+                if (s.t > first.t && s.waste >= first.waste){ breakEven = s; break; }
+            }
+        }
+
+        const kpi = [];
+        if (tEligible === null){
+            kpi.push({t:'Ипотека возможна', v:'—', cls:'no'});
+            kpi.push({t:'Статус', v:'накопления не достигают минимального взноса на горизонте', cls:'warn'});
+        } else {
+            kpi.push({t:'Ипотека возможна', v:`через ${tEligible} мес · ${fmtMonth(addMonths(start,tEligible))}`, cls:'ok'});
+            kpi.push({t:'Мин. взнос (на момент возможности)', v:fmtMoney(dpMinAt(tEligible)), cls:''});
+            kpi.push({t:'Цена квартиры (на момент возможности)', v:fmtMoney(priceAt(tEligible)), cls:''});
+            kpi.push({t:'Аренда в момент возможности', v:fmtMoney(rentAtMonth(tEligible)), cls:''});
+        }
+        if (best){
+            const deltaM = best.t - tEligible;
+            const more = deltaM>0 ? `(+${deltaM} мес ожидания)` : '(сразу)';
+            const termTxt = best.termMonths ? `${(best.termMonths/12).toFixed(1)} лет` : '0 (без кредита)';
+            kpi.push({t:'Выгоднее купить', v:`${fmtMonth(best.date)} ${more}`, cls:'ok'});
+            kpi.push({t:'Срок ипотеки (выбран)', v:`${termTxt}${best.termOk?'':' (платёж выше лимита)'}`, cls:best.termOk?'':'warn'});
+            kpi.push({t:'Потери (лучший сценарий)', v:fmtMoney(best.waste), cls:''});
+        } else {
+            kpi.push({t:'Выгоднее купить', v:'—', cls:'no'});
+        }
+        if (breakEven && first){
+            kpi.push({t:'Съём становится невыгоден', v:`${fmtMonth(breakEven.date)} (vs покупка при первой возможности)`, cls:''});
+            kpi.push({t:'Потери при покупке сразу', v:fmtMoney(first.waste), cls:''});
+        }
+
+        const kpiEl = $('kpi');
+        kpiEl.innerHTML = '';
+        for (const x of kpi){
+            const div = document.createElement('div');
+            div.className = 'k';
+            div.innerHTML = `<div class="t">${x.t}</div><div class="v ${x.cls||''}">${x.v}</div>`;
+            kpiEl.appendChild(div);
+        }
+
+        // Play section
+        const dpPlayPct = (+$('dpPlayPctNum').value || 0) / 100;
+        const termPlayYears = +$('termPlayNum').value || 0;
+
+        let tReach = null;
+        for (let t=0; t<=horizonMonths; t++){
+            const st = s0 + save*t;
+            const priceT = priceAt(t);
+            if (st >= priceT * dpPlayPct){ tReach = t; break; }
+        }
+
+        const play = [];
+        if (tReach === null){
+            play.push({t:'Целевой взнос', v:'не достижим на горизонте', cls:'warn'});
+        } else {
+            const st = s0 + save*tReach;
+            const priceT = priceAt(tReach);
+            const dpAmt = priceT * dpPlayPct;
+            const cash = Math.min(st, priceT);
+            const loan = Math.max(0, priceT - cash);
+            const payment = termPlayYears > 0 ? pmt(rMonth, Math.round(termPlayYears*12), -loan) : 0;
+            const interest = termPlayYears > 0 ? (payment * Math.round(termPlayYears*12) - loan) : 0;
+            play.push({t:'Взнос выбранный', v:`${Math.round(dpPlayPct*100)}% · ${fmtMoney(dpAmt)}`, cls:''});
+            play.push({t:'Когда накопится', v:`${tReach} мес · ${fmtMonth(addMonths(start,tReach))}`, cls:'ok'});
+            play.push({t:'Цена жилья тогда', v:fmtMoney(priceT), cls:''});
+            play.push({t:'Кредит', v:fmtMoney(loan), cls:''});
+            play.push({t:'Платёж/мес', v:fmtMoney(payment), cls:''});
+            play.push({t:'Проценты за срок', v:fmtMoney(interest), cls:''});
+        }
+
+        const playEl = $('playKpi');
+        playEl.innerHTML = '';
+        for (const x of play){
+            const div = document.createElement('div');
+            div.className = 'k';
+            div.innerHTML = `<div class="t">${x.t}</div><div class="v ${x.cls||''}">${x.v}</div>`;
+            playEl.appendChild(div);
+        }
+    }
+
+    function reset(){
+        $('s0').value = '0';
+        $('save').value = '2000';
+        $('price').value = '250000';
+        $('homeGrow').value = '1';
+        $('dpPct').value = '0.3';
+        $('apr').value = '4.5';
+        $('maxYears').value = '25';
+        $('rent').value = '1000';
+        $('rentGrow').value = '100';
+        $('payCap').value = '0';
+        $('horizonYears').value = '40';
+        $('dpPlayPct').value = '30';
+        $('dpPlayPctNum').value = '30';
+        $('termPlay').value = '25';
+        $('termPlayNum').value = '25';
+        const now = new Date();
+        const yyyy = now.getFullYear();
+        const mm = String(now.getMonth()+1).padStart(2,'0');
+        const dd = String(now.getDate()).padStart(2,'0');
+        $('startDate').value = `${yyyy}-${mm}-${dd}`;
+        calc();
+    }
+
+    (function init(){
+        const now = new Date();
+        const yyyy = now.getFullYear();
+        const mm = String(now.getMonth()+1).padStart(2,'0');
+        const dd = String(now.getDate()).padStart(2,'0');
+        $('startDate').value = `${yyyy}-${mm}-${dd}`;
+
+        $('calcBtn').addEventListener('click', calc);
+        $('resetBtn').addEventListener('click', reset);
+
+        for (const id of ['startDate','s0','save','price','homeGrow','dpPct','apr','maxYears','rent','rentGrow','payCap','horizonYears','dpPlayPct','dpPlayPctNum','termPlay','termPlayNum']){
+            $(id).addEventListener('input', calc);
+            $(id).addEventListener('keydown', (e)=>{ if (e.key==='Enter') calc(); });
+        }
+
+        const syncPct = (v)=>{
+            $('dpPlayPct').value = String(v);
+            $('dpPlayPctNum').value = String(v);
+        };
+        $('dpPlayPct').addEventListener('input', (e)=>{ syncPct(e.target.value); });
+        $('dpPlayPctNum').addEventListener('input', (e)=>{ syncPct(e.target.value); });
+
+        const syncTerm = (v)=>{
+            $('termPlay').value = String(v);
+            $('termPlayNum').value = String(v);
+        };
+        $('termPlay').addEventListener('input', (e)=>{ syncTerm(e.target.value); });
+        $('termPlayNum').addEventListener('input', (e)=>{ syncTerm(e.target.value); });
+
+        let payTouched = false;
+        $('payCap').addEventListener('input', ()=>{ payTouched = true; });
+        const recomputeCap = ()=>{
+            if (payTouched) return;
+            const rent0 = +$('rent').value || 0;
+            const save = +$('save').value || 0;
+            $('payCap').value = String(Math.max(0, Math.round(rent0 + save)));
+        };
+        $('rent').addEventListener('input', recomputeCap);
+        $('save').addEventListener('input', recomputeCap);
+        $('rentGrow').addEventListener('input', recomputeCap);
+
+        reset();
+    })();
+</script>
+</body>
+</html>
