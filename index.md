@@ -1,25 +1,28 @@
-# Pages
+# 📚 Pages
 
-Простой список страниц для GitHub Pages.
+Коллекция мини‑страниц, заметок и интерактивных калькуляторов для GitHub Pages.
 
-## Common
-- [Art](pages/common/art/)
-- [Censored](pages/common/censored/)
-- [Intellect](pages/common/intellect/)
-- [Nation](pages/common/nation/)
+## 🧭 Навигация
+- 🎨 [Common](pages/common/)
+- 💰 [Economics](pages/economics/)
+- ⚛️ [Physics](pages/physics/nav/)
 
-## Economics
-- [Emergence](pages/economics/emergence/)
-- [Future of Work](pages/economics/future_of_work/)
-- [Future of Work Reading](pages/economics/future_of_work_reading/)
-- [Houses](pages/economics/houses/)
-- [Mortgage](pages/economics/mortgage/)
-- [Mortgage 2](pages/economics/mortgage_2/)
-- [Salaries](pages/economics/salaries/)
-- [Salaries G](pages/economics/salaries_g/)
-- [Taxes CY](pages/economics/taxes_cy/)
+## 🎨 Common
+- [Art](pages/common/art/) — визуальные эксперименты и композиции.
+- [Censored](pages/common/censored/) — тестовый каталог/витрина.
+- [Intellect](pages/common/intellect/) — заметки и смыслы.
+- [Nation](pages/common/nation/) — мини‑страница про идентичность/общество.
 
-## Physics
-- [Physics](pages/physics/)
+## 💰 Economics
+- [Emergence](pages/economics/emergence/) — короткая заметка про emergence.
+- [Future of Work](pages/economics/future_of_work/) — лонгрид со схемами и данными.
+- [Future of Work Reading](pages/economics/future_of_work_reading/) — список чтения.
+- [Houses](pages/economics/houses/) — заметка про жильё.
+- [Mortgage](pages/economics/mortgage/) — простой калькулятор ипотеки.
+- [Mortgage 2](pages/economics/mortgage_2/) — расширенный калькулятор «аренда vs ипотека».
+- [Salaries](pages/economics/salaries/) — визуализация/заметки по зарплатам.
+- [Salaries G](pages/economics/salaries_g/) — графики и сравнения.
+- [Taxes CY](pages/economics/taxes_cy/) — справка по налогам Кипра.
 
-Page: https://alexander-topilskii.github.io/Pages/
+## ⚛️ Physics
+- [Physics](pages/physics/) — базовая страница по физике.
