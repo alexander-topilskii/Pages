@@ -1,7 +1,10 @@
 # 📚 Pages
 
 Коллекция мини‑страниц, заметок и интерактивных калькуляторов для GitHub Pages.
-https://alexander-topilskii.github.io/Pages/
+----
+👉👉👉 [Страницы](https://alexander-topilskii.github.io/Pages/) 👈👈👈
+----
+
 
 ## 🧭 Навигация
 - 🎨 [Common](pages/common/)
