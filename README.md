@@ -31,4 +31,4 @@
 - [Salaries](pages/cyprus/salaries/) — визуализация/заметки по зарплатам.
 - [Salaries G](pages/cyprus/salaries_g/) — графики и сравнения.
 - [Taxes CY](pages/cyprus/taxes_cy/) — справка по налогам Кипра.
-- [Taxes CY](pages/cyprus/taxes_cy/) — справка по налогам Кипра.
+- [Календарь до паспорта](pages/cyprus/passport_calendar/) — справка по налогам Кипра.
