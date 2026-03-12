@@ -1,0 +1,335 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>План: Гражданство Кипра</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Outfit', sans-serif;
+            background-color: #f8fafc; /* Очень мягкий светлый фон */
+        }
+
+        /* Плавные переходы для карточек */
+        .month-cell {
+            transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+        .month-cell:hover {
+            transform: translateY(-3px) scale(1.02);
+            box-shadow: 0 12px 20px -8px rgba(0, 0, 0, 0.1);
+            z-index: 10;
+        }
+
+        /* Анимация пульсации для текущего месяца */
+        @keyframes pulse-ring {
+            0% { box-shadow: 0 0 0 0 rgba(99, 102, 241, 0.4); }
+            70% { box-shadow: 0 0 0 6px rgba(99, 102, 241, 0); }
+            100% { box-shadow: 0 0 0 0 rgba(99, 102, 241, 0); }
+        }
+        .now-ring {
+            animation: pulse-ring 2s infinite;
+        }
+
+        /* Анимация для модального окна */
+        .modal-enter {
+            animation: modal-pop 0.3s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+        }
+        @keyframes modal-pop {
+            0% { opacity: 0; transform: scale(0.95) translateY(10px); }
+            100% { opacity: 1; transform: scale(1) translateY(0); }
+        }
+
+        /* Скрытие скролла при открытом модалке */
+        body.modal-open {
+            overflow: hidden;
+        }
+    </style>
+</head>
+<body class="text-slate-800 antialiased min-h-screen pb-20">
+
+<!-- Верхняя панель (Header) -->
+<header class="bg-white/80 backdrop-blur-md border-b border-slate-200 sticky top-0 z-40 shadow-sm">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4 sm:py-5">
+        <div class="flex flex-col md:flex-row md:items-center justify-between gap-4">
+            <div>
+                <h1 class="text-2xl sm:text-3xl font-extrabold bg-clip-text text-transparent bg-gradient-to-r from-slate-900 to-slate-600 tracking-tight">
+                    Таймлайн Кипра 🇨🇾
+                </h1>
+                <p class="text-slate-500 text-xs sm:text-sm mt-1 font-medium">Кликните на любой месяц для деталей</p>
+            </div>
+
+            <!-- Легенда -->
+            <div class="flex flex-wrap gap-2 text-[10px] sm:text-xs font-semibold">
+                <div class="flex items-center gap-1 bg-slate-100 text-slate-600 px-2.5 py-1 sm:py-1.5 rounded-lg">
+                    <span class="text-sm">🛬</span> Приезд
+                </div>
+                <div class="flex items-center gap-1 bg-slate-100 text-slate-600 px-2.5 py-1 sm:py-1.5 rounded-lg">
+                    <span class="text-sm">🇨🇾</span> Экз. Язык
+                </div>
+                <div class="flex items-center gap-1 bg-slate-100 text-slate-600 px-2.5 py-1 sm:py-1.5 rounded-lg">
+                    <span class="text-sm">💻</span> Экз. Культура
+                </div>
+                <div class="flex items-center gap-1 bg-blue-50 text-blue-700 border border-blue-200 px-2.5 py-1 sm:py-1.5 rounded-lg">
+                    B1 (4 года)
+                </div>
+                <div class="flex items-center gap-1 bg-emerald-50 text-emerald-700 border border-emerald-200 px-2.5 py-1 sm:py-1.5 rounded-lg">
+                    A2 (5 лет)
+                </div>
+            </div>
+        </div>
+    </div>
+</header>
+
+<!-- Основной контент (Таймлайн) -->
+<main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 space-y-10" id="timeline-container">
+    <!-- Сетка генерируется через JS -->
+</main>
+
+<!-- Модальное окно (изначально скрыто) -->
+<div id="modal-backdrop" class="fixed inset-0 bg-slate-900/40 backdrop-blur-sm z-50 hidden opacity-0 transition-opacity duration-300 flex items-center justify-center p-4">
+    <div id="modal-content" class="bg-white rounded-3xl shadow-2xl w-full max-w-sm overflow-hidden transform scale-95 transition-transform duration-300">
+        <!-- Содержимое модального окна будет вставлено через JS -->
+    </div>
+</div>
+
+<script>
+    document.addEventListener('DOMContentLoaded', () => {
+        const startYear = 2021;
+        const endYear = 2032;
+
+        const monthsNames = ['Январь', 'Февраль', 'Март', 'Апрель', 'Май', 'Июнь', 'Июль', 'Август', 'Сентябрь', 'Октябрь', 'Ноябрь', 'Декабрь'];
+        const shortMonths = ['Янв', 'Фев', 'Мар', 'Апр', 'Май', 'Июн', 'Июл', 'Авг', 'Сен', 'Окт', 'Ноя', 'Дек'];
+
+        const arrivalAbs = 2022 * 12 + 8; // Сентябрь 2022
+        const b1TargetAbs = 2026 * 12 + 8; // Сентябрь 2026
+        const a2TargetAbs = 2027 * 12 + 8; // Сентябрь 2027
+
+        const langExamMonths = [4]; // Май - Экзамен языка 🇨🇾
+        const cultureExamMonths = [1, 6]; // Февраль, Июль - Экзамен культуры 💻
+
+        const currentDate = new Date();
+        const currentAbs = currentDate.getFullYear() * 12 + currentDate.getMonth();
+
+        const container = document.getElementById('timeline-container');
+        const modalBackdrop = document.getElementById('modal-backdrop');
+        const modalContent = document.getElementById('modal-content');
+
+        // Объект для хранения данных всех месяцев для модального окна
+        const monthsData = {};
+
+        let html = '';
+
+        for (let year = startYear; year <= endYear; year++) {
+            html += `
+            <section class="relative">
+                <div class="flex items-center gap-3 mb-4">
+                    <h2 class="text-xl sm:text-2xl font-bold text-slate-800 w-16">${year}</h2>
+                    <div class="h-[2px] bg-slate-200 flex-grow rounded-full"></div>
+                </div>
+
+                <!-- Компактная сетка: 3 колонки на смартфонах, 4-6 на планшетах, 12 на ПК -->
+                <div class="grid grid-cols-3 sm:grid-cols-4 md:grid-cols-6 lg:grid-cols-12 gap-2 sm:gap-3">
+            `;
+
+            for (let month = 0; month < 12; month++) {
+                const currentCellAbs = year * 12 + month;
+                const cellId = `cell-${currentCellAbs}`;
+
+                const isBeforeArrival = currentCellAbs < arrivalAbs;
+                const isArrival = currentCellAbs === arrivalAbs;
+                const isB1Period = currentCellAbs >= b1TargetAbs && currentCellAbs < a2TargetAbs;
+                const isA2Period = currentCellAbs >= a2TargetAbs;
+                const isNow = currentCellAbs === currentAbs;
+
+                const isLangExam = langExamMonths.includes(month) && currentCellAbs > arrivalAbs;
+                const isCultExam = cultureExamMonths.includes(month) && currentCellAbs > arrivalAbs;
+                const isAnniversary = (month === 8) && currentCellAbs > arrivalAbs;
+                const yearsInCyprus = year - 2022;
+
+                // Сохраняем данные для модалки
+                monthsData[cellId] = {
+                    title: `${monthsNames[month]} ${year}`,
+                    isBeforeArrival, isArrival, isB1Period, isA2Period, isNow,
+                    isLangExam, isCultExam, isAnniversary, yearsInCyprus
+                };
+
+                // Стилизация компактной ячейки
+                let cellBg = 'bg-white border-slate-200';
+                let textColor = 'text-slate-700';
+                let bottomBadge = '';
+
+                if (isBeforeArrival) {
+                    cellBg = 'bg-slate-100/50 border-dashed border-slate-200 opacity-60 grayscale';
+                } else if (isA2Period) {
+                    cellBg = 'bg-emerald-50 border-emerald-200';
+                    textColor = 'text-emerald-900';
+                    bottomBadge = `<div class="w-full bg-emerald-500 text-white text-[9px] font-bold text-center py-[2px] rounded-sm tracking-wide shadow-sm mt-auto">ПОДАЧА A2</div>`;
+                } else if (isB1Period) {
+                    cellBg = 'bg-blue-50 border-blue-200';
+                    textColor = 'text-blue-900';
+                    bottomBadge = `<div class="w-full bg-blue-500 text-white text-[9px] font-bold text-center py-[2px] rounded-sm tracking-wide shadow-sm mt-auto">ПОДАЧА B1</div>`;
+                }
+
+                if (isNow) {
+                    cellBg += ' ring-2 ring-indigo-500 ring-offset-2 ring-offset-slate-50 border-transparent z-10';
+                }
+
+                // Формируем HTML ячейки
+                html += `
+                    <div class="month-cell relative rounded-xl border p-2 flex flex-col items-center justify-between cursor-pointer h-20 sm:h-24 ${cellBg}"
+                         onclick="openModal('${cellId}')">
+                `;
+
+                // Иконки событий (верхний край)
+                html += `<div class="flex gap-1 w-full justify-center absolute top-1.5 px-1">`;
+                if (isNow) html += `<span class="w-2 h-2 rounded-full bg-indigo-500 now-ring"></span>`;
+                if (isArrival) html += `<span class="text-xs">🛬</span>`;
+                if (isLangExam) html += `<span class="text-xs drop-shadow-sm">🇨🇾</span>`;
+                if (isCultExam) html += `<span class="text-xs">💻</span>`;
+                if (isAnniversary && !isBeforeArrival) html += `<span class="text-[9px] font-black text-slate-300 ml-auto absolute right-1.5 top-0">${yearsInCyprus}</span>`;
+                html += `</div>`;
+
+                // Название месяца (центр)
+                html += `<div class="mt-3 sm:mt-4 font-bold text-sm sm:text-base ${textColor}">${shortMonths[month]}</div>`;
+
+                // Плашка B1/A2 (низ)
+                if (bottomBadge) {
+                    html += bottomBadge;
+                } else {
+                    html += `<div class="h-3"></div>`; // пустой спейсер
+                }
+
+                html += `</div>`;
+            }
+            html += `</div></section>`;
+        }
+
+        container.innerHTML = html;
+        window.monthsData = monthsData; // делаем доступным для onClick
+    });
+
+    // Логика Модального окна
+    function openModal(cellId) {
+        const data = window.monthsData[cellId];
+        if (!data) return;
+
+        const modalBackdrop = document.getElementById('modal-backdrop');
+        const modalContent = document.getElementById('modal-content');
+
+        // Формируем контент внутри модалки
+        let headerColor = 'bg-slate-100';
+        let titleColor = 'text-slate-800';
+        let badgeHtml = '';
+        let contentHtml = '';
+
+        // Определяем главную тему модалки
+        if (data.isA2Period) {
+            headerColor = 'bg-emerald-500'; titleColor = 'text-white';
+            badgeHtml = `<span class="bg-emerald-600/30 text-emerald-50 text-xs px-2 py-1 rounded-md font-bold">Ускоренно (5 лет)</span>`;
+        } else if (data.isB1Period) {
+            headerColor = 'bg-blue-500'; titleColor = 'text-white';
+            badgeHtml = `<span class="bg-blue-600/30 text-blue-50 text-xs px-2 py-1 rounded-md font-bold">Ускоренно (4 года)</span>`;
+        } else if (data.isNow) {
+            headerColor = 'bg-indigo-500'; titleColor = 'text-white';
+            badgeHtml = `<span class="bg-white/20 text-white text-xs px-2 py-1 rounded-md font-bold">Текущий месяц</span>`;
+        }
+
+        // Наполняем события
+        if (data.isBeforeArrival) {
+            contentHtml += `<div class="p-3 bg-slate-50 text-slate-500 text-sm rounded-xl">Еще не переехали на Кипр.</div>`;
+        }
+
+        if (data.isArrival) {
+            contentHtml += `<div class="flex items-start gap-3 p-3 bg-amber-50 rounded-xl border border-amber-100">
+                                <div class="text-2xl">🛬</div>
+                                <div><p class="font-bold text-amber-900">Переезд на Кипр</p><p class="text-xs text-amber-700">Старт отсчета дней для гражданства.</p></div>
+                            </div>`;
+        }
+
+        if (data.isLangExam) {
+            contentHtml += `<div class="flex items-start gap-3 p-3 bg-slate-50 rounded-xl border border-slate-200">
+                                <div class="text-2xl drop-shadow-md">🇨🇾</div>
+                                <div><p class="font-bold text-slate-800">Экзамен по греческому языку</p><p class="text-xs text-slate-500">Проходит ежегодно в мае. Необходим для подачи.</p></div>
+                            </div>`;
+        }
+
+        if (data.isCultExam) {
+            contentHtml += `<div class="flex items-start gap-3 p-3 bg-slate-50 rounded-xl border border-slate-200">
+                                <div class="text-2xl">💻</div>
+                                <div><p class="font-bold text-slate-800">Экзамен по культуре Кипра</p><p class="text-xs text-slate-500">Доступен к сдаче в феврале и июле.</p></div>
+                            </div>`;
+        }
+
+        if (data.isB1Period && !data.isA2Period) {
+            contentHtml += `<div class="flex items-start gap-3 p-3 bg-blue-50 rounded-xl border border-blue-100">
+                                <div class="text-2xl">📘</div>
+                                <div><p class="font-bold text-blue-900">Можно подаваться с B1</p><p class="text-xs text-blue-700">Прошло 4 года. Если у вас есть языковой сертификат уровня B1, вы имеете право на подачу.</p></div>
+                            </div>`;
+        }
+
+        if (data.isA2Period) {
+            contentHtml += `<div class="flex items-start gap-3 p-3 bg-emerald-50 rounded-xl border border-emerald-100">
+                                <div class="text-2xl">📗</div>
+                                <div><p class="font-bold text-emerald-900">Можно подаваться с A2</p><p class="text-xs text-emerald-700">Прошло 5 лет. Теперь для подачи по ускоренной процедуре достаточно сертификата уровня A2.</p></div>
+                            </div>`;
+        }
+
+        if (data.isAnniversary && !data.isBeforeArrival && data.yearsInCyprus > 0) {
+             contentHtml += `<div class="flex items-center gap-2 text-slate-400 text-sm font-medium mt-2">
+                                <span>🏁</span> Полных лет на Кипре: <b class="text-slate-700">${data.yearsInCyprus}</b>
+                            </div>`;
+        }
+
+        if (!contentHtml) {
+            contentHtml = `<div class="text-center p-4 text-slate-400 text-sm">Нет особых событий в этом месяце.</div>`;
+        }
+
+        // HTML структура модалки
+        modalContent.innerHTML = `
+            <div class="${headerColor} p-5 pb-6 relative">
+                <button onclick="closeModal()" class="absolute top-4 right-4 text-white/70 hover:text-white bg-black/10 hover:bg-black/20 rounded-full p-1.5 transition-colors">
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>
+                </button>
+                <div class="flex flex-col items-start gap-2">
+                    ${badgeHtml}
+                    <h3 class="text-2xl font-extrabold ${titleColor} tracking-tight">${data.title}</h3>
+                </div>
+            </div>
+            <div class="p-5 flex flex-col gap-3 -mt-3 bg-white rounded-t-2xl relative">
+                ${contentHtml}
+            </div>
+        `;
+
+        // Показываем
+        modalBackdrop.classList.remove('hidden');
+        document.body.classList.add('modal-open');
+
+        // Небольшая задержка для анимации opacity
+        setTimeout(() => {
+            modalBackdrop.classList.remove('opacity-0');
+            modalContent.classList.add('modal-enter');
+        }, 10);
+    }
+
+    function closeModal() {
+        const modalBackdrop = document.getElementById('modal-backdrop');
+        const modalContent = document.getElementById('modal-content');
+
+        modalBackdrop.classList.add('opacity-0');
+        modalContent.classList.remove('modal-enter');
+
+        setTimeout(() => {
+            modalBackdrop.classList.add('hidden');
+            document.body.classList.remove('modal-open');
+        }, 300); // Длительность transition
+    }
+
+    // Закрытие по клику вне контента
+    document.getElementById('modal-backdrop').addEventListener('click', function(e) {
+        if (e.target === this) closeModal();
+    });
+</script>
+</body>
+</html>
