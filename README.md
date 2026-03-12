@@ -7,6 +7,7 @@
 - 🎨 [Common](pages/common/)
 - 💰 [Economics](pages/economics/)
 - ⚛️ [Physics](pages/physics/nav/)
+- 🇨🇾 [Cyprus](pages/cyprus/)
 
 ## 🎨 Common
 - [Art](pages/common/art/) — визуальные эксперименты и композиции.
