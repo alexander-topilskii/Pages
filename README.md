@@ -2,6 +2,9 @@
 
 Коллекция мини‑страниц, заметок и интерактивных калькуляторов для GitHub Pages.
 
+![Last commit](https://img.shields.io/github/last-commit/alexander-topilskii/Pages/main)
+
+
 ## 🧭 Навигация
 - 🏠 [Главная страница сайта](https://alexander-topilskii.github.io/Pages/)
 - 🎨 [Common](pages/common/)
