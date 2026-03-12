@@ -72,10 +72,10 @@
                     <span class="text-sm">💻</span> Экз. Культура
                 </div>
                 <div class="flex items-center gap-1 bg-blue-50 text-blue-700 border border-blue-200 px-2.5 py-1 sm:py-1.5 rounded-lg">
-                    B1 (4 года)
+                    <span class="font-bold">B1</span> <span id="b1-countdown" class="opacity-80 text-[11px]">(4 года)</span>
                 </div>
                 <div class="flex items-center gap-1 bg-emerald-50 text-emerald-700 border border-emerald-200 px-2.5 py-1 sm:py-1.5 rounded-lg">
-                    A2 (5 лет)
+                    <span class="font-bold">A2</span> <span id="a2-countdown" class="opacity-80 text-[11px]">(5 лет)</span>
                 </div>
             </div>
         </div>
@@ -106,11 +106,29 @@
         const b1TargetAbs = 2026 * 12 + 8; // Сентябрь 2026
         const a2TargetAbs = 2027 * 12 + 8; // Сентябрь 2027
 
-        const langExamMonths = [4]; // Май - Экзамен языка 🇨🇾
-        const cultureExamMonths = [1, 6]; // Февраль, Июль - Экзамен культуры 💻
+        const langExamMonths = [0, 4, 5, 8]; // Янв, Май, Июнь, Сентябрь - Экзамен языка 🇨🇾 (КЕГ и UCY)
+        const cultureExamMonths = [1, 2, 6]; // Февраль, Март, Июль - Экзамен культуры 💻
 
         const currentDate = new Date();
         const currentAbs = currentDate.getFullYear() * 12 + currentDate.getMonth();
+
+        // Динамический счетчик месяцев в шапке
+        const monthsToB1 = b1TargetAbs - currentAbs;
+        const monthsToA2 = a2TargetAbs - currentAbs;
+
+        const b1El = document.getElementById('b1-countdown');
+        if (b1El) {
+            if (monthsToB1 > 0) b1El.textContent = `(осталось ${monthsToB1} мес.)`;
+            else if (monthsToB1 === 0) b1El.textContent = `(в этом месяце!)`;
+            else b1El.textContent = `(доступно)`;
+        }
+
+        const a2El = document.getElementById('a2-countdown');
+        if (a2El) {
+            if (monthsToA2 > 0) a2El.textContent = `(осталось ${monthsToA2} мес.)`;
+            else if (monthsToA2 === 0) a2El.textContent = `(в этом месяце!)`;
+            else a2El.textContent = `(доступно)`;
+        }
 
         const container = document.getElementById('timeline-container');
         const modalBackdrop = document.getElementById('modal-backdrop');
@@ -251,14 +269,20 @@
         if (data.isLangExam) {
             contentHtml += `<div class="flex items-start gap-3 p-3 bg-slate-50 rounded-xl border border-slate-200">
                                 <div class="text-2xl drop-shadow-md">🇨🇾</div>
-                                <div><p class="font-bold text-slate-800">Экзамен по греческому языку</p><p class="text-xs text-slate-500">Проходит ежегодно в мае. Необходим для подачи.</p></div>
+                                <div>
+                                    <p class="font-bold text-slate-800">Экзамен по греческому языку</p>
+                                    <p class="text-xs text-slate-500 mt-1"><b>Май:</b> Главный глобальный экзамен (КЕГ).<br><b>Янв, Май/Июн, Сен:</b> Экзамены при Университете Кипра (UCY).</p>
+                                </div>
                             </div>`;
         }
 
         if (data.isCultExam) {
             contentHtml += `<div class="flex items-start gap-3 p-3 bg-slate-50 rounded-xl border border-slate-200">
                                 <div class="text-2xl">💻</div>
-                                <div><p class="font-bold text-slate-800">Экзамен по культуре Кипра</p><p class="text-xs text-slate-500">Доступен к сдаче в феврале и июле.</p></div>
+                                <div>
+                                    <p class="font-bold text-slate-800">История, культура и устройство</p>
+                                    <p class="text-xs text-slate-500 mt-1">Проходит 2 раза в год (Мин. образования):<br><b>1 поток:</b> кон. февраля / нач. марта.<br><b>2 поток:</b> июль (первые числа).</p>
+                                </div>
                             </div>`;
         }
 
